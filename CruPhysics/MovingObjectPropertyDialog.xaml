@@ -1,0 +1,58 @@
+﻿<Window x:Class="CruPhysics.MovingObjectPropertyDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CruPhysics"
+        mc:Ignorable="d"
+        Title="MovingObjectProperty" SizeToContent="WidthAndHeight" MinWidth="250">
+    <StackPanel>
+        <Grid DockPanel.Dock="Top">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="3" HorizontalAlignment="Center">名字</Label>
+            <Label Grid.Row="1" Grid.RowSpan="2" Grid.Column="0" Margin="3" HorizontalAlignment="Center" VerticalAlignment="Center">位置</Label>
+            <Label Grid.Row="1" Grid.Column="1" Margin="3">x轴</Label>
+            <Label Grid.Row="2" Grid.Column="1" Margin="3">y轴</Label>
+            <Label Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Margin="3" HorizontalAlignment="Center">半径</Label>
+            <Label Grid.Row="4" Grid.RowSpan="2" Grid.Column="0" Margin="3" HorizontalAlignment="Center" VerticalAlignment="Center">初速度</Label>
+            <Label Grid.Row="4" Grid.Column="1" Margin="3">x轴</Label>
+            <Label Grid.Row="5" Grid.Column="1" Margin="3">y轴</Label>
+            <Label Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Margin="3" HorizontalAlignment="Center">质量</Label>
+            <Label Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" Margin="3" HorizontalAlignment="Center">电荷量</Label>
+            <TextBox Name="nameTextBox"      Grid.Row="0" Grid.Column="2" Style="{StaticResource ResourceKey=textbox}"/>
+            <TextBox Name="positionXTextBox" Grid.Row="1" Grid.Column="2" Style="{StaticResource ResourceKey=textbox}"/>
+            <TextBox Name="positionYTextBox" Grid.Row="2" Grid.Column="2" Style="{StaticResource ResourceKey=textbox}"/>
+            <TextBox Name="radiusTextBox"    Grid.Row="3" Grid.Column="2" Style="{StaticResource ResourceKey=textbox}"/>
+            <TextBox Name="velocityXTextBox" Grid.Row="4" Grid.Column="2" Style="{StaticResource ResourceKey=textbox}"/>
+            <TextBox Name="velocityYTextBox" Grid.Row="5" Grid.Column="2" Style="{StaticResource ResourceKey=textbox}"/>
+            <TextBox Name="massTextBox"      Grid.Row="6" Grid.Column="2" Style="{StaticResource ResourceKey=textbox}"/>
+            <TextBox Name="chargeTextBox"    Grid.Row="7" Grid.Column="2" Style="{StaticResource ResourceKey=textbox}"/>
+            <Label Grid.Row="1" Grid.Column="3" Margin="3" HorizontalAlignment="Center">m</Label>
+            <Label Grid.Row="2" Grid.Column="3" Margin="3" HorizontalAlignment="Center">m</Label>
+            <Label Grid.Row="3" Grid.Column="3" Margin="3" HorizontalAlignment="Center">m</Label>
+            <Label Grid.Row="4" Grid.Column="3" Margin="3" HorizontalAlignment="Center">m/s</Label>
+            <Label Grid.Row="5" Grid.Column="3" Margin="3" HorizontalAlignment="Center">m/s</Label>
+            <Label Grid.Row="6" Grid.Column="3" Margin="3" HorizontalAlignment="Center">kg</Label>
+            <Label Grid.Row="7" Grid.Column="3" Margin="3" HorizontalAlignment="Center">C</Label>
+        </Grid>
+        <DockPanel LastChildFill="False">
+            <Button Name="confirmButton" DockPanel.Dock="Right" Margin="5" Click="confirmButton_Click">确定</Button>
+            <Button Name="cancleButton"  DockPanel.Dock="Right" Margin="5" Click="cancleButton_Click" >取消</Button>
+        </DockPanel>
+    </StackPanel>
+</Window>

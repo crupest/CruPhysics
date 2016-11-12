@@ -1,0 +1,19 @@
+﻿<Application x:Class="CruPhysics.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:CruPhysics"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+        <ContextMenu x:Key="PhysicalObjectContextMenu">
+            <MenuItem Command="local:MainWindow.Delete"></MenuItem>
+            <MenuItem Command="local:MainWindow.Property"></MenuItem>
+        </ContextMenu>
+        <Style x:Key="textbox" TargetType="TextBox">
+            <Style.Setters>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="Margin" Value="3"/>
+                <Setter Property="Height" Value="Auto"/>
+            </Style.Setters>
+        </Style>
+    </Application.Resources>
+</Application>

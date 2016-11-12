@@ -1,0 +1,62 @@
+﻿<Window x:Class="CruPhysics.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CruPhysics"
+        mc:Ignorable="d"
+        Title="CruPhysics" Height="350" Width="525">
+
+    <Window.CommandBindings>
+        <CommandBinding Command="local:MainWindow.NewMovingObject"  Executed="NewMovingObject_Executed" />
+        <CommandBinding Command="local:MainWindow.NewElectricField" Executed="NewElectricField_Executed"/>
+        <CommandBinding Command="local:MainWindow.NewMagneticField" Executed="NewMagneticField_Executed"/>
+        <CommandBinding Command="local:MainWindow.Property"         Executed="Property_Executed"        CanExecute="CanExecute"        />
+        <CommandBinding Command="local:MainWindow.Delete"           Executed="Delete_Executed"          CanExecute="CanExecute"        />
+        <CommandBinding Command="local:MainWindow.Begin"            Executed="Begin_Executed"           CanExecute="Begin_CanExecute"  />
+        <CommandBinding Command="local:MainWindow.Stop"             Executed="Stop_Executed"            CanExecute="Stop_CanExecute"   />
+        <CommandBinding Command="local:MainWindow.Restart"          Executed="Restart_Executed"         CanExecute="Restart_CanExecute"/>
+    </Window.CommandBindings>
+
+    <DockPanel LastChildFill="True">
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="文件(_F)">
+                <MenuItem Command="ApplicationCommands.New"/>
+            </MenuItem>
+            <MenuItem Header="编辑(_E)">
+                <MenuItem Header="添加(_A)">
+                    <MenuItem Command="local:MainWindow.NewMovingObject"/>
+                    <MenuItem Command="local:MainWindow.NewElectricField"/>
+                    <MenuItem Command="local:MainWindow.NewMagneticField"/>
+                </MenuItem>
+                <Separator/>
+                <MenuItem Command="local:MainWindow.Delete"/>
+                <MenuItem Command="local:MainWindow.Property"/>
+            </MenuItem>
+            <MenuItem Header="运行(_R)">
+                <MenuItem Name="beginMenuItem"
+                          Command="local:MainWindow.Begin"/>
+                <MenuItem Command="local:MainWindow.Stop"/>
+                <MenuItem Command="local:MainWindow.Restart"/>
+            </MenuItem>
+        </Menu>
+
+        <Canvas Name="canvas"
+                ClipToBounds="True"
+                Background="Transparent"
+                SizeChanged="canvas_SizeChanged"
+                MouseDown="canvas_MouseDown">
+            <Canvas.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="添加(_A)">
+                        <MenuItem Command="local:MainWindow.NewMovingObject"/>
+                        <MenuItem Command="local:MainWindow.NewElectricField"/>
+                        <MenuItem Command="local:MainWindow.NewMagneticField"/>
+                    </MenuItem>
+                </ContextMenu>
+            </Canvas.ContextMenu>
+            <Canvas Name="worldCanvas"/>
+            <TextBlock Name="timeTextBox" Canvas.Right="20" Canvas.Top="10" Visibility="Collapsed">00:00.00</TextBlock>
+        </Canvas>
+    </DockPanel>
+</Window>
