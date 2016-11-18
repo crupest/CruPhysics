@@ -5,7 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CruPhysics"
         mc:Ignorable="d"
-        Title="MovingObjectProperty" SizeToContent="WidthAndHeight" MinWidth="250">
+        Title="MovingObjectProperty"
+        SizeToContent="WidthAndHeight"
+        MinWidth="250"
+        ShowInTaskbar="False">
     <StackPanel>
         <Grid DockPanel.Dock="Top">
             <Grid.RowDefinitions>
@@ -34,14 +37,14 @@
             <Label Grid.Row="5" Grid.Column="1" Margin="3">y轴</Label>
             <Label Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Margin="3" HorizontalAlignment="Center">质量</Label>
             <Label Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" Margin="3" HorizontalAlignment="Center">电荷量</Label>
-            <TextBox Name="nameTextBox"      Grid.Row="0" Grid.Column="2" Style="{StaticResource ResourceKey=textbox}"/>
-            <TextBox Name="positionXTextBox" Grid.Row="1" Grid.Column="2" Style="{StaticResource ResourceKey=textbox}"/>
-            <TextBox Name="positionYTextBox" Grid.Row="2" Grid.Column="2" Style="{StaticResource ResourceKey=textbox}"/>
-            <TextBox Name="radiusTextBox"    Grid.Row="3" Grid.Column="2" Style="{StaticResource ResourceKey=textbox}"/>
-            <TextBox Name="velocityXTextBox" Grid.Row="4" Grid.Column="2" Style="{StaticResource ResourceKey=textbox}"/>
-            <TextBox Name="velocityYTextBox" Grid.Row="5" Grid.Column="2" Style="{StaticResource ResourceKey=textbox}"/>
-            <TextBox Name="massTextBox"      Grid.Row="6" Grid.Column="2" Style="{StaticResource ResourceKey=textbox}"/>
-            <TextBox Name="chargeTextBox"    Grid.Row="7" Grid.Column="2" Style="{StaticResource ResourceKey=textbox}"/>
+            <TextBox Name="nameTextBox"      Grid.Row="0" Grid.Column="2" Style="{StaticResource ResourceKey=textbox}" TextChanged="textBox_TextChanged" Tag="名字"/>
+            <TextBox Name="positionXTextBox" Grid.Row="1" Grid.Column="2" Style="{StaticResource ResourceKey=textbox}" TextChanged="textBox_TextChanged" Tag="x轴位置"/>
+            <TextBox Name="positionYTextBox" Grid.Row="2" Grid.Column="2" Style="{StaticResource ResourceKey=textbox}" TextChanged="textBox_TextChanged" Tag="y轴位置"/>
+            <TextBox Name="radiusTextBox"    Grid.Row="3" Grid.Column="2" Style="{StaticResource ResourceKey=textbox}" TextChanged="textBox_TextChanged" Tag="半径"/>
+            <TextBox Name="velocityXTextBox" Grid.Row="4" Grid.Column="2" Style="{StaticResource ResourceKey=textbox}" TextChanged="textBox_TextChanged" Tag="x轴初速度"/>
+            <TextBox Name="velocityYTextBox" Grid.Row="5" Grid.Column="2" Style="{StaticResource ResourceKey=textbox}" TextChanged="textBox_TextChanged" Tag="y轴初速度"/>
+            <TextBox Name="massTextBox"      Grid.Row="6" Grid.Column="2" Style="{StaticResource ResourceKey=textbox}" TextChanged="textBox_TextChanged" Tag="质量"/>
+            <TextBox Name="chargeTextBox"    Grid.Row="7" Grid.Column="2" Style="{StaticResource ResourceKey=textbox}" TextChanged="textBox_TextChanged" Tag="电荷量"/>
             <Label Grid.Row="1" Grid.Column="3" Margin="3" HorizontalAlignment="Center">m</Label>
             <Label Grid.Row="2" Grid.Column="3" Margin="3" HorizontalAlignment="Center">m</Label>
             <Label Grid.Row="3" Grid.Column="3" Margin="3" HorizontalAlignment="Center">m</Label>

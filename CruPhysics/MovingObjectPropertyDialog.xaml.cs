@@ -39,25 +39,43 @@ namespace CruPhysics
 
         private void confirmButton_Click(object sender, RoutedEventArgs e)
         {
-            RelatedMovingObject.Name = nameTextBox.Text;
-            RelatedMovingObject.Position = new Point(
-                double.Parse(positionXTextBox.Text),
-                double.Parse(positionYTextBox.Text));
-            RelatedMovingObject.Radius = double.Parse(radiusTextBox.Text);
-            RelatedMovingObject.Velocity = new Vector(
-                double.Parse(velocityXTextBox.Text),
-                double.Parse(velocityYTextBox.Text));
-            RelatedMovingObject.Mass = double.Parse(massTextBox.Text);
-            RelatedMovingObject.Charge = double.Parse(chargeTextBox.Text);
+            string info = null;
 
-            RelatedMovingObject.Update();
+            var name = nameTextBox.Text;
+            var positionX = Common.ParseTextBox(positionXTextBox, ref info);
+            var positionY = Common.ParseTextBox(positionYTextBox, ref info);
+            var radius    = Common.ParseTextBox(radiusTextBox, x => x > 0.0, ref info);
+            var velocityX = Common.ParseTextBox(velocityXTextBox, ref info);
+            var velocityY = Common.ParseTextBox(velocityYTextBox, ref info);
+            var mass      = Common.ParseTextBox(massTextBox, x => x > 0.0, ref info);
+            var charge    = Common.ParseTextBox(chargeTextBox, ref info);
 
-            Close();
+            if (string.IsNullOrEmpty(info))
+            {
+                RelatedMovingObject.Position = new Point(positionX, positionY);
+                RelatedMovingObject.Radius = radius;
+                RelatedMovingObject.Velocity = new Vector(velocityX, velocityY);
+                RelatedMovingObject.Mass = mass;
+                RelatedMovingObject.Charge = charge;
+
+                RelatedMovingObject.Update();
+
+                Close();
+            }
+            else
+            {
+                MessageBox.Show(info, "错误！", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void cancleButton_Click(object sender, RoutedEventArgs e)
         {
             Close();
+        }
+
+        private void textBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            ((TextBox)sender).Background = Brushes.White;
         }
     }
 }
