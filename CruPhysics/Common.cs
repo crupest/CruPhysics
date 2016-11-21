@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
@@ -44,6 +45,40 @@ namespace CruPhysics
                 info += (string)textBox.Tag + "超出范围！\n";
             }
             return result;
+        }
+
+        /// <summary>
+        /// 顺时针旋转一个向量一定角度
+        /// </summary>
+        /// <param name="vector">要旋转的向量</param>
+        /// <param name="angle">顺时针旋转的角度</param>
+        /// <returns>旋转得到的向量</returns>
+        public static Vector Rotate(Vector vector, double angle)
+        {
+            double newAngle = 0.0;
+            if (vector.X == 0.0)
+            {
+                if (vector.Y > 0.0)
+                    newAngle = Math.PI / 2.0 - angle;
+                else
+                    newAngle = Math.PI * 3.0 / 2.0 - angle;
+            }
+            else
+            {
+                newAngle = Math.Atan(vector.Y / vector.X) - angle;
+            }
+            double length = vector.Length;
+            return new Vector(length * Math.Cos(newAngle), length * Math.Sin(newAngle));
+        }
+
+        /// <summary>
+        /// 顺时针旋转一个向量一定角度
+        /// </summary>
+        /// <param name="vector">要旋转的向量</param>
+        /// <param name="angle">顺时针旋转的角度</param>
+        public static void Rotate(ref Vector vector, double angle)
+        {
+            vector = Rotate(vector, angle);
         }
     }
 }
