@@ -31,10 +31,10 @@
             <Label Grid.Row="1" Grid.Column="0" Margin="3">右边界</Label>
             <Label Grid.Row="2" Grid.Column="0" Margin="3">上边界</Label>
             <Label Grid.Row="3" Grid.Column="0" Margin="3">下边界</Label>
-            <TextBox Name="leftTextBox"   Grid.Row="0" Grid.Column="1" Style="{StaticResource ResourceKey=textbox}">-50</TextBox>
-            <TextBox Name="rightTextBox"  Grid.Row="1" Grid.Column="1" Style="{StaticResource ResourceKey=textbox}">50</TextBox>
-            <TextBox Name="topTextBox"    Grid.Row="2" Grid.Column="1" Style="{StaticResource ResourceKey=textbox}">50</TextBox>
-            <TextBox Name="bottomTextBox" Grid.Row="3" Grid.Column="1" Style="{StaticResource ResourceKey=textbox}">-50</TextBox>
+            <TextBox Name="leftTextBox"   Grid.Row="0" Grid.Column="1" Style="{StaticResource ResourceKey=textbox}" Tag="左边界" TextChanged="textBox_TextChanged">-50</TextBox>
+            <TextBox Name="rightTextBox"  Grid.Row="1" Grid.Column="1" Style="{StaticResource ResourceKey=textbox}" Tag="右边界" TextChanged="textBox_TextChanged">50</TextBox>
+            <TextBox Name="topTextBox"    Grid.Row="2" Grid.Column="1" Style="{StaticResource ResourceKey=textbox}" Tag="上边界" TextChanged="textBox_TextChanged">50</TextBox>
+            <TextBox Name="bottomTextBox" Grid.Row="3" Grid.Column="1" Style="{StaticResource ResourceKey=textbox}" Tag="下边界" TextChanged="textBox_TextChanged">-50</TextBox>
             <Label Grid.Row="0" Grid.Column="2" Margin="3">m</Label>
             <Label Grid.Row="1" Grid.Column="2" Margin="3">m</Label>
             <Label Grid.Row="2" Grid.Column="2" Margin="3">m</Label>
@@ -57,9 +57,9 @@
             <Label Grid.Row="0" Grid.Column="1" Margin="3">y轴</Label>
             <Label Grid.Row="1" Grid.Column="1" Margin="3">x轴</Label>
             <Label Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Margin="3" HorizontalAlignment="Center">半径</Label>
-            <TextBox Name="centerXTextBox" Grid.Row="0" Grid.Column="2" Style="{StaticResource ResourceKey=textbox}">0</TextBox>
-            <TextBox Name="centerYTextBox" Grid.Row="1" Grid.Column="2" Style="{StaticResource ResourceKey=textbox}">0</TextBox>
-            <TextBox Name="radiusTextBox"  Grid.Row="2" Grid.Column="2" Style="{StaticResource ResourceKey=textbox}">50</TextBox>
+            <TextBox Name="centerXTextBox" Grid.Row="0" Grid.Column="2" Style="{StaticResource ResourceKey=textbox}" Tag="圆心x轴" TextChanged="textBox_TextChanged">0</TextBox>
+            <TextBox Name="centerYTextBox" Grid.Row="1" Grid.Column="2" Style="{StaticResource ResourceKey=textbox}" Tag="圆心y轴" TextChanged="textBox_TextChanged">0</TextBox>
+            <TextBox Name="radiusTextBox"  Grid.Row="2" Grid.Column="2" Style="{StaticResource ResourceKey=textbox}" Tag="半径" TextChanged="textBox_TextChanged">50</TextBox>
             <Label Grid.Row="0" Grid.Column="3" Margin="3">m</Label>
             <Label Grid.Row="1" Grid.Column="3" Margin="3">m</Label>
             <Label Grid.Row="2" Grid.Column="3" Margin="3">m</Label>

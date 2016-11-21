@@ -31,30 +31,46 @@ namespace CruPhysics
             shape.ShowProperty(this);
         }
 
-        public CPShape CreateShape()
+        public CPShape CreateShape(ref string errorInfo)
         {
             if (rectangleRadioButton.IsChecked.Value)
             {
-                return new CPRectangle()
-                {
-                    Left   = double.Parse(leftTextBox  .Text),
-                    Top    = double.Parse(topTextBox   .Text),
-                    Right  = double.Parse(rightTextBox .Text),
-                    Bottom = double.Parse(bottomTextBox.Text)
-                };
+                string internalErrorInfo1 = null;
+                var left = Common.ParseTextBox(leftTextBox, ref internalErrorInfo1);
+                var right = Common.ParseTextBox(rightTextBox, ref internalErrorInfo1);
+                if (string.IsNullOrEmpty(internalErrorInfo1) && left >= right)
+                    internalErrorInfo1 += "左边界必须小于右边界！";
+                string internalErrorInfo2 = null;
+                var top = Common.ParseTextBox(topTextBox, ref internalErrorInfo2);
+                var bottom = Common.ParseTextBox(bottomTextBox, ref internalErrorInfo2);
+                if (string.IsNullOrEmpty(internalErrorInfo2) && top <= bottom)
+                    internalErrorInfo2 += "上边界必须大于下边界！";
+                var internalErrorInfo = internalErrorInfo1 + internalErrorInfo2;
+                errorInfo += internalErrorInfo;
+                if (string.IsNullOrEmpty(internalErrorInfo))
+                    return new CPRectangle()
+                    {
+                        Left = left,
+                        Top = top,
+                        Right = right,
+                        Bottom = bottom
+                    };
             }
             else if (circleRadioButton.IsChecked.Value)
             {
-                return new CPCircle()
-                {
-                    Center = new Point(
-                        double.Parse(centerXTextBox.Text),
-                        double.Parse(centerYTextBox.Text)
-                        ),
-                    Radius = double.Parse(radiusTextBox.Text)
-                };
+                string internalError = null;
+                var centerX = Common.ParseTextBox(centerXTextBox, ref internalError);
+                var centerY = Common.ParseTextBox(centerYTextBox, ref internalError);
+                var radius = Common.ParseTextBox(radiusTextBox, x => x > 0.0, ref internalError);
+                errorInfo += internalError;
+                if (string.IsNullOrEmpty(internalError))
+                    return new CPCircle()
+                    {
+                        Center = new Point(centerX, centerY),
+                        Radius = radius
+                    };
             }
-            throw new Exception();
+            return null;
         }
 
         private void HideAllPane()
@@ -73,6 +89,11 @@ namespace CruPhysics
         {
             HideAllPane();
             circleGrid.Visibility = Visibility.Visible;
+        }
+
+        private void textBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            ((TextBox)sender).Background = Brushes.White;
         }
     }
 }

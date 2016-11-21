@@ -32,8 +32,8 @@
             <Label Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Margin="3" VerticalAlignment="Center">电场强度</Label>
             <Label Grid.Row="0" Grid.Column="1" Margin="3">x轴</Label>
             <Label Grid.Row="1" Grid.Column="1" Margin="3">y轴</Label>
-            <TextBox Name="intensityXTextBox" Grid.Row="0" Grid.Column="2" Style="{StaticResource ResourceKey=textbox}"/>
-            <TextBox Name="intensityYTextBox" Grid.Row="1" Grid.Column="2" Style="{StaticResource ResourceKey=textbox}"/>
+            <TextBox Name="intensityXTextBox" Grid.Row="0" Grid.Column="2" Style="{StaticResource ResourceKey=textbox}" Tag="电场强度x轴" TextChanged="textBox_TextChanged"/>
+            <TextBox Name="intensityYTextBox" Grid.Row="1" Grid.Column="2" Style="{StaticResource ResourceKey=textbox}" Tag="电场强度y轴" TextChanged="textBox_TextChanged"/>
             <Label Grid.Row="0" Grid.Column="3" Margin="3">N/q</Label>
             <Label Grid.Row="1" Grid.Column="3" Margin="3">N/q</Label>
         </Grid>

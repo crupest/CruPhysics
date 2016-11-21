@@ -39,18 +39,18 @@ namespace CruPhysics
 
         private void confirmButton_Click(object sender, RoutedEventArgs e)
         {
-            string info = null;
+            string errorInfo = null;
 
             var name = nameTextBox.Text;
-            var positionX = Common.ParseTextBox(positionXTextBox, ref info);
-            var positionY = Common.ParseTextBox(positionYTextBox, ref info);
-            var radius    = Common.ParseTextBox(radiusTextBox, x => x > 0.0, ref info);
-            var velocityX = Common.ParseTextBox(velocityXTextBox, ref info);
-            var velocityY = Common.ParseTextBox(velocityYTextBox, ref info);
-            var mass      = Common.ParseTextBox(massTextBox, x => x > 0.0, ref info);
-            var charge    = Common.ParseTextBox(chargeTextBox, ref info);
+            var positionX = Common.ParseTextBox(positionXTextBox, ref errorInfo);
+            var positionY = Common.ParseTextBox(positionYTextBox, ref errorInfo);
+            var radius    = Common.ParseTextBox(radiusTextBox, x => x > 0.0, ref errorInfo);
+            var velocityX = Common.ParseTextBox(velocityXTextBox, ref errorInfo);
+            var velocityY = Common.ParseTextBox(velocityYTextBox, ref errorInfo);
+            var mass      = Common.ParseTextBox(massTextBox, x => x > 0.0, ref errorInfo);
+            var charge    = Common.ParseTextBox(chargeTextBox, ref errorInfo);
 
-            if (string.IsNullOrEmpty(info))
+            if (string.IsNullOrEmpty(errorInfo))
             {
                 RelatedMovingObject.Position = new Point(positionX, positionY);
                 RelatedMovingObject.Radius = radius;
@@ -64,7 +64,7 @@ namespace CruPhysics
             }
             else
             {
-                MessageBox.Show(info, "错误！", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(errorInfo, "错误！", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 

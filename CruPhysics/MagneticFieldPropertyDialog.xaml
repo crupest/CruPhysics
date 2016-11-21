@@ -28,7 +28,7 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <Label Grid.Row="0" Grid.Column="0" Margin="3">磁感应强度</Label>
-            <TextBox Name="fluxDensityTextBox" Grid.Row="0" Grid.Column="1" Style="{StaticResource ResourceKey=textbox}"/>
+            <TextBox Name="fluxDensityTextBox" Grid.Row="0" Grid.Column="1" Style="{StaticResource ResourceKey=textbox}" Tag="磁感应强度" TextChanged="textBox_TextChanged"/>
             <Label Grid.Row="0" Grid.Column="2" Margin="3">T</Label>
         </Grid>
 

@@ -34,18 +34,35 @@ namespace CruPhysics
 
         private void confirmButton_Click(object sender, RoutedEventArgs e)
         {
-            RelatedMagneticField.Name = nameTextBox.Text;
-            RelatedMagneticField.SetShape(shapePropertyControl.CreateShape());
-            RelatedMagneticField.FluxDensity = double.Parse(fluxDensityTextBox.Text);
+            string errorInfo = null;
+            var name = nameTextBox.Text;
+            var shape = shapePropertyControl.CreateShape(ref errorInfo);
+            var fluxDensity = Common.ParseTextBox(fluxDensityTextBox, ref errorInfo);
 
-            RelatedMagneticField.Update();
+            if (string.IsNullOrEmpty(errorInfo))
+            {
+                RelatedMagneticField.Name = name;
+                RelatedMagneticField.SetShape(shape);
+                RelatedMagneticField.FluxDensity = fluxDensity;
 
-            Close();
+                RelatedMagneticField.Update();
+
+                Close();
+            }
+            else
+            {
+                MessageBox.Show(errorInfo, "错误！", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void cancleButton_Click(object sender, RoutedEventArgs e)
         {
             Close();
+        }
+
+        private void textBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            ((TextBox)sender).Background = Brushes.White;
         }
     }
 }

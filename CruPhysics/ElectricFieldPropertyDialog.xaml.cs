@@ -35,20 +35,36 @@ namespace CruPhysics
 
         private void confirmButton_Click(object sender, RoutedEventArgs e)
         {
-            RelatedElectricField.Name = nameTextBox.Text;
-            RelatedElectricField.SetShape(shapePropertyControl.CreateShape());
-            RelatedElectricField.Intensity = new Vector(
-                double.Parse(intensityXTextBox.Text),
-                double.Parse(intensityYTextBox.Text));
+            string errorInfo = null;
+            var name = nameTextBox.Text;
+            var shape = shapePropertyControl.CreateShape(ref errorInfo);
+            var intensityX = Common.ParseTextBox(intensityXTextBox, ref errorInfo);
+            var intensityY = Common.ParseTextBox(intensityYTextBox, ref errorInfo);
 
-            RelatedElectricField.Update();
+            if (string.IsNullOrEmpty(errorInfo))
+            {
+                RelatedElectricField.Name = nameTextBox.Text;
+                RelatedElectricField.SetShape(shape);
+                RelatedElectricField.Intensity = new Vector(intensityX, intensityY);
 
-            Close();
+                RelatedElectricField.Update();
+
+                Close();
+            }
+            else
+            {
+                MessageBox.Show(errorInfo, "错误！", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void cancleButton_Click(object sender, RoutedEventArgs e)
         {
             Close();
+        }
+
+        private void textBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            ((TextBox)sender).Background = Brushes.White;
         }
     }
 }
