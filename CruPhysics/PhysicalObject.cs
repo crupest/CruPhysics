@@ -612,8 +612,7 @@ namespace CruPhysics
                 force.Y += i.Y;
             }
             var acceleration = force / Mass;
-            //Position += Velocity * t + acceleration * Math.Pow(t, 2) / 2.0;
-            Position += Velocity * t;
+            Position += Velocity * t + acceleration * Math.Pow(t, 2) / 2.0;
             Velocity += acceleration * t;
         }
     }
@@ -641,10 +640,10 @@ namespace CruPhysics
             return _shape;
         }
 
-        public void Influence(MovingObject movingObject)
+        public void Influence(MovingObject movingObject, TimeSpan time)
         {
             if (Shape.IsPointInside(movingObject.Position))
-                CalculateEffect(movingObject);
+                CalculateEffect(movingObject, time);
         }
 
         public override int DefaultZIndex
@@ -655,7 +654,7 @@ namespace CruPhysics
             }
         }
 
-        protected abstract void CalculateEffect(MovingObject movingObject);
+        protected abstract void CalculateEffect(MovingObject movingObject, TimeSpan time);
 
         protected override void AddToScene(Scene scene)
         {
@@ -690,7 +689,8 @@ namespace CruPhysics
             }
         }
 
-        protected override void CalculateEffect(MovingObject movingObject)
+
+        protected override void CalculateEffect(MovingObject movingObject, TimeSpan no_use)
         {
             movingObject.AddForce(
                 new Force(Intensity.X * movingObject.Charge,
@@ -726,11 +726,11 @@ namespace CruPhysics
             }
         }
 
-        protected override void CalculateEffect(MovingObject movingObject)
+        protected override void CalculateEffect(MovingObject movingObject, TimeSpan time)
         {
-            movingObject.AddForce(
-                new Force(-movingObject.Velocity.Y * movingObject.Charge * FluxDensity,
-                    movingObject.Velocity.X * movingObject.Charge * FluxDensity));
+            //qvB = mvω => ω = qB/m => α = ωt = qBt/m
+            movingObject.Velocity = Common.Rotate(movingObject.Velocity,
+                -time.TotalSeconds * movingObject.Charge * FluxDensity / movingObject.Mass);
         }
 
         internal override Window CreatePropertyWindow()
@@ -780,15 +780,16 @@ namespace CruPhysics
 
         private void Run(object sender, EventArgs e)
         {
-            runningTime += timer.Interval;
+            runningTime += ScanInterval;
             RelatedMainWindow.timeTextBox.Text = runningTime.ToString(timeFormat);
 
+            var calculationInterval = TimeSpan.FromTicks(ScanInterval.Ticks / 1000);
             for (int k = 1; k <= 1000; k++)
                 foreach (var i in movingObjects)
                 {
                     foreach (var j in fields)
-                        j.Influence(i);
-                    i.Run(TimeSpan.FromTicks(timer.Interval.Ticks / 1000));
+                        j.Influence(i, calculationInterval);
+                    i.Run(calculationInterval);
                     i.ClearForce();
                 }
 

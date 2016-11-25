@@ -55,7 +55,7 @@ namespace CruPhysics
         /// <returns>旋转得到的向量</returns>
         public static Vector Rotate(Vector vector, double angle)
         {
-            double newAngle = 0.0;
+            double newAngle;
             if (vector.X == 0.0)
             {
                 if (vector.Y > 0.0)
@@ -66,6 +66,8 @@ namespace CruPhysics
             else
             {
                 newAngle = Math.Atan(vector.Y / vector.X) - angle;
+                if (vector.X < 0.0)      //It took me over one hour to
+                    newAngle += Math.PI; //think about these two line.
             }
             double length = vector.Length;
             return new Vector(length * Math.Cos(newAngle), length * Math.Sin(newAngle));
