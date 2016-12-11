@@ -11,7 +11,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
+
+using CruPhysics.Shapes;
 
 namespace CruPhysics
 {
@@ -25,13 +26,13 @@ namespace CruPhysics
             InitializeComponent();
         }
 
-        public void ShowProperty(CPShape shape)
+        public void ShowProperty(Shape shape)
         {
             HideAllPane();
             shape.ShowProperty(this);
         }
 
-        public CPShape CreateShape(ref string errorInfo)
+        public Shape CreateShape(ref string errorInfo)
         {
             if (rectangleRadioButton.IsChecked.Value)
             {
@@ -48,7 +49,7 @@ namespace CruPhysics
                 var internalErrorInfo = internalErrorInfo1 + internalErrorInfo2;
                 errorInfo += internalErrorInfo;
                 if (string.IsNullOrEmpty(internalErrorInfo))
-                    return new CPRectangle()
+                    return new Rectangle()
                     {
                         Left = left,
                         Top = top,
@@ -64,7 +65,7 @@ namespace CruPhysics
                 var radius = Common.ParseTextBox(radiusTextBox, x => x > 0.0, ref internalError);
                 errorInfo += internalError;
                 if (string.IsNullOrEmpty(internalError))
-                    return new CPCircle()
+                    return new Circle()
                     {
                         Center = new Point(centerX, centerY),
                         Radius = radius

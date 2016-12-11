@@ -5,262 +5,20 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Shapes;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
 
+using CruPhysics.Shapes;
+
 namespace CruPhysics
 {
-    public abstract class CPShape
-    {
-        private bool _autoUpdate;
-
-        public CPShape()
-        {
-            _autoUpdate = false;
-        }
-
-        public Shape Raw
-        {
-            get
-            {
-                return GetRawShape();
-            }
-        }
-
-        public abstract void Update();
-        protected void TryUpdate()
-        {
-            if (AutoUpdate)
-                Update();
-        }
-
-        public abstract void Move(Vector vector);
-        public abstract bool IsPointInside(Point point);
-
-        public abstract void ShowProperty(ShapePropertyControl shapePropertyControl);
-
-        protected abstract Shape GetRawShape();
-        
-        public Canvas Canvas
-        {
-            get
-            {
-                return Raw.Parent as Canvas;
-            }
-            set
-            {
-                if (Canvas != null)
-                    Canvas.Children.Remove(Raw);
-                if (value != null)
-                    value.Children.Add(Raw);
-            }
-        }
-
-        public bool AutoUpdate
-        {
-            get
-            {
-                return _autoUpdate;
-            }
-            set
-            {
-                _autoUpdate = value;
-            }
-        }
-    }
-
-    public class CPCircle : CPShape
-    {
-        private Ellipse _shape  = new Ellipse();
-        private Point   _center = new Point();
-        private double  _radius = 10.0;
-
-        public CPCircle()
-        {
-            Update();
-        }
-
-        protected override Shape GetRawShape()
-        {
-            return _shape;
-        }
-
-        public override void Update()
-        {
-            _shape.Width = _radius * 2.0;
-            _shape.Height = _radius * 2.0;
-            Canvas.SetLeft(_shape, _center.X - _radius);
-            Canvas.SetTop(_shape, -_center.Y - _radius);
-        }
-
-        public override void ShowProperty(ShapePropertyControl shapePropertyControl)
-        {
-            shapePropertyControl.circleRadioButton.IsChecked = true;
-            shapePropertyControl.circleGrid.Visibility = Visibility.Visible;
-            shapePropertyControl.centerXTextBox.Text = Center.X.ToString();
-            shapePropertyControl.centerYTextBox.Text = Center.Y.ToString();
-            shapePropertyControl.radiusTextBox.Text = Radius.ToString();
-        }
-
-        public Point Center
-        {
-            get
-            {
-                return _center;
-            }
-            set
-            {
-                _center = value;
-                TryUpdate();
-            }
-        }
-
-        public double Radius
-        {
-            get
-            {
-                return _radius;
-            }
-            set
-            {
-                _radius = value;
-                TryUpdate();
-            }
-        }
-
-        public override void Move(Vector vector)
-        {
-            Center += vector;
-        }
-
-        public override bool IsPointInside(Point point)
-        {
-            var center = Center;
-            return Math.Pow(point.X - center.X, 2) +
-                Math.Pow(point.Y - center.Y, 2) < Math.Pow(Radius, 2);
-        }
-    }
-
-    public class CPRectangle : CPShape
-    {
-        private Rectangle _shape  = new Rectangle();
-        private double    _left   = -50.0;
-        private double    _top    =  50.0;
-        private double    _right  =  50.0;
-        private double    _bottom = -50.0;
-
-        public CPRectangle()
-        {
-            Update();
-        }
-
-        public override void Update()
-        {
-            _shape.Width = _right - _left;
-            _shape.Height = _top - _bottom;
-            Canvas.SetLeft(_shape, _left);
-            Canvas.SetTop(_shape, -_top);
-        }
-
-        public override void ShowProperty(ShapePropertyControl shapePropertyControl)
-        {
-            shapePropertyControl.rectangleRadioButton.IsChecked = true;
-            shapePropertyControl.rectangleGrid.Visibility = Visibility.Visible;
-            shapePropertyControl.leftTextBox  .Text = Left  .ToString();
-            shapePropertyControl.topTextBox   .Text = Top   .ToString();
-            shapePropertyControl.rightTextBox .Text = Right .ToString();
-            shapePropertyControl.bottomTextBox.Text = Bottom.ToString();
-        }
-
-        protected override Shape GetRawShape()
-        {
-            return _shape;
-        }
-        
-        public double Left
-        {
-            get
-            {
-                return _left;
-            }
-            set
-            {
-                _left = value;
-                TryUpdate();
-            }
-        }
-
-        public double Top
-        {
-            get
-            {
-                return _top;
-            }
-            set
-            {
-                _top = value;
-                TryUpdate();
-            }
-        }
-
-        public double Right
-        {
-            get
-            {
-                return _right;
-            }
-            set
-            {
-                _right = value;
-                TryUpdate();
-            }
-        }
-
-        public double Bottom
-        {
-            get
-            {
-                return _bottom;
-            }
-            set
-            {
-                _bottom = value;
-                TryUpdate();
-            }
-        }
-
-        public override void Move(Vector vector)
-        {
-            _left   += vector.X;
-            _right  += vector.X;
-            _top    += vector.Y;
-            _bottom += vector.Y;
-
-            TryUpdate();
-        }
-
-        public override bool IsPointInside(Point point)
-        {
-            return
-                point.X > _left   &&
-                point.X < _right  &&
-                point.Y > _bottom &&
-                point.Y < _top;
-        }
-    }
-
-
-
     public enum SelectionState
     {
         normal,
         hover,
         select
     }
-
-
 
     public struct Force
     {
@@ -300,7 +58,7 @@ namespace CruPhysics
 
     public static class PhysicalObjectZIndex
     {
-        public static int selected = int.MaxValue;
+        public static int selected = 100;
         public static int movingObject = 2;
         public static int field = 1;
     }
@@ -308,6 +66,7 @@ namespace CruPhysics
     public abstract class PhysicalObject
     {
         private static PhysicalObject selectedObject = null;
+        private static SelectionBox selectionBox = null;
 
         public static PhysicalObject SelectedObject
         {
@@ -317,20 +76,22 @@ namespace CruPhysics
             }
             set
             {
+                if (selectedObject == value)
+                    return;
+
                 if (selectedObject != null)
                 {
                     selectedObject.SetShowState(SelectionState.normal);
+                    selectionBox.Delete();
                 }
                 selectedObject = value;
                 if (value != null)
                 {
                     value.SetShowState(SelectionState.select);
+                    selectionBox = selectedObject.Shape.CreateSelectionBox();
                 }
             }
         }
-
-        private static Point cursorPreviousPosition;
-
 
 
 
@@ -341,7 +102,7 @@ namespace CruPhysics
 
         public string Name { get; set; }
 
-        public CPShape Shape
+        public Shape Shape
         {
             get
             {
@@ -350,28 +111,21 @@ namespace CruPhysics
         }
 
 
-        protected abstract CPShape GetShape();
+        protected abstract Shape GetShape();
         public abstract Brush FillBrush { get; }
         public abstract int DefaultZIndex { get; }
 
-
-        /// <summary>
-        /// 一个CPShape对象作为PhysicalObject的形状之前所进行的一般处理。
-        /// </summary>
         protected void PrepareShape()
         {
-            Shape.Canvas = RelatedScene == null ?
-                    null : RelatedScene.RelatedMainWindow.worldCanvas;
-            Shape.Raw.ContextMenu = (ContextMenu)Application.Current.FindResource("PhysicalObjectContextMenu");
-            Shape.Raw.MouseEnter += PhysicalObject_OnMouseEnter;
-            Shape.Raw.MouseLeave += PhysicalObject_OnMouseLeave;
-            Shape.Raw.MouseDown  += PhysicalObject_OnMouseDown;
-            Shape.Raw.MouseUp    += PhysicalObject_OnMouseUp;
-            Shape.Raw.MouseMove  += PhysicalObject_OnMouseMove;
+            Shape.Canvas = RelatedScene?.RelatedWorldCanvas;
+            Shape.ContextMenu = (ContextMenu)Application.Current.FindResource("PhysicalObjectContextMenu");
+            Shape.MouseEnter += PhysicalObject_OnMouseEnter;
+            Shape.MouseLeave += PhysicalObject_OnMouseLeave;
+            Shape.MouseDown  += PhysicalObject_OnMouseDown;
 
             SetShowState(GetSelectionState());
 
-            Shape.Raw.Fill = FillBrush;
+            Shape.Fill = FillBrush;
         }
 
         private Scene _scene;
@@ -416,24 +170,24 @@ namespace CruPhysics
                 return SelectionState.normal;
         }
 
-        private void SetShowState(SelectionState selectionState)
+        protected virtual void SetShowState(SelectionState selectionState)
         {
             switch (selectionState)
             {
                 case SelectionState.normal:
-                    Shape.Raw.Stroke = normal_stroke;
-                    Shape.Raw.StrokeThickness = 1.0;
-                    Canvas.SetZIndex(Shape.Raw, DefaultZIndex);
+                    Shape.Stroke = normal_stroke;
+                    Shape.StrokeThickness = 1.0;
+                    Shape.ZIndex = DefaultZIndex;
                     break;
                 case SelectionState.hover:
-                    Shape.Raw.Stroke = hover_stroke;
-                    Shape.Raw.StrokeThickness = 2.0;
-                    Canvas.SetZIndex(Shape.Raw, DefaultZIndex);
+                    Shape.Stroke = hover_stroke;
+                    Shape.StrokeThickness = 2.0;
+                    Shape.ZIndex = DefaultZIndex;
                     break;
                 case SelectionState.select:
-                    Shape.Raw.Stroke = select_stroke;
-                    Shape.Raw.StrokeThickness = 2.0;
-                    Canvas.SetZIndex(Shape.Raw, PhysicalObjectZIndex.selected);
+                    Shape.Stroke = select_stroke;
+                    Shape.StrokeThickness = 2.0;
+                    Shape.ZIndex = PhysicalObjectZIndex.selected;
                     break;
             }
         }
@@ -472,28 +226,7 @@ namespace CruPhysics
         private void PhysicalObject_OnMouseDown(object sender, MouseButtonEventArgs args)
         {
             SelectedObject = this;
-            Mouse.Capture(Shape.Raw);
             args.Handled = true;
-        }
-
-
-        private void PhysicalObject_OnMouseUp(object sender, MouseButtonEventArgs args)
-        {
-            Mouse.Capture(null);
-        }
-
-
-        private void PhysicalObject_OnMouseMove(object sender, MouseEventArgs args)
-        {
-            var newPosition = args.GetPosition(RelatedScene.RelatedMainWindow.worldCanvas);
-            if (Shape.Raw.IsMouseCaptured)
-            {
-                var displacement = newPosition - cursorPreviousPosition;
-                displacement.Y = -displacement.Y;
-                Move(displacement);
-                Update();
-            }
-            cursorPreviousPosition = newPosition;
         }
     }
 
@@ -501,7 +234,7 @@ namespace CruPhysics
 
     public class MovingObject : PhysicalObject
     {
-        private CPCircle _shape = new CPCircle();
+        private Circle _shape = new Circle();
 
         public MovingObject()
         {
@@ -509,7 +242,7 @@ namespace CruPhysics
             Mass = 1.0;
         }
 
-        protected override CPShape GetShape()
+        protected override Shape GetShape()
         {
             return _shape;
         }
@@ -621,21 +354,23 @@ namespace CruPhysics
 
     public abstract class Field : PhysicalObject
     {
-        private CPShape _shape = new CPRectangle(); 
+        private Shape _shape = new Rectangle(); 
 
         public Field()
         {
+            _shape.AutoUpdate = true;
             PrepareShape();
         }
 
-        public void SetShape(CPShape shape)
+        public void SetShape(Shape shape)
         {
             _shape.Canvas = null;
             _shape = shape;
+            shape.AutoUpdate = true;
             PrepareShape();
         }
 
-        protected override CPShape GetShape()
+        protected override Shape GetShape()
         {
             return _shape;
         }

@@ -8,6 +8,7 @@
             <MenuItem Command="local:MainWindow.Delete"></MenuItem>
             <MenuItem Command="local:MainWindow.Property"></MenuItem>
         </ContextMenu>
+        
         <Style x:Key="textbox" TargetType="TextBox">
             <Style.Setters>
                 <Setter Property="VerticalAlignment" Value="Center"/>
