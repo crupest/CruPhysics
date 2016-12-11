@@ -16,25 +16,25 @@ namespace CruPhysics
 {
     namespace _SelectionBox
     {
-        internal class ControllerDragedEventArgs : EventArgs
+        internal class ControllerDraggedEventArgs : EventArgs
         {
-            private Vector movement;
+            private Point position;
 
-            internal ControllerDragedEventArgs(Vector movement)
+            internal ControllerDraggedEventArgs(Point position)
+                : base()
             {
-                this.movement = movement;
+                this.position = position;
             }
 
-            public Vector Movement
+            public Point Position
             {
                 get
                 {
-                    return movement;
+                    return position;
                 }
             }
         }
 
-        
         internal class Controller
         {
             private Circle controller;
@@ -88,7 +88,7 @@ namespace CruPhysics
                 }
             }
 
-            public delegate void ControllerDraggedHandler(object sender, ControllerDragedEventArgs e);
+            public delegate void ControllerDraggedHandler(object sender, ControllerDraggedEventArgs e);
 
             private ControllerDraggedHandler dragged;
 
@@ -110,12 +110,16 @@ namespace CruPhysics
                 controller.Delete();
             }
 
+
+            private static Vector cursorDelta;
+
             private void OnMouseDown(object sender, MouseButtonEventArgs args)
             {
                 Mouse.Capture(controller.Raw);
+                cursorDelta =
+                    Common.TransformPoint(args.GetPosition(controller.Canvas)) - controller.Center;
                 args.Handled = true;
             }
-
 
             private void OnMouseUp(object sender, MouseButtonEventArgs args)
             {
@@ -123,18 +127,14 @@ namespace CruPhysics
                 args.Handled = true;
             }
 
-            private static Point cursorPreviousPosition;
-
             private void OnMouseMove(object sender, MouseEventArgs args)
             {
-                var newPosition = args.GetPosition(controller.Canvas);
                 if (controller.Raw.IsMouseCaptured)
                 {
-                    var displacement = newPosition - cursorPreviousPosition;
-                    displacement.Y = -displacement.Y;
-                    dragged(this, new ControllerDragedEventArgs(displacement));
+                    var newCenter = Common.TransformPoint(args.GetPosition(controller.Canvas)) - cursorDelta;
+                    controller.Center = newCenter;
+                    dragged(this, new ControllerDraggedEventArgs(newCenter));
                 }
-                cursorPreviousPosition = newPosition;
             }
         }
     }
@@ -200,15 +200,19 @@ namespace CruPhysics
                 new Vector(SelectedShape.Radius, 0.0);
         }
 
-        private void CenterController_Dragged(object sender, ControllerDragedEventArgs e)
+        private void CenterController_Dragged(object sender, ControllerDraggedEventArgs e)
         {
-            SelectedShape.Center += e.Movement;
+            SelectedShape.Center = e.Position;
             SelectedShape.Update();
         }
 
-        private void RadiusController_Dragged(object sender, ControllerDragedEventArgs e)
+        private void RadiusController_Dragged(object sender, ControllerDraggedEventArgs e)
         {
-            SelectedShape.Radius += e.Movement.X;
+            var center = centerController.Position;
+            if (e.Position.X <= center.X)
+                SelectedShape.Radius = 0.0;
+            else
+                SelectedShape.Radius = e.Position.X - center.Y;
             SelectedShape.Update();
         }
 

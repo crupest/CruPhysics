@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Input;
 
 namespace CruPhysics
 {
@@ -81,6 +82,12 @@ namespace CruPhysics
         public static void Rotate(ref Vector vector, double angle)
         {
             vector = Rotate(vector, angle);
+        }
+
+
+        public static Point TransformPoint(Point point)
+        {
+            return new Point(point.X, -point.Y);
         }
     }
 }

@@ -379,9 +379,9 @@ namespace CruPhysics.Shapes
             }
             set
             {
-                if (value <= 0.0)
+                if (value < 0.0)
                     throw new ArgumentOutOfRangeException
-                        ("Radius", value, "Radius must be bigger than 0.");
+                        ("Radius", value, "Radius can't be smaller than 0.");
 
                 _radius = value;
                 TryUpdate();

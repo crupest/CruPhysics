@@ -1,2 +1,1 @@
-﻿1.CircleSelectionBox在半径滑杆拉到中心左边后导致半径小于0的bug。
-2.实现RectangleSelectionBox
+﻿1.实现RectangleSelectionBox
