@@ -542,6 +542,38 @@ namespace CruPhysics.Shapes
             }
         }
 
+        public Point Lefttop
+        {
+            get
+            {
+                return new Point(Left, Top);
+            }
+        }
+
+        public Point Righttop
+        {
+            get
+            {
+                return new Point(Right, Top);
+            }
+        }
+
+        public Point Leftbottom
+        {
+            get
+            {
+                return new Point(Left, Bottom);
+            }
+        }
+
+        public Point Rightbottom
+        {
+            get
+            {
+                return new Point(Right, Bottom);
+            }
+        }
+
         public override void Move(Vector vector)
         {
             _left += vector.X;

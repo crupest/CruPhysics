@@ -223,4 +223,131 @@ namespace CruPhysics
             radiusController.Delete();
         }
     }
+
+    public sealed class RectangleSelectionBox : SelectionBox
+    {
+        Controller[] controllers = new Controller[9];
+        //controllers[0] is lefttopController.
+        //controllers[1] is topController.
+        //controllers[2] is righttopController.
+        //controllers[3] is leftController.
+        //controllers[4] is centerController.
+        //controllers[5] is rightController.
+        //controllers[6] is leftbottomController.
+        //controllers[7] is bottomController.
+        //controllers[8] is rightbottomController.
+
+        public RectangleSelectionBox(Rectangle rectangle)
+            : base(rectangle)
+        {
+            var canvas = rectangle.Canvas;
+
+            controllers[0] = new Controller(canvas, Cursors.SizeNWSE);
+            controllers[1] = new Controller(canvas, Cursors.SizeNS);
+            controllers[2] = new Controller(canvas, Cursors.SizeNESW);
+            controllers[3] = new Controller(canvas, Cursors.SizeWE);
+            controllers[4] = new Controller(canvas, Cursors.SizeAll);
+            controllers[5] = new Controller(canvas, Cursors.SizeWE);
+            controllers[6] = new Controller(canvas, Cursors.SizeNESW);
+            controllers[7] = new Controller(canvas, Cursors.SizeNS);
+            controllers[8] = new Controller(canvas, Cursors.SizeNWSE);
+
+            controllers[0].Dragged += LefttopController_Dragged;
+            controllers[1].Dragged += TopController_Dragged;
+            controllers[2].Dragged += RighttopController_Dragged;
+            controllers[3].Dragged += LeftController_Dragged;
+            controllers[4].Dragged += CenterController_Dragged;
+            controllers[5].Dragged += RightController_Dragged;
+            controllers[6].Dragged += LeftbottomController_Dragged;
+            controllers[7].Dragged += BottomController_Dragged;
+            controllers[8].Dragged += RightbottomController_Dragged;
+
+            foreach (var i in controllers)
+            {
+                i.Dragged += UpdateAfterDraggedAndSetting;
+            }
+
+            UpdateView(this, EventArgs.Empty);
+        }
+
+        private void LefttopController_Dragged(object sender, ControllerDraggedEventArgs e)
+        {
+            
+        }
+
+        private void TopController_Dragged(object sender, ControllerDraggedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void RighttopController_Dragged(object sender, ControllerDraggedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void LeftController_Dragged(object sender, ControllerDraggedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void CenterController_Dragged(object sender, ControllerDraggedEventArgs e)
+        {
+            SelectedShape.Center = e.Position;
+        }
+
+        private void RightController_Dragged(object sender, ControllerDraggedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void LeftbottomController_Dragged(object sender, ControllerDraggedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void BottomController_Dragged(object sender, ControllerDraggedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void RightbottomController_Dragged(object sender, ControllerDraggedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void UpdateAfterDraggedAndSetting(object sender, ControllerDraggedEventArgs e)
+        {
+            SelectedShape.Update();
+        }
+
+        protected override void UpdateView(object sender, EventArgs e)
+        {
+            var rectangle = SelectedShape;
+
+            controllers[0].Position = rectangle.Lefttop;
+            controllers[1].Position = new Point((rectangle.Left + rectangle.Right) / 2.0, rectangle.Top);
+            controllers[2].Position = rectangle.Righttop;
+            controllers[3].Position = new Point(rectangle.Left, (rectangle.Top + rectangle.Bottom) / 2.0);
+            controllers[4].Position = rectangle.Center;
+            controllers[5].Position = new Point(rectangle.Right, (rectangle.Top + rectangle.Bottom) / 2.0);
+            controllers[6].Position = rectangle.Leftbottom;
+            controllers[7].Position = new Point((rectangle.Left + rectangle.Right) / 2.0, rectangle.Bottom);
+            controllers[8].Position = rectangle.Rightbottom;
+        }
+
+        public new Rectangle SelectedShape
+        {
+            get
+            {
+                return (Rectangle)base.SelectedShape;
+            }
+        }
+
+        public override void Delete()
+        {
+            base.Delete();
+            foreach (var i in controllers)
+                i.Delete();
+        }
+    }
 }
