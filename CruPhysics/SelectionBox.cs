@@ -168,7 +168,7 @@ namespace CruPhysics
     }
 
 
-    public class CircleSelectionBox : SelectionBox
+    public sealed class CircleSelectionBox : SelectionBox
     {
         private Controller centerController;
         private Controller radiusController;

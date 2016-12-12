@@ -242,7 +242,7 @@ namespace CruPhysics.Shapes
         }
     }
 
-    public class Line : Shape
+    public sealed class Line : Shape
     {
         private System.Windows.Shapes.Line shape = new System.Windows.Shapes.Line();
         private Point point1 = new Point();
@@ -319,7 +319,7 @@ namespace CruPhysics.Shapes
         }
     }
 
-    public class Circle : Shape
+    public sealed class Circle : Shape
     {
         private Ellipse _shape = new Ellipse();
         private Point _center = new Point();
@@ -401,7 +401,7 @@ namespace CruPhysics.Shapes
         }
     }
 
-    public class Rectangle : Shape
+    public sealed class Rectangle : Shape
     {
         private System.Windows.Shapes.Rectangle _shape = new System.Windows.Shapes.Rectangle();
         private double _left = -50.0;
@@ -443,6 +443,41 @@ namespace CruPhysics.Shapes
             return _shape;
         }
 
+        public Point Center
+        {
+            get
+            {
+                return new Point((Left + Right) / 2.0, (Top + Bottom) / 2.0);
+            }
+
+            set
+            {
+                var halfWidth = Width / 2.0;
+                var halfHeight = Height / 2.0;
+                _left = value.X - halfWidth;
+                _top = value.Y + halfHeight;
+                _right = value.X + halfWidth;
+                _bottom = value.Y - halfHeight;
+                TryUpdate();
+            }
+        }
+
+        public double Width
+        {
+            get
+            {
+                return Right - Left;
+            }
+        }
+
+        public double Height
+        {
+            get
+            {
+                return Top - Bottom;
+            }
+        }
+
         public double Left
         {
             get
@@ -451,6 +486,9 @@ namespace CruPhysics.Shapes
             }
             set
             {
+                if (value > Right)
+                    throw new ArgumentOutOfRangeException
+                        ("Left", value, "Left can't be bigger than Right.");
                 _left = value;
                 TryUpdate();
             }
@@ -464,6 +502,9 @@ namespace CruPhysics.Shapes
             }
             set
             {
+                if (value < Bottom)
+                    throw new ArgumentOutOfRangeException
+                        ("Top", value, "Top can't be smaller than Bottom.");
                 _top = value;
                 TryUpdate();
             }
@@ -477,6 +518,9 @@ namespace CruPhysics.Shapes
             }
             set
             {
+                if (value < Left)
+                    throw new ArgumentOutOfRangeException
+                        ("Right", value, "Right can't be smaller than Left.");
                 _right = value;
                 TryUpdate();
             }
@@ -490,6 +534,9 @@ namespace CruPhysics.Shapes
             }
             set
             {
+                if (value > Top)
+                    throw new ArgumentOutOfRangeException
+                        ("Bottom", value, "Bottom can't be bigger than Top.");
                 _bottom = value;
                 TryUpdate();
             }

@@ -1,2 +1,1 @@
-﻿1.添加Rectangle的Left,Top,Right,Bottom的setter对value的有效性的判定。
-2.实现RectangleSelectionBox。
+﻿1.实现RectangleSelectionBox。
