@@ -275,17 +275,18 @@ namespace CruPhysics
 
         private void TopController_Dragged(object sender, ControllerDraggedEventArgs e)
         {
-            throw new NotImplementedException();
+            SelectedShape.Top = Math.Max(SelectedShape.Bottom, e.Position.Y);
         }
 
         private void RighttopController_Dragged(object sender, ControllerDraggedEventArgs e)
         {
-            throw new NotImplementedException();
+            SelectedShape.Right = Math.Max(SelectedShape.Left, e.Position.X);
+            SelectedShape.Top = Math.Max(SelectedShape.Bottom, e.Position.Y);
         }
 
         private void LeftController_Dragged(object sender, ControllerDraggedEventArgs e)
         {
-            throw new NotImplementedException();
+            SelectedShape.Left = Math.Min(SelectedShape.Right, e.Position.X);
         }
 
         private void CenterController_Dragged(object sender, ControllerDraggedEventArgs e)
@@ -295,22 +296,24 @@ namespace CruPhysics
 
         private void RightController_Dragged(object sender, ControllerDraggedEventArgs e)
         {
-            throw new NotImplementedException();
+            SelectedShape.Right = Math.Max(SelectedShape.Left, e.Position.X);
         }
 
         private void LeftbottomController_Dragged(object sender, ControllerDraggedEventArgs e)
         {
-            throw new NotImplementedException();
+            SelectedShape.Left = Math.Min(SelectedShape.Right, e.Position.X);
+            SelectedShape.Bottom = Math.Min(SelectedShape.Top, e.Position.Y);
         }
 
         private void BottomController_Dragged(object sender, ControllerDraggedEventArgs e)
         {
-            throw new NotImplementedException();
+            SelectedShape.Bottom = Math.Min(SelectedShape.Top, e.Position.Y);
         }
 
         private void RightbottomController_Dragged(object sender, ControllerDraggedEventArgs e)
         {
-            throw new NotImplementedException();
+            SelectedShape.Right = Math.Max(SelectedShape.Left, e.Position.X);
+            SelectedShape.Bottom = Math.Min(SelectedShape.Top, e.Position.Y);
         }
 
         private void UpdateAfterDraggedAndSetting(object sender, ControllerDraggedEventArgs e)
