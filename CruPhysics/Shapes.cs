@@ -416,7 +416,7 @@ namespace CruPhysics.Shapes
 
         public override SelectionBox CreateSelectionBox()
         {
-            throw new NotImplementedException();
+            return new RectangleSelectionBox(this);
         }
 
         public override void Update()

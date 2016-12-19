@@ -10,12 +10,12 @@ using System.Windows.Input;
 using System.Windows.Media;
 
 using CruPhysics.Shapes;
-using CruPhysics._SelectionBox;
 
 namespace CruPhysics
 {
-    namespace _SelectionBox
+    public abstract class SelectionBox
     {
+
         internal class ControllerDraggedEventArgs : EventArgs
         {
             private Point position;
@@ -48,11 +48,11 @@ namespace CruPhysics
                     Stroke = Brushes.Black,
                     Fill = Brushes.White,
                     Canvas = canvas,
-                    ZIndex = 101
+                    ZIndex = PhysicalObjectZIndex.controller
                 };
 
                 controller.MouseDown += OnMouseDown;
-                controller.MouseUp   += OnMouseUp;
+                controller.MouseUp += OnMouseUp;
                 controller.MouseMove += OnMouseMove;
             }
 
@@ -137,12 +137,10 @@ namespace CruPhysics
                 }
             }
         }
-    }
 
-    public abstract class SelectionBox
-    {
+
+
         private Shape shape;
-        
 
         public SelectionBox(Shape shape)
         {
@@ -209,10 +207,9 @@ namespace CruPhysics
         private void RadiusController_Dragged(object sender, ControllerDraggedEventArgs e)
         {
             var center = centerController.Position;
-            if (e.Position.X <= center.X)
-                SelectedShape.Radius = 0.0;
-            else
-                SelectedShape.Radius = e.Position.X - center.Y;
+            SelectedShape.Radius =
+                e.Position.X <= center.X ?
+                0.0 : e.Position.X - center.Y;
             SelectedShape.Update();
         }
 
@@ -272,7 +269,8 @@ namespace CruPhysics
 
         private void LefttopController_Dragged(object sender, ControllerDraggedEventArgs e)
         {
-            
+            SelectedShape.Left = Math.Min(SelectedShape.Right, e.Position.X);
+            SelectedShape.Top = Math.Max(SelectedShape.Bottom, e.Position.Y);
         }
 
         private void TopController_Dragged(object sender, ControllerDraggedEventArgs e)

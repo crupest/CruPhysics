@@ -58,9 +58,10 @@ namespace CruPhysics
 
     public static class PhysicalObjectZIndex
     {
-        public static int selected = 100;
-        public static int movingObject = 2;
-        public static int field = 1;
+        public const int selected = 100;
+        public const int controller = 101;
+        public const int movingObject = 2;
+        public const int field = 1;
     }
 
     public abstract class PhysicalObject
