@@ -12,13 +12,17 @@ using System.Windows.Media;
 
 namespace CruPhysics.Shapes
 {
+    /// <summary>
+    /// Represents a shape in a canvas.
+    /// It preserves an internal shape object with cache of properties and provides some useful methods.
+    /// </summary>
     public abstract class Shape
     {
-        private bool _autoUpdate;
+        private bool _autoUpdate = false;
 
-        public Shape()
+        protected Shape()
         {
-            _autoUpdate = false;
+
         }
 
         public virtual void Update()
@@ -39,6 +43,14 @@ namespace CruPhysics.Shapes
 
         public abstract SelectionBox CreateSelectionBox();
 
+        public System.Windows.Shapes.Shape Raw
+        {
+            get
+            {
+                return GetRawShape();
+            }
+        }
+
         public Canvas Canvas
         {
             get
@@ -48,11 +60,12 @@ namespace CruPhysics.Shapes
 
             set
             {
-                if (Canvas == value)
+                var parent = Canvas;
+                if (parent == value)
                     return;
 
-                if (Canvas != null)
-                    Canvas.Children.Remove(GetRawShape());
+                if (parent != null)
+                    parent.Children.Remove(GetRawShape());
                 if (value != null)
                     value.Children.Add(GetRawShape());
             }
@@ -87,16 +100,22 @@ namespace CruPhysics.Shapes
 
         public void Delete()
         {
-            Canvas.Children.Remove(GetRawShape());
+            Canvas = null;
         }
 
-        public System.Windows.Shapes.Shape Raw
+        public int ZIndex
         {
             get
             {
-                return GetRawShape();
+                return Canvas.GetZIndex(Raw);
+            }
+
+            set
+            {
+                Canvas.SetZIndex(Raw, value);
             }
         }
+
 
         public Brush Fill
         {
@@ -134,19 +153,6 @@ namespace CruPhysics.Shapes
             set
             {
                 GetRawShape().StrokeThickness = value;
-            }
-        }
-
-        public int ZIndex
-        {
-            get
-            {
-                return Canvas.GetZIndex(Raw);
-            }
-
-            set
-            {
-                Canvas.SetZIndex(Raw, value);
             }
         }
 

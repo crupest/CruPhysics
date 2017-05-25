@@ -12,8 +12,6 @@ namespace CruPhysics
 {
     public static class Common
     {
-
-
         public delegate bool CheckValue(double value);
 
         public static double ParseTextBox(TextBox textBox, ref string info)

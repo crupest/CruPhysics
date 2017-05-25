@@ -37,23 +37,25 @@ namespace CruPhysics
 
         internal class Controller
         {
-            private Circle controller;
+            private const double radius = 4.0;
+
+            private Circle shape;
 
             public Controller(Canvas canvas)
             {
-                controller = new Circle()
+                shape = new Circle()
                 {
                     AutoUpdate = true,
-                    Radius = 5.0,
+                    Radius = radius,
                     Stroke = Brushes.Black,
                     Fill = Brushes.White,
                     Canvas = canvas,
                     ZIndex = PhysicalObjectZIndex.controller
                 };
 
-                controller.MouseDown += OnMouseDown;
-                controller.MouseUp += OnMouseUp;
-                controller.MouseMove += OnMouseMove;
+                shape.MouseDown += OnMouseDown;
+                shape.MouseUp += OnMouseUp;
+                shape.MouseMove += OnMouseMove;
             }
 
             public Controller(Canvas canvas, Cursor cursor)
@@ -66,12 +68,12 @@ namespace CruPhysics
             {
                 get
                 {
-                    return controller.Center;
+                    return shape.Center;
                 }
 
                 set
                 {
-                    controller.Center = value;
+                    shape.Center = value;
                 }
             }
 
@@ -79,12 +81,12 @@ namespace CruPhysics
             {
                 get
                 {
-                    return controller.Cursor;
+                    return shape.Cursor;
                 }
 
                 set
                 {
-                    controller.Cursor = value;
+                    shape.Cursor = value;
                 }
             }
 
@@ -107,7 +109,7 @@ namespace CruPhysics
 
             public void Delete()
             {
-                controller.Delete();
+                shape.Delete();
             }
 
 
@@ -115,9 +117,9 @@ namespace CruPhysics
 
             private void OnMouseDown(object sender, MouseButtonEventArgs args)
             {
-                Mouse.Capture(controller.Raw);
+                Mouse.Capture(shape.Raw);
                 cursorDelta =
-                    Common.TransformPoint(args.GetPosition(controller.Canvas)) - controller.Center;
+                    Common.TransformPoint(args.GetPosition(shape.Canvas)) - shape.Center;
                 args.Handled = true;
             }
 
@@ -129,10 +131,10 @@ namespace CruPhysics
 
             private void OnMouseMove(object sender, MouseEventArgs args)
             {
-                if (controller.Raw.IsMouseCaptured)
+                if (shape.Raw.IsMouseCaptured)
                 {
-                    var newCenter = Common.TransformPoint(args.GetPosition(controller.Canvas)) - cursorDelta;
-                    controller.Center = newCenter;
+                    var newCenter = Common.TransformPoint(args.GetPosition(shape.Canvas)) - cursorDelta;
+                    shape.Center = newCenter;
                     dragged(this, new ControllerDraggedEventArgs(newCenter));
                 }
             }
@@ -140,11 +142,11 @@ namespace CruPhysics
 
 
 
-        private Shape shape;
+        private Shape selectedShape;
 
         public SelectionBox(Shape shape)
         {
-            this.shape = shape;
+            selectedShape = shape;
 
             shape.Updated += UpdateView;
         }
@@ -153,7 +155,7 @@ namespace CruPhysics
         {
             get
             {
-                return shape;
+                return selectedShape;
             }
         }
 
@@ -161,7 +163,7 @@ namespace CruPhysics
 
         public virtual void Delete()
         {
-            shape.Updated -= UpdateView;
+            selectedShape.Updated -= UpdateView;
         }
     }
 
@@ -223,16 +225,8 @@ namespace CruPhysics
 
     public sealed class RectangleSelectionBox : SelectionBox
     {
+        //From left to right, from top to bottom.
         Controller[] controllers = new Controller[9];
-        //controllers[0] is lefttopController.
-        //controllers[1] is topController.
-        //controllers[2] is righttopController.
-        //controllers[3] is leftController.
-        //controllers[4] is centerController.
-        //controllers[5] is rightController.
-        //controllers[6] is leftbottomController.
-        //controllers[7] is bottomController.
-        //controllers[8] is rightbottomController.
 
         public RectangleSelectionBox(Rectangle rectangle)
             : base(rectangle)

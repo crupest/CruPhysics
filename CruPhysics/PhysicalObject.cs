@@ -198,13 +198,16 @@ namespace CruPhysics
 
         protected virtual void AddToScene(Scene scene)
         {
-            scene.RelatedWorldCanvas.Children.Add(Shape.Raw);
+            Shape.Canvas = scene.RelatedWorldCanvas;
             scene.physicalObjects.Add(this);
         }
 
         protected virtual void RemoveFromScene(Scene scene)
         {
-            scene.RelatedWorldCanvas.Children.Remove(Shape.Raw);
+            if (SelectedObject == this)
+                SelectedObject = null;
+
+            Shape.Canvas = null;
             scene.physicalObjects.Remove(this);
         }
 
@@ -493,7 +496,7 @@ namespace CruPhysics
             }
         }
 
-        private static readonly string timeFormat = @"mm\:ss\.ff";
+        private const string timeFormat = @"mm\:ss\.ff";
 
 
         private readonly MainWindow _mainWindow;
