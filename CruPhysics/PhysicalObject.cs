@@ -505,7 +505,7 @@ namespace CruPhysics
         internal List<MovingObject>      movingObjects = new List<MovingObject>();
         internal List<Field>             fields = new List<Field>();
 
-        private DispatcherTimer timer = new DispatcherTimer();
+        private DispatcherTimer timer = new DispatcherTimer(DispatcherPriority.Normal);
         private TimeSpan runningTime = TimeSpan.Zero;
         private bool hasBegun = false;
 
