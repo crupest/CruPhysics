@@ -319,6 +319,14 @@ namespace CruPhysics.Shapes
             TryUpdate();
         }
 
+        public void Set(Point point1, Point point2, bool update = true)
+        {
+            this.point1 = point1;
+            this.point2 = point2;
+            if (update)
+                Update();
+        }
+
         internal override void ShowProperty(ShapePropertyControl shapePropertyControl)
         {
             throw new Exception("ShapePropertyControl can't show property of a line.");
@@ -397,6 +405,17 @@ namespace CruPhysics.Shapes
         public override void Move(Vector vector)
         {
             Center += vector;
+        }
+
+        public void Set(Point center, double radius, bool update = true)
+        {
+            if (radius < 0.0)
+                throw new ArgumentOutOfRangeException("radius", "Radius can't be below 0.");
+
+            this._center = center;
+            this._radius = radius;
+            if (update)
+                Update();
         }
 
         public override bool IsPointInside(Point point)
@@ -578,6 +597,19 @@ namespace CruPhysics.Shapes
             {
                 return new Point(Right, Bottom);
             }
+        }
+
+        public void Set(double left, double top, double right, double bottom, bool update = true)
+        {
+            if (left > right || bottom > top)
+                throw new ArgumentException();
+
+            this._left = left;
+            this._top = top;
+            this._right = right;
+            this._bottom = bottom;
+            if (update)
+                Update();
         }
 
         public override void Move(Vector vector)
