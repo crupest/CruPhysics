@@ -211,7 +211,7 @@ namespace CruPhysics
             scene.physicalObjects.Remove(this);
         }
 
-        private void PhysicalObject_OnMouseEnter(object sender, MouseEventArgs args)
+        private void PhysicalObject_OnMouseEnter(object sender, ShapeMouseEventArgs args)
         {
             if (SelectedObject == this)
                 return;
@@ -219,7 +219,7 @@ namespace CruPhysics
         }
 
 
-        private void PhysicalObject_OnMouseLeave(object sender, MouseEventArgs args)
+        private void PhysicalObject_OnMouseLeave(object sender, ShapeMouseEventArgs args)
         {
             if (SelectedObject == this)
                 return;
@@ -227,10 +227,10 @@ namespace CruPhysics
         }
 
 
-        private void PhysicalObject_OnMouseDown(object sender, MouseButtonEventArgs args)
+        private void PhysicalObject_OnMouseDown(object sender, ShapeMouseEventArgs args)
         {
             SelectedObject = this;
-            args.Handled = true;
+            args.Raw.Handled = true;
         }
     }
 

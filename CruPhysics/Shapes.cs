@@ -12,6 +12,45 @@ using System.Windows.Media;
 
 namespace CruPhysics.Shapes
 {
+    public class ShapeMouseEventArgs : EventArgs
+    {
+        private Shape shape;
+        private MouseEventArgs origin;
+
+        public ShapeMouseEventArgs(Shape shape, MouseEventArgs origin)
+        {
+            this.shape = shape;
+            this.origin = origin;
+        }
+
+        public Shape Shape
+        {
+            get
+            {
+                return shape;
+            }
+        }
+
+        public MouseEventArgs Raw
+        {
+            get
+            {
+                return origin;
+            }
+        }
+
+        public Point Position
+        {
+            get
+            {
+                var position = origin.GetPosition(shape.Canvas);
+                return new Point(position.X, -position.Y);
+            }
+        }
+    }
+
+    public delegate void ShapeMouseEventHandler(object sender, ShapeMouseEventArgs e);
+
     /// <summary>
     /// Represents a shape in a canvas.
     /// It preserves an internal shape object with cache of properties and provides some useful methods.
@@ -23,6 +62,15 @@ namespace CruPhysics.Shapes
         protected Shape()
         {
 
+        }
+
+        protected void Initialize(System.Windows.Shapes.Shape shape)
+        {
+            shape.MouseDown += (sender, e) => this.mouseDown?.Invoke(this, new ShapeMouseEventArgs(this, e));
+            shape.MouseUp += (sender, e) => this.mouseUp?.Invoke(this, new ShapeMouseEventArgs(this, e));
+            shape.MouseEnter += (sender, e) => this.mouseEnter?.Invoke(this, new ShapeMouseEventArgs(this, e));
+            shape.MouseLeave += (sender, e) => this.mouseLeave?.Invoke(this, new ShapeMouseEventArgs(this, e));
+            shape.MouseMove += (sender, e) => this.mouseMove?.Invoke(this, new ShapeMouseEventArgs(this, e));
         }
 
         public virtual void Update()
@@ -182,68 +230,75 @@ namespace CruPhysics.Shapes
             }
         }
 
-        public event MouseButtonEventHandler MouseDown
+        private ShapeMouseEventHandler mouseDown;
+        private ShapeMouseEventHandler mouseUp;
+        private ShapeMouseEventHandler mouseEnter;
+        private ShapeMouseEventHandler mouseLeave;
+        private ShapeMouseEventHandler mouseMove;
+
+
+        public event ShapeMouseEventHandler MouseDown
         {
             add
             {
-                GetRawShape().MouseDown += value;
+                mouseDown += value;
             }
 
             remove
             {
-                GetRawShape().MouseDown -= value;
+                mouseDown -= value;
             }
         }
 
-        public event MouseButtonEventHandler MouseUp
+        public event ShapeMouseEventHandler MouseUp
         {
             add
             {
-                GetRawShape().MouseUp += value;
+                mouseUp += value;
             }
 
             remove
             {
-                GetRawShape().MouseUp -= value;
+                mouseUp -= value;
             }
         }
 
-        public event MouseEventHandler MouseEnter
+        public event ShapeMouseEventHandler MouseEnter
         {
             add
             {
-                GetRawShape().MouseEnter += value;
+                mouseEnter += value;
             }
 
             remove
             {
-                GetRawShape().MouseEnter -= value;
+                mouseEnter -= value;
             }
         }
 
-        public event MouseEventHandler MouseLeave
+        public event ShapeMouseEventHandler MouseLeave
         {
             add
             {
-                GetRawShape().MouseLeave += value;
+                mouseLeave += value;
             }
 
             remove
             {
-                GetRawShape().MouseLeave -= value;
+                mouseLeave -= value;
             }
         }
 
-        public event MouseEventHandler MouseMove
+        public event ShapeMouseEventHandler MouseMove
         {
             add
             {
-                GetRawShape().MouseMove += value;
+                mouseMove += value;
             }
 
             remove
             {
-                GetRawShape().MouseMove -= value;
+                mouseMove -= value;
             }
         }
     }
@@ -256,6 +311,7 @@ namespace CruPhysics.Shapes
 
         public Line()
         {
+            Initialize(shape);
             Update();
         }
 
@@ -341,6 +397,7 @@ namespace CruPhysics.Shapes
 
         public Circle()
         {
+            Initialize(_shape);
             Update();
         }
 
@@ -436,6 +493,7 @@ namespace CruPhysics.Shapes
 
         public Rectangle()
         {
+            Initialize(_shape);
             Update();
         }
 

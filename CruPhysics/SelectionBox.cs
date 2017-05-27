@@ -115,25 +115,24 @@ namespace CruPhysics
 
             private static Vector cursorDelta;
 
-            private void OnMouseDown(object sender, MouseButtonEventArgs args)
+            private void OnMouseDown(object sender, ShapeMouseEventArgs args)
             {
                 Mouse.Capture(shape.Raw);
-                cursorDelta =
-                    Common.TransformPoint(args.GetPosition(shape.Canvas)) - shape.Center;
-                args.Handled = true;
+                cursorDelta = args.Position - shape.Center;
+                args.Raw.Handled = true;
             }
 
-            private void OnMouseUp(object sender, MouseButtonEventArgs args)
+            private void OnMouseUp(object sender, ShapeMouseEventArgs args)
             {
                 Mouse.Capture(null);
-                args.Handled = true;
+                args.Raw.Handled = true;
             }
 
-            private void OnMouseMove(object sender, MouseEventArgs args)
+            private void OnMouseMove(object sender, ShapeMouseEventArgs args)
             {
                 if (shape.Raw.IsMouseCaptured)
                 {
-                    var newCenter = Common.TransformPoint(args.GetPosition(shape.Canvas)) - cursorDelta;
+                    var newCenter = args.Position - cursorDelta;
                     shape.Center = newCenter;
                     dragged(this, new ControllerDraggedEventArgs(newCenter));
                 }
