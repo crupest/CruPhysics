@@ -412,8 +412,10 @@ namespace CruPhysics
     {
         static ElectricField()
         {
-            fillBrush = new SolidColorBrush(Colors.Green);
-            fillBrush.Opacity = 0.5;
+            fillBrush = new SolidColorBrush(Colors.Green)
+            {
+                Opacity = 0.5
+            };
         }
 
         private static readonly Brush fillBrush;
@@ -446,8 +448,10 @@ namespace CruPhysics
     {
         static MagneticField()
         {
-            fillBrush = new SolidColorBrush(Colors.Orange);
-            fillBrush.Opacity = 0.5;
+            fillBrush = new SolidColorBrush(Colors.Orange)
+            {
+                Opacity = 0.5
+            };
         }
 
         private static readonly Brush fillBrush;
