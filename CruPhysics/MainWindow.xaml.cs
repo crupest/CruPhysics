@@ -30,35 +30,44 @@ namespace CruPhysics
         public static RoutedUICommand Restart           = new RoutedUICommand("重新(_R)",     "restart",          typeof(MainWindow));
         
 
-        private Scene _scene;
-        private CoordinateSystem _coordinateSystem;
+        private MainViewModel viewModel;
+        private CoordinateSystem coordinateSystem;
 
         public MainWindow()
         {
             InitializeComponent();
 
-            _scene = new Scene(this);
-            _coordinateSystem = new CoordinateSystem(_scene);
+            viewModel = new MainViewModel(this);
+
+            coordinateSystem = new CoordinateSystem(this);
 
             Focus();
+        }
+
+        internal MainViewModel ViewModel
+        {
+            get
+            {
+                return viewModel;
+            }
         }
 
         private void NewMovingObject_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             MovingObject moving_object = new MovingObject();
-            _scene.Add(moving_object);
+            viewModel.Scene.Add(moving_object);
         }
 
         private void NewElectricField_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             var electric_field = new ElectricField();
-            _scene.Add(electric_field);
+            viewModel.Scene.Add(electric_field);
         }
 
         private void NewMagneticField_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             var magnetic_field = new MagneticField();
-            _scene.Add(magnetic_field);
+            viewModel.Scene.Add(magnetic_field);
         }
 
         private void Property_Executed(object sender, ExecutedRoutedEventArgs e)
@@ -68,7 +77,7 @@ namespace CruPhysics
 
         private void Delete_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            _scene.Remove(PhysicalObject.SelectedObject);
+            viewModel.Scene.Remove(PhysicalObject.SelectedObject);
         }
 
         private void CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -78,41 +87,41 @@ namespace CruPhysics
 
         private void Begin_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            _scene.Begin();
+            viewModel.Scene.Begin();
         }
 
         private void Begin_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = !_scene.IsRunning;
+            e.CanExecute = !viewModel.Scene.IsRunning;
         }
 
         private void Stop_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            _scene.Stop();
+            viewModel.Scene.Stop();
         }
 
         private void Stop_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = _scene.IsRunning;
+            e.CanExecute = viewModel.Scene.IsRunning;
         }
 
         private void Restart_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            _scene.Restart();
+            viewModel.Scene.Restart();
         }
 
         private void Restart_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = _scene.HasBegun; 
+            e.CanExecute = viewModel.Scene.HasBegun; 
         }
 
-        private void canvas_SizeChanged(object sender, SizeChangedEventArgs e)
+        private void MainCanvas_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            Canvas.SetLeft(worldCanvas, canvas.ActualWidth / 2.0);
-            Canvas.SetTop(worldCanvas, canvas.ActualHeight / 2.0);
+            Canvas.SetLeft(WorldCanvas, MainCanvas.ActualWidth / 2.0);
+            Canvas.SetTop(WorldCanvas, MainCanvas.ActualHeight / 2.0);
         }
 
-        private void canvas_MouseDown(object sender, MouseButtonEventArgs e)
+        private void MainCanvas_MouseDown(object sender, MouseButtonEventArgs e)
         {
             PhysicalObject.SelectedObject = null;
         }
@@ -121,9 +130,9 @@ namespace CruPhysics
 
     public class CoordinateSystem
     {
-        public CoordinateSystem(Scene scene)
+        public CoordinateSystem(MainWindow window)
         {
-            var bounds = scene.Bounds;
+            var bounds = window.ViewModel.Scene.Bounds;
             var graduation = 50.0;
             var geometry = new GeometryGroup();
 
@@ -165,17 +174,17 @@ namespace CruPhysics
             _axisX.StrokeThickness = 2.0;
             _axisY.StrokeThickness = 2.0;
 
-            scene.RelatedMainWindow.worldCanvas.Children.Add(_path);
-            scene.RelatedMainWindow.worldCanvas.Children.Add(_axisX);
-            scene.RelatedMainWindow.worldCanvas.Children.Add(_axisY);
+            window.WorldCanvas.Children.Add(_path);
+            window.WorldCanvas.Children.Add(_axisX);
+            window.WorldCanvas.Children.Add(_axisY);
 
-            scene.RelatedMainWindow.worldCanvas.Children.Add(_zeroScale);
+            window.WorldCanvas.Children.Add(_zeroScale);
 
             foreach (var i in _axisXScale)
-                scene.RelatedMainWindow.worldCanvas.Children.Add(i);
+                window.WorldCanvas.Children.Add(i);
 
             foreach (var i in _axisYScale)
-                scene.RelatedMainWindow.worldCanvas.Children.Add(i);
+                window.WorldCanvas.Children.Add(i);
         }
 
         private static TextBlock CreateGraduation(double value, Point position)

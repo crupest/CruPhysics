@@ -41,11 +41,11 @@
             </MenuItem>
         </Menu>
 
-        <Canvas Name="canvas"
+        <Canvas Name="MainCanvas"
                 ClipToBounds="True"
                 Background="Transparent"
-                SizeChanged="canvas_SizeChanged"
-                MouseDown="canvas_MouseDown">
+                SizeChanged="MainCanvas_SizeChanged"
+                MouseDown="MainCanvas_MouseDown">
             <Canvas.ContextMenu>
                 <ContextMenu>
                     <MenuItem Header="添加(_A)">
@@ -55,8 +55,8 @@
                     </MenuItem>
                 </ContextMenu>
             </Canvas.ContextMenu>
-            <Canvas Name="worldCanvas"/>
-            <TextBlock Name="timeTextBox" Canvas.Right="20" Canvas.Top="10" Visibility="Collapsed">00:00.00</TextBlock>
+            <Canvas Name="WorldCanvas"/>
+            <TextBlock Name="TimeTextBox" Canvas.Right="20" Canvas.Top="10" Visibility="Collapsed">00:00.00</TextBlock>
         </Canvas>
     </DockPanel>
 </Window>

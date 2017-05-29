@@ -62,6 +62,7 @@
     <Compile Include="MagneticFieldPropertyDialog.xaml.cs">
       <DependentUpon>MagneticFieldPropertyDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ViewModel.cs" />
     <Compile Include="MovingObjectPropertyDialog.xaml.cs">
       <DependentUpon>MovingObjectPropertyDialog.xaml</DependentUpon>
     </Compile>

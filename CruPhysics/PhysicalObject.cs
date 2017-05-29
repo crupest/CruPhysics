@@ -524,7 +524,7 @@ namespace CruPhysics
         private void Run(object sender, EventArgs e)
         {
             runningTime += ScanInterval;
-            RelatedMainWindow.timeTextBox.Text = runningTime.ToString(timeFormat);
+            RelatedMainWindow.TimeTextBox.Text = runningTime.ToString(timeFormat);
 
             var calculationInterval = TimeSpan.FromTicks(ScanInterval.Ticks / 1000);
             for (int k = 1; k <= 1000; k++)
@@ -552,7 +552,7 @@ namespace CruPhysics
         {
             get
             {
-                return RelatedMainWindow.worldCanvas;
+                return RelatedMainWindow.WorldCanvas;
             }
         }
 
@@ -612,7 +612,7 @@ namespace CruPhysics
                 }
                 hasBegun = true;
             }
-            RelatedMainWindow.timeTextBox.Visibility = Visibility.Visible;
+            RelatedMainWindow.TimeTextBox.Visibility = Visibility.Visible;
             timer.Start();
         }
         
@@ -632,8 +632,8 @@ namespace CruPhysics
                 item.Update();
             }
             runningTime = TimeSpan.Zero;
-            RelatedMainWindow.timeTextBox.Visibility = Visibility.Collapsed;
-            RelatedMainWindow.timeTextBox.Text = runningTime.ToString(timeFormat);
+            RelatedMainWindow.TimeTextBox.Visibility = Visibility.Collapsed;
+            RelatedMainWindow.TimeTextBox.Text = runningTime.ToString(timeFormat);
         }
     }
 }
