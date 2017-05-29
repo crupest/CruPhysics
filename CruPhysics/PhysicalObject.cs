@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
+using System.ComponentModel;
 
 using CruPhysics.Shapes;
 
@@ -64,7 +65,7 @@ namespace CruPhysics
         public const int field = 1;
     }
 
-    public abstract class PhysicalObject
+    public abstract class PhysicalObject : INotifyPropertyChanged
     {
         private static PhysicalObject selectedObject = null;
         private static SelectionBox selectionBox = null;
@@ -94,14 +95,44 @@ namespace CruPhysics
             }
         }
 
-
+        private string name;
 
         public PhysicalObject()
         {
 
         }
 
-        public string Name { get; set; }
+        private PropertyChangedEventHandler propertyChanged;
+
+        protected void RaisePropertyChangedEvent(string propertyName)
+        {
+            propertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged
+        {
+            add
+            {
+                propertyChanged += value;
+            }
+            remove
+            {
+                propertyChanged -= value;
+            }
+        }
+
+        public string Name
+        {
+            get
+            {
+                return name;
+            }
+            set
+            {
+                name = value;
+                RaisePropertyChangedEvent("Name");
+            }
+        }
 
         public Shape Shape
         {
@@ -484,7 +515,7 @@ namespace CruPhysics
     
 
 
-    public class Scene
+    public class Scene : INotifyPropertyChanged
     {
         private static Scene currentScene;
 
@@ -513,12 +544,39 @@ namespace CruPhysics
         private TimeSpan runningTime = TimeSpan.Zero;
         private bool hasBegun = false;
 
+        private PropertyChangedEventHandler propertyChanged;
+
+        private void RaisePropertyChangedEvent(string propertyName)
+        {
+            propertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged
+        {
+            add
+            {
+                propertyChanged += value;
+            }
+            remove
+            {
+                propertyChanged -= value;
+            }
+        }
+
         public Scene(MainWindow mainWindow)
         {
             _mainWindow = mainWindow;
             Current = this;
             ScanInterval = TimeSpan.FromMilliseconds(50.0);
             timer.Tick += Run;
+        }
+
+        public List<PhysicalObject> PhysicalObjects
+        {
+            get
+            {
+                return physicalObjects;
+            }
         }
 
         private void Run(object sender, EventArgs e)
@@ -556,14 +614,18 @@ namespace CruPhysics
             }
         }
 
+        //TODO: 此处逻辑等待修改！
         public void Add(PhysicalObject physicalObject)
         {
             physicalObject.RelatedScene = this;
+            RaisePropertyChangedEvent("PhysicalObjects");
+            RelatedMainWindow.ObjectList.GetBindingExpression(ListView.ItemsSourceProperty).UpdateTarget();
         }
 
         public void Remove(PhysicalObject physicalObject)
         {
             physicalObject.RelatedScene = null;
+            RaisePropertyChangedEvent("PhysicalObjects");
         }
 
         public double Bounds

@@ -43,7 +43,7 @@ namespace CruPhysics
 
             if (string.IsNullOrEmpty(errorInfo))
             {
-                RelatedElectricField.Name = nameTextBox.Text;
+                RelatedElectricField.Name = name;
                 RelatedElectricField.SetShape(shape);
                 RelatedElectricField.Intensity = new Vector(intensityX, intensityY);
 

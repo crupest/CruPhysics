@@ -8,7 +8,7 @@ using System.ComponentModel;
 
 namespace CruPhysics
 {
-    internal class MainViewModel : INotifyPropertyChanged
+    public class MainViewModel : INotifyPropertyChanged
     {
         private MainWindow window;
         private Scene scene;

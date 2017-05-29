@@ -52,6 +52,7 @@ namespace CruPhysics
 
             if (string.IsNullOrEmpty(errorInfo))
             {
+                RelatedMovingObject.Name = name;
                 RelatedMovingObject.Position = new Point(positionX, positionY);
                 RelatedMovingObject.Radius = radius;
                 RelatedMovingObject.Velocity = new Vector(velocityX, velocityY);

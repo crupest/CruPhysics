@@ -44,7 +44,7 @@ namespace CruPhysics
             Focus();
         }
 
-        internal MainViewModel ViewModel
+        public MainViewModel ViewModel
         {
             get
             {

@@ -19,7 +19,8 @@
     </Window.CommandBindings>
 
     <DockPanel LastChildFill="True">
-        <Menu DockPanel.Dock="Top">
+        <Menu DockPanel.Dock="Top"
+              Background="Gray">
             <MenuItem Header="文件(_F)">
                 <MenuItem Command="ApplicationCommands.New"/>
             </MenuItem>
@@ -41,22 +42,38 @@
             </MenuItem>
         </Menu>
 
-        <Canvas Name="MainCanvas"
-                ClipToBounds="True"
-                Background="Transparent"
-                SizeChanged="MainCanvas_SizeChanged"
-                MouseDown="MainCanvas_MouseDown">
-            <Canvas.ContextMenu>
-                <ContextMenu>
-                    <MenuItem Header="添加(_A)">
-                        <MenuItem Command="local:MainWindow.NewMovingObject"/>
-                        <MenuItem Command="local:MainWindow.NewElectricField"/>
-                        <MenuItem Command="local:MainWindow.NewMagneticField"/>
-                    </MenuItem>
-                </ContextMenu>
-            </Canvas.ContextMenu>
-            <Canvas Name="WorldCanvas"/>
-            <TextBlock Name="TimeTextBox" Canvas.Right="20" Canvas.Top="10" Visibility="Collapsed">00:00.00</TextBlock>
-        </Canvas>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Canvas Grid.Column="0"
+                    Name="MainCanvas" ClipToBounds="True" Background="Transparent"
+                    SizeChanged="MainCanvas_SizeChanged" MouseDown="MainCanvas_MouseDown">
+                <Canvas.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="添加(_A)">
+                            <MenuItem Command="local:MainWindow.NewMovingObject"/>
+                            <MenuItem Command="local:MainWindow.NewElectricField"/>
+                            <MenuItem Command="local:MainWindow.NewMagneticField"/>
+                        </MenuItem>
+                    </ContextMenu>
+                </Canvas.ContextMenu>
+                <Canvas Name="WorldCanvas"/>
+                <TextBlock Name="TimeTextBox" Canvas.Right="20" Canvas.Top="10" Visibility="Collapsed">00:00.00</TextBlock>
+            </Canvas>
+            <GridSplitter Grid.Column="1"
+                          Width="3" Background="DarkCyan" HorizontalAlignment="Center" VerticalAlignment="Stretch"/>
+            <ListView Grid.Column="2"
+                      Name="ObjectList"  BorderThickness="0"
+                      ItemsSource="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Path=ViewModel.Scene.PhysicalObjects}">
+                <ListView.ItemTemplate>
+                    <DataTemplate DataType="{x:Type local:PhysicalObject}">
+                        <TextBox Text="{Binding Path=Name, Mode=TwoWay}"/>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </Grid>
     </DockPanel>
 </Window>
