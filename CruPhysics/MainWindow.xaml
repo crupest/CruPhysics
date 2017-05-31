@@ -8,23 +8,36 @@
         Title="CruPhysics" Height="350" Width="525">
 
     <Window.Resources>
+        <Style x:Key="AutoBorder" TargetType="TextBox">
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Cursor" Value="Arrow"/>
+            <Style.Triggers>
+                <Trigger Property="IsFocused" Value="True">
+                    <Setter Property="BorderThickness" Value="1"/>
+                    <Setter Property="Background" Value="White"/>
+                    <Setter Property="Cursor" Value="IBeam"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        
         <local:ObjectListItemTemplateSelector x:Key="objectListItemTemplateSelector"/>
         <DataTemplate x:Key="movingObjectDataTemplate"
                       DataType="{x:Type local:MovingObject}">
             <StackPanel>
-                <TextBlock Text="{Binding Path=Name}"/>
+                <TextBox Style="{StaticResource ResourceKey=AutoBorder}" Text="{Binding Path=Name}"/>
             </StackPanel>
         </DataTemplate>
         <DataTemplate x:Key="electricFieldDataTemplate"
                       DataType="{x:Type local:ElectricField}">
             <StackPanel>
-                <TextBlock Text="{Binding Path=Name}"/>
+                <TextBox Style="{StaticResource ResourceKey=AutoBorder}" Text="{Binding Path=Name}"/>
             </StackPanel>
         </DataTemplate>
         <DataTemplate x:Key="magneticFieldDataTemplate"
                       DataType="{x:Type local:MagneticField}">
             <StackPanel>
-                <TextBlock Text="{Binding Path=Name}"/>
+                <TextBox Style="{StaticResource ResourceKey=AutoBorder}" Text="{Binding Path=Name}"/>
             </StackPanel>
         </DataTemplate>
     </Window.Resources>
