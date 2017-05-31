@@ -41,7 +41,7 @@ namespace CruPhysics
             }
         }
 
-        private void RaisePropertyChangedEvent(string propertyName)
+        internal void RaisePropertyChangedEvent(string propertyName)
         {
             propertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }

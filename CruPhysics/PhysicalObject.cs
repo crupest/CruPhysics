@@ -64,34 +64,6 @@ namespace CruPhysics
 
     public abstract class PhysicalObject : INotifyPropertyChanged
     {
-        private static PhysicalObject selectedObject = null;
-        private static SelectionBox selectionBox = null;
-
-        public static PhysicalObject SelectedObject
-        {
-            get
-            {
-                return selectedObject;
-            }
-            set
-            {
-                if (selectedObject == value)
-                    return;
-
-                if (selectedObject != null)
-                {
-                    selectedObject.SetShowState(SelectionState.normal);
-                    selectionBox.Delete();
-                }
-                selectedObject = value;
-                if (value != null)
-                {
-                    value.SetShowState(SelectionState.select);
-                    selectionBox = selectedObject.Shape.CreateSelectionBox();
-                }
-            }
-        }
-
         private string name;
 
         public PhysicalObject()
@@ -189,9 +161,22 @@ namespace CruPhysics
         private static readonly Brush hover_stroke  = Brushes.Red;
         private static readonly Brush select_stroke = Brushes.Blue;
         
-        private SelectionState GetSelectionState()
+        public bool IsSelected
         {
-            if (SelectedObject == this)
+            get
+            {
+                if (RelatedScene == null)
+                    return false;
+                return RelatedScene.SelectedObject == this; 
+            }
+        }
+
+        public SelectionState GetSelectionState()
+        {
+            if (RelatedScene == null)
+                return SelectionState.normal;
+
+            if (RelatedScene.SelectedObject == this)
                 return SelectionState.select;
             else if (Shape.Raw.IsMouseDirectlyOver == true)
                 return SelectionState.hover;
@@ -199,7 +184,7 @@ namespace CruPhysics
                 return SelectionState.normal;
         }
 
-        protected virtual void SetShowState(SelectionState selectionState)
+        internal void SetShowState(SelectionState selectionState)
         {
             switch (selectionState)
             {
@@ -232,8 +217,8 @@ namespace CruPhysics
 
         protected virtual void RemoveFromScene(Scene scene)
         {
-            if (SelectedObject == this)
-                SelectedObject = null;
+            if (IsSelected)
+                RelatedScene.SelectedObject = null;
 
             Shape.Canvas = null;
             scene.physicalObjects.Remove(this);
@@ -241,7 +226,7 @@ namespace CruPhysics
 
         private void PhysicalObject_OnMouseEnter(object sender, ShapeMouseEventArgs args)
         {
-            if (SelectedObject == this)
+            if (IsSelected)
                 return;
             SetShowState(SelectionState.hover);
         }
@@ -249,7 +234,7 @@ namespace CruPhysics
 
         private void PhysicalObject_OnMouseLeave(object sender, ShapeMouseEventArgs args)
         {
-            if (SelectedObject == this)
+            if (IsSelected)
                 return;
             SetShowState(SelectionState.normal);
         }
@@ -257,7 +242,7 @@ namespace CruPhysics
 
         private void PhysicalObject_OnMouseDown(object sender, ShapeMouseEventArgs args)
         {
-            SelectedObject = this;
+            RelatedScene.SelectedObject = this;
             args.Raw.Handled = true;
         }
     }
@@ -551,6 +536,37 @@ namespace CruPhysics
         private DispatcherTimer timer = new DispatcherTimer(DispatcherPriority.Normal);
         private TimeSpan runningTime = TimeSpan.Zero;
         private bool hasBegun = false;
+
+
+        private PhysicalObject selectedObject = null;
+        private SelectionBox selectionBox = null;
+
+        public PhysicalObject SelectedObject
+        {
+            get
+            {
+                return selectedObject;
+            }
+            set
+            {
+                if (selectedObject == value)
+                    return;
+
+                if (selectedObject != null)
+                {
+                    selectedObject.SetShowState(SelectionState.normal);
+                    selectionBox.Delete();
+                }
+                selectedObject = value;
+                if (value != null)
+                {
+                    value.SetShowState(SelectionState.select);
+                    selectionBox = selectedObject.Shape.CreateSelectionBox();
+                }
+
+                RaisePropertyChangedEvent("SelectedObject");
+            }
+        }
 
         public Scene(MainWindow mainWindow)
         {

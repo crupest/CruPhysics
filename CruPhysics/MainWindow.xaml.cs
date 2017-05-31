@@ -41,7 +41,7 @@ namespace CruPhysics
 
             coordinateSystem = new CoordinateSystem(this);
 
-            Focus();
+            ObjectList.Focus();
         }
 
         public MainViewModel ViewModel
@@ -72,17 +72,17 @@ namespace CruPhysics
 
         private void Property_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            PhysicalObject.SelectedObject.CreatePropertyWindow().ShowDialog();
+            ViewModel.Scene.SelectedObject.CreatePropertyWindow().ShowDialog();
         }
 
         private void Delete_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            viewModel.Scene.Remove(PhysicalObject.SelectedObject);
+            viewModel.Scene.Remove(ViewModel.Scene.SelectedObject);
         }
 
         private void CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = PhysicalObject.SelectedObject != null;
+            e.CanExecute = ViewModel.Scene.SelectedObject != null;
         }
 
         private void Begin_Executed(object sender, ExecutedRoutedEventArgs e)
@@ -123,7 +123,7 @@ namespace CruPhysics
 
         private void MainCanvas_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            PhysicalObject.SelectedObject = null;
+            ViewModel.Scene.SelectedObject = null;
         }
     }
 

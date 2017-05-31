@@ -90,7 +90,8 @@
             <ListView Grid.Column="2"
                       Name="ObjectList"  BorderThickness="0"
                       ItemsSource="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Path=ViewModel.Scene.PhysicalObjects}"
-                      ItemTemplateSelector="{StaticResource ResourceKey=objectListItemTemplateSelector}"/>
+                      ItemTemplateSelector="{StaticResource ResourceKey=objectListItemTemplateSelector}"
+                      SelectedItem="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Path=ViewModel.Scene.SelectedObject, Mode=TwoWay}"/>
         </Grid>
     </DockPanel>
 </Window>
