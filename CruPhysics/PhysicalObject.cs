@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
-using System.ComponentModel;
 
 using CruPhysics.Shapes;
 
@@ -273,6 +270,7 @@ namespace CruPhysics
 
         public MovingObject()
         {
+            Name = "运动对象";
             PrepareShape();
             Mass = 1.0;
         }
@@ -391,7 +389,7 @@ namespace CruPhysics
     {
         private Shape _shape = new Rectangle(); 
 
-        public Field()
+        protected Field()
         {
             _shape.AutoUpdate = true;
             PrepareShape();
@@ -451,6 +449,11 @@ namespace CruPhysics
 
         private static readonly Brush fillBrush;
 
+        public ElectricField()
+        {
+            Name = "电场";
+        }
+
         public Vector Intensity { get; set; }
 
         public override Brush FillBrush
@@ -486,6 +489,11 @@ namespace CruPhysics
         }
 
         private static readonly Brush fillBrush;
+
+        public MagneticField()
+        {
+            Name = "磁场";
+        }
 
         /// <summary>
         /// 为正时垂直纸面向里，为负时垂直于纸面向外
@@ -536,13 +544,21 @@ namespace CruPhysics
 
         private readonly MainWindow _mainWindow;
 
-        internal List<PhysicalObject>    physicalObjects = new List<PhysicalObject>();
-        internal List<MovingObject>      movingObjects = new List<MovingObject>();
-        internal List<Field>             fields = new List<Field>();
+        internal ObservableCollection<PhysicalObject> physicalObjects = new ObservableCollection<PhysicalObject>();
+        internal ObservableCollection<MovingObject> movingObjects = new ObservableCollection<MovingObject>();
+        internal ObservableCollection<Field> fields = new ObservableCollection<Field>();
 
         private DispatcherTimer timer = new DispatcherTimer(DispatcherPriority.Normal);
         private TimeSpan runningTime = TimeSpan.Zero;
         private bool hasBegun = false;
+
+        public Scene(MainWindow mainWindow)
+        {
+            _mainWindow = mainWindow;
+            Current = this;
+            ScanInterval = TimeSpan.FromMilliseconds(50.0);
+            timer.Tick += Run;
+        }
 
         private PropertyChangedEventHandler propertyChanged;
 
@@ -563,15 +579,7 @@ namespace CruPhysics
             }
         }
 
-        public Scene(MainWindow mainWindow)
-        {
-            _mainWindow = mainWindow;
-            Current = this;
-            ScanInterval = TimeSpan.FromMilliseconds(50.0);
-            timer.Tick += Run;
-        }
-
-        public List<PhysicalObject> PhysicalObjects
+        public ObservableCollection<PhysicalObject> PhysicalObjects
         {
             get
             {
@@ -614,18 +622,14 @@ namespace CruPhysics
             }
         }
 
-        //TODO: 此处逻辑等待修改！
         public void Add(PhysicalObject physicalObject)
         {
             physicalObject.RelatedScene = this;
-            RaisePropertyChangedEvent("PhysicalObjects");
-            RelatedMainWindow.ObjectList.GetBindingExpression(ListView.ItemsSourceProperty).UpdateTarget();
         }
 
         public void Remove(PhysicalObject physicalObject)
         {
             physicalObject.RelatedScene = null;
-            RaisePropertyChangedEvent("PhysicalObjects");
         }
 
         public double Bounds
