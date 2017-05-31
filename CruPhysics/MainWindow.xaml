@@ -7,6 +7,28 @@
         mc:Ignorable="d"
         Title="CruPhysics" Height="350" Width="525">
 
+    <Window.Resources>
+        <local:ObjectListItemTemplateSelector x:Key="objectListItemTemplateSelector"/>
+        <DataTemplate x:Key="movingObjectDataTemplate"
+                      DataType="{x:Type local:MovingObject}">
+            <StackPanel>
+                <TextBlock Text="{Binding Path=Name}"/>
+            </StackPanel>
+        </DataTemplate>
+        <DataTemplate x:Key="electricFieldDataTemplate"
+                      DataType="{x:Type local:ElectricField}">
+            <StackPanel>
+                <TextBlock Text="{Binding Path=Name}"/>
+            </StackPanel>
+        </DataTemplate>
+        <DataTemplate x:Key="magneticFieldDataTemplate"
+                      DataType="{x:Type local:MagneticField}">
+            <StackPanel>
+                <TextBlock Text="{Binding Path=Name}"/>
+            </StackPanel>
+        </DataTemplate>
+    </Window.Resources>
+
     <Window.CommandBindings>
         <CommandBinding Command="local:MainWindow.NewMovingObject"  Executed="NewMovingObject_Executed" />
         <CommandBinding Command="local:MainWindow.NewElectricField" Executed="NewElectricField_Executed"/>
@@ -64,16 +86,11 @@
                 <TextBlock Name="TimeTextBox" Canvas.Right="20" Canvas.Top="10" Visibility="Collapsed">00:00.00</TextBlock>
             </Canvas>
             <GridSplitter Grid.Column="1"
-                          Width="3" Background="DarkCyan" HorizontalAlignment="Center" VerticalAlignment="Stretch"/>
+                          Width="3" HorizontalAlignment="Center" VerticalAlignment="Stretch" Background="#FF008B13"/>
             <ListView Grid.Column="2"
                       Name="ObjectList"  BorderThickness="0"
-                      ItemsSource="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Path=ViewModel.Scene.PhysicalObjects}">
-                <ListView.ItemTemplate>
-                    <DataTemplate DataType="{x:Type local:PhysicalObject}">
-                        <TextBox Text="{Binding Path=Name, Mode=TwoWay}"/>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
+                      ItemsSource="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Path=ViewModel.Scene.PhysicalObjects}"
+                      ItemTemplateSelector="{StaticResource ResourceKey=objectListItemTemplateSelector}"/>
         </Grid>
     </DockPanel>
 </Window>

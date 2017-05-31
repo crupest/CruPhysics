@@ -216,4 +216,27 @@ namespace CruPhysics
         private List<TextBlock> _axisXScale = new List<TextBlock>();
         private List<TextBlock> _axisYScale = new List<TextBlock>();
     }
+
+    public class ObjectListItemTemplateSelector : DataTemplateSelector
+    {
+        public override DataTemplate SelectTemplate(object item, DependencyObject container)
+        {
+            Func<string, DataTemplate> findResource = (key) => (container as FrameworkElement).FindResource(key) as DataTemplate;
+
+            if (item is MovingObject)
+            {
+                return findResource("movingObjectDataTemplate");
+            }
+            else if (item is ElectricField)
+            {
+                return findResource("electricFieldDataTemplate");
+            }
+            else if (item is MagneticField)
+            {
+                return findResource("magneticFieldDataTemplate");
+            }
+
+            return base.SelectTemplate(item, container);
+        }
+    }
 }
