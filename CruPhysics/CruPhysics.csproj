@@ -56,6 +56,9 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Common.cs" />
+    <Compile Include="Controls\ObjectPropertyBox.xaml.cs">
+      <DependentUpon>ObjectPropertyBox.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ElectricFieldPropertyDialog.xaml.cs">
       <DependentUpon>ElectricFieldPropertyDialog.xaml</DependentUpon>
     </Compile>
@@ -71,6 +74,10 @@
     <Compile Include="ShapePropertyControl.xaml.cs">
       <DependentUpon>ShapePropertyControl.xaml</DependentUpon>
     </Compile>
+    <Page Include="Controls\ObjectPropertyBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="ElectricFieldPropertyDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

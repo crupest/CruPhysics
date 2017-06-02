@@ -4,28 +4,17 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CruPhysics"
+        xmlns:controls="clr-namespace:CruPhysics.Controls"
         mc:Ignorable="d"
         Title="CruPhysics" Height="350" Width="525">
 
     <Window.Resources>
-        <Style x:Key="AutoBorder" TargetType="TextBox">
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="Cursor" Value="Arrow"/>
-            <Style.Triggers>
-                <Trigger Property="IsFocused" Value="True">
-                    <Setter Property="BorderThickness" Value="1"/>
-                    <Setter Property="Background" Value="White"/>
-                    <Setter Property="Cursor" Value="IBeam"/>
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-        
         <local:ObjectListItemTemplateSelector x:Key="objectListItemTemplateSelector"/>
         <DataTemplate x:Key="movingObjectDataTemplate"
                       DataType="{x:Type local:MovingObject}">
             <StackPanel>
                 <TextBox Style="{StaticResource ResourceKey=AutoBorder}" Text="{Binding Path=Name}"/>
+                <controls:ObjectPropertyBox PropertyName="位置x" Value="{Binding Path=Position.X}" Unit="m"/>
             </StackPanel>
         </DataTemplate>
         <DataTemplate x:Key="electricFieldDataTemplate"
