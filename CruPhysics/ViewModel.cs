@@ -8,7 +8,7 @@ using System.ComponentModel;
 
 namespace CruPhysics
 {
-    public class MainViewModel : INotifyPropertyChanged
+    public class MainViewModel : NotifyPropertyChangedObject
     {
         private MainWindow window;
         private Scene scene;
@@ -25,25 +25,6 @@ namespace CruPhysics
             {
                 return window;
             }
-        }
-
-        private PropertyChangedEventHandler propertyChanged;
-
-        public event PropertyChangedEventHandler PropertyChanged
-        {
-            add
-            {
-                propertyChanged += value;
-            }
-            remove
-            {
-                propertyChanged -= value;
-            }
-        }
-
-        internal void RaisePropertyChangedEvent(string propertyName)
-        {
-            propertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         public Scene Scene
