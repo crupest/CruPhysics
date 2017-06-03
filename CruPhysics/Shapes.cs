@@ -9,22 +9,96 @@ using System.Windows.Controls;
 using System.Windows.Shapes;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.ComponentModel;
+using System.Windows.Threading;
 
 namespace CruPhysics.Shapes
 {
+    /// <summary>
+    /// A Point class used for data-binding.
+    /// </summary>
+    public class BindablePoint : NotifyPropertyChangedObject
+    {
+        private double x = 0.0;
+        private double y = 0.0;
+
+        public BindablePoint()
+        {
+
+        }
+
+        public BindablePoint(double x, double y)
+        {
+            this.x = x;
+            this.y = y;
+        }
+
+        public BindablePoint(Point point)
+        {
+            x = point.X;
+            y = point.Y;
+        }
+
+        public double X
+        {
+            get
+            {
+                return x;
+            }
+            set
+            {
+                x = value;
+                RaisePropertyChangedEvent("X");
+            }
+        }
+
+        public double Y
+        {
+            get
+            {
+                return y;
+            }
+            set
+            {
+                y = value;
+                RaisePropertyChangedEvent("Y");
+            }
+        }
+
+        public void Set(Point point)
+        {
+            X = point.X;
+            Y = point.Y;
+        }
+
+        public void Move(Vector vector)
+        {
+            X += vector.X;
+            Y += vector.Y;
+        }
+
+        public static explicit operator Point(BindablePoint point)
+        {
+            return new Point(point.x, point.y);
+        }
+
+        public static explicit operator BindablePoint(Point point)
+        {
+            return new BindablePoint(point);
+        }
+    }
+
     public class ShapeMouseEventArgs : EventArgs
     {
-        private Shape shape;
+        private CruShape shape;
         private MouseEventArgs origin;
 
-        public ShapeMouseEventArgs(Shape shape, MouseEventArgs origin)
+        public ShapeMouseEventArgs(CruShape shape, MouseEventArgs origin)
         {
             this.shape = shape;
             this.origin = origin;
         }
 
-        public Shape Shape
+        public CruShape Shape
         {
             get
             {
@@ -53,19 +127,20 @@ namespace CruPhysics.Shapes
     public delegate void ShapeMouseEventHandler(object sender, ShapeMouseEventArgs e);
 
     /// <summary>
-    /// Represents a shape in a canvas.
-    /// It preserves an internal shape object with cache of properties and provides some useful methods.
+    /// <para>Represents a shape in a canvas.</para>
+    /// <para>It preserves an internal shape object with cache of properties and provides some useful methods.</para>
+    /// <para>Data binding should be bound through <see cref="Raw"/>.</para>
     /// </summary>
-    public abstract class Shape : NotifyPropertyChangedObject
+    public abstract class CruShape : NotifyPropertyChangedObject
     {
-        private bool _autoUpdate = false;
+        private DispatcherOperation updateOperation;
 
-        protected Shape()
+        protected CruShape()
         {
 
         }
 
-        protected void Initialize(System.Windows.Shapes.Shape shape)
+        protected void Initialize(Shape shape)
         {
             shape.MouseDown += (sender, e) => this.mouseDown?.Invoke(this, new ShapeMouseEventArgs(this, e));
             shape.MouseUp += (sender, e) => this.mouseUp?.Invoke(this, new ShapeMouseEventArgs(this, e));
@@ -74,25 +149,29 @@ namespace CruPhysics.Shapes
             shape.MouseMove += (sender, e) => this.mouseMove?.Invoke(this, new ShapeMouseEventArgs(this, e));
         }
 
-        public virtual void Update()
+        protected abstract void DoUpdate();
+
+        public void Update()
         {
-            updated?.Invoke(this, EventArgs.Empty);
+            if (updateOperation != null)
+                updateOperation.Abort();
+            updateOperation = Raw.Dispatcher.BeginInvoke(DispatcherPriority.DataBind, new Action(DoUpdate));
         }
 
-        protected void TryUpdate()
+        public void ForceUpdate()
         {
-            if (AutoUpdate)
-                Update();
+            DoUpdate();
         }
 
         public abstract void Move(Vector vector);
         public abstract bool IsPointInside(Point point);
-        public abstract System.Windows.Shapes.Shape GetRawShape();
+        public abstract Shape GetRawShape();
+
         internal abstract void ShowProperty(ShapePropertyControl shapePropertyControl);
 
         public abstract SelectionBox CreateSelectionBox();
 
-        public System.Windows.Shapes.Shape Raw
+        public Shape Raw
         {
             get
             {
@@ -119,18 +198,7 @@ namespace CruPhysics.Shapes
                     value.Children.Add(GetRawShape());
             }
         }
-
-        public bool AutoUpdate
-        {
-            get
-            {
-                return _autoUpdate;
-            }
-            set
-            {
-                _autoUpdate = value;
-            }
-        }
+        
 
         public delegate void ShapeUpdatedHandler(object sender, EventArgs e);
         private ShapeUpdatedHandler updated;
@@ -304,47 +372,39 @@ namespace CruPhysics.Shapes
         }
     }
 
-    public sealed class Line : Shape
+    public sealed class CruLine : CruShape
     {
-        private System.Windows.Shapes.Line shape = new System.Windows.Shapes.Line();
-        private Point point1 = new Point();
-        private Point point2 = new Point();
+        private Line shape = new Line();
+        private BindablePoint point1 = new BindablePoint();
+        private BindablePoint point2 = new BindablePoint();
 
-        public Line()
+        public CruLine()
         {
             Initialize(shape);
+
+            point1.PropertyChanged += (sender, args) => Update();
+            point2.PropertyChanged += (sender, args) => Update();
+
             Update();
         }
 
-        public Point Point1
+        public BindablePoint Point1
         {
             get
             {
                 return point1;
             }
-
-            set
-            {
-                point1 = value;
-                TryUpdate();
-            }
         }
 
-        public Point Point2
+        public BindablePoint Point2
         {
             get
             {
                 return point2;
             }
-
-            set
-            {
-                point2 = value;
-                TryUpdate();
-            }
         }
 
-        public override System.Windows.Shapes.Shape GetRawShape()
+        public override Shape GetRawShape()
         {
             return shape;
         }
@@ -354,13 +414,12 @@ namespace CruPhysics.Shapes
             throw new NotImplementedException();
         }
 
-        public override void Update()
+        protected override void DoUpdate()
         {
             shape.X1 = point1.X;
             shape.Y1 = -point1.Y;
             shape.X2 = point2.X;
             shape.Y2 = -point2.Y;
-            base.Update();
         }
 
         public override bool IsPointInside(Point point)
@@ -371,17 +430,14 @@ namespace CruPhysics.Shapes
 
         public override void Move(Vector vector)
         {
-            point1 += vector;
-            point2 += vector;
-            TryUpdate();
+            point1.Move(vector);
+            point2.Move(vector);
         }
 
-        public void Set(Point point1, Point point2, bool update = true)
+        public void Set(Point point1, Point point2)
         {
-            this.point1 = point1;
-            this.point2 = point2;
-            if (update)
-                Update();
+            this.point1.Set(point1);
+            this.point2.Set(point2);
         }
 
         internal override void ShowProperty(ShapePropertyControl shapePropertyControl)
@@ -390,19 +446,22 @@ namespace CruPhysics.Shapes
         }
     }
 
-    public sealed class Circle : Shape
+    public sealed class Circle : CruShape
     {
         private Ellipse _shape = new Ellipse();
-        private Point _center = new Point();
+        private BindablePoint _center = new BindablePoint();
         private double _radius = 10.0;
 
         public Circle()
         {
             Initialize(_shape);
+
+            _center.PropertyChanged += (sender, args) => Update();
+
             Update();
         }
 
-        public override System.Windows.Shapes.Shape GetRawShape()
+        public override Shape GetRawShape()
         {
             return _shape;
         }
@@ -412,13 +471,12 @@ namespace CruPhysics.Shapes
             return new CircleSelectionBox(this);
         }
         
-        public override void Update()
+        protected override void DoUpdate()
         {
             _shape.Width = _radius * 2.0;
             _shape.Height = _radius * 2.0;
             Canvas.SetLeft(_shape, _center.X - _radius);
             Canvas.SetTop(_shape, -_center.Y - _radius);
-            base.Update();
         }
 
         internal override void ShowProperty(ShapePropertyControl shapePropertyControl)
@@ -431,16 +489,11 @@ namespace CruPhysics.Shapes
         }
 
 
-        public Point Center
+        public BindablePoint Center
         {
             get
             {
                 return _center;
-            }
-            set
-            {
-                _center = value;
-                TryUpdate();
             }
         }
 
@@ -457,24 +510,22 @@ namespace CruPhysics.Shapes
                         ("Radius", value, "Radius can't be smaller than 0.");
 
                 _radius = value;
-                TryUpdate();
+                Update();
             }
         }
         
         public override void Move(Vector vector)
         {
-            Center += vector;
+            Center.Move(vector);
         }
 
-        public void Set(Point center, double radius, bool update = true)
+        public void Set(Point center, double radius)
         {
             if (radius < 0.0)
                 throw new ArgumentOutOfRangeException("radius", "Radius can't be below 0.");
 
-            this._center = center;
-            this._radius = radius;
-            if (update)
-                Update();
+            _center.Set(center);
+            _radius = radius;
         }
 
         public override bool IsPointInside(Point point)
@@ -485,7 +536,7 @@ namespace CruPhysics.Shapes
         }
     }
 
-    public sealed class Rectangle : Shape
+    public sealed class Rectangle : CruShape
     {
         private System.Windows.Shapes.Rectangle _shape = new System.Windows.Shapes.Rectangle();
         private double _left = -50.0;
@@ -504,13 +555,12 @@ namespace CruPhysics.Shapes
             return new RectangleSelectionBox(this);
         }
 
-        public override void Update()
+        protected override void DoUpdate()
         {
             _shape.Width = _right - _left;
             _shape.Height = _top - _bottom;
             Canvas.SetLeft(_shape, _left);
             Canvas.SetTop(_shape, -_top);
-            base.Update();
         }
 
         internal override void ShowProperty(ShapePropertyControl shapePropertyControl)
@@ -523,7 +573,7 @@ namespace CruPhysics.Shapes
             shapePropertyControl.bottomTextBox.Text = Bottom.ToString();
         }
 
-        public override System.Windows.Shapes.Shape GetRawShape()
+        public override Shape GetRawShape()
         {
             return _shape;
         }
@@ -534,7 +584,6 @@ namespace CruPhysics.Shapes
             {
                 return new Point((Left + Right) / 2.0, (Top + Bottom) / 2.0);
             }
-
             set
             {
                 var halfWidth = Width / 2.0;
@@ -543,7 +592,7 @@ namespace CruPhysics.Shapes
                 _top = value.Y + halfHeight;
                 _right = value.X + halfWidth;
                 _bottom = value.Y - halfHeight;
-                TryUpdate();
+                Update();
             }
         }
 
@@ -575,7 +624,7 @@ namespace CruPhysics.Shapes
                     throw new ArgumentOutOfRangeException
                         ("Left", value, "Left can't be bigger than Right.");
                 _left = value;
-                TryUpdate();
+                Update();
             }
         }
 
@@ -591,7 +640,7 @@ namespace CruPhysics.Shapes
                     throw new ArgumentOutOfRangeException
                         ("Top", value, "Top can't be smaller than Bottom.");
                 _top = value;
-                TryUpdate();
+                Update();
             }
         }
 
@@ -607,7 +656,7 @@ namespace CruPhysics.Shapes
                     throw new ArgumentOutOfRangeException
                         ("Right", value, "Right can't be smaller than Left.");
                 _right = value;
-                TryUpdate();
+                Update();
             }
         }
 
@@ -623,7 +672,7 @@ namespace CruPhysics.Shapes
                     throw new ArgumentOutOfRangeException
                         ("Bottom", value, "Bottom can't be bigger than Top.");
                 _bottom = value;
-                TryUpdate();
+                Update();
             }
         }
 
@@ -659,17 +708,16 @@ namespace CruPhysics.Shapes
             }
         }
 
-        public void Set(double left, double top, double right, double bottom, bool update = true)
+        public void Set(double left, double top, double right, double bottom)
         {
             if (left > right || bottom > top)
                 throw new ArgumentException();
 
-            this._left = left;
-            this._top = top;
-            this._right = right;
-            this._bottom = bottom;
-            if (update)
-                Update();
+            _left = left;
+            _top = top;
+            _right = right;
+            _bottom = bottom;
+            Update();
         }
 
         public override void Move(Vector vector)
@@ -679,7 +727,7 @@ namespace CruPhysics.Shapes
             _top += vector.Y;
             _bottom += vector.Y;
 
-            TryUpdate();
+            Update();
         }
 
         public override bool IsPointInside(Point point)

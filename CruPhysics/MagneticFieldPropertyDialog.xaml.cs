@@ -45,8 +45,6 @@ namespace CruPhysics
                 RelatedMagneticField.SetShape(shape);
                 RelatedMagneticField.FluxDensity = fluxDensity;
 
-                RelatedMagneticField.Update();
-
                 Close();
             }
             else

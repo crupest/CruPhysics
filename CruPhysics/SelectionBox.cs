@@ -45,7 +45,6 @@ namespace CruPhysics
             {
                 shape = new Circle()
                 {
-                    AutoUpdate = true,
                     Radius = radius,
                     Stroke = Brushes.Black,
                     Fill = Brushes.White,
@@ -68,12 +67,11 @@ namespace CruPhysics
             {
                 get
                 {
-                    return shape.Center;
+                    return (Point)shape.Center;
                 }
-
                 set
                 {
-                    shape.Center = value;
+                    shape.Center.Set(value);
                 }
             }
 
@@ -118,7 +116,7 @@ namespace CruPhysics
             private void OnMouseDown(object sender, ShapeMouseEventArgs args)
             {
                 Mouse.Capture(shape.Raw);
-                cursorDelta = args.Position - shape.Center;
+                cursorDelta = args.Position - Position;
                 args.Raw.Handled = true;
             }
 
@@ -132,25 +130,21 @@ namespace CruPhysics
             {
                 if (shape.Raw.IsMouseCaptured)
                 {
-                    var newCenter = args.Position - cursorDelta;
-                    shape.Center = newCenter;
-                    dragged(this, new ControllerDraggedEventArgs(newCenter));
+                    dragged(this, new ControllerDraggedEventArgs(args.Position - cursorDelta));
                 }
             }
         }
 
 
 
-        private Shape selectedShape;
+        private CruShape selectedShape;
 
-        public SelectionBox(Shape shape)
+        public SelectionBox(CruShape shape)
         {
             selectedShape = shape;
-
-            shape.Updated += UpdateView;
         }
 
-        public Shape SelectedShape
+        public CruShape SelectedShape
         {
             get
             {
@@ -158,12 +152,7 @@ namespace CruPhysics
             }
         }
 
-        protected abstract void UpdateView(object sender, EventArgs e);
-
-        public virtual void Delete()
-        {
-            selectedShape.Updated -= UpdateView;
-        }
+        public abstract void Delete();
     }
 
 
@@ -178,7 +167,7 @@ namespace CruPhysics
             centerController = new Controller(circle.Canvas, Cursors.SizeAll);
             radiusController = new Controller(circle.Canvas, Cursors.SizeWE);
 
-            UpdateView(this, EventArgs.Empty);
+            UpdateControllerPosition();
 
             centerController.Dragged += CenterController_Dragged;
             radiusController.Dragged += RadiusController_Dragged;
@@ -192,17 +181,17 @@ namespace CruPhysics
             }
         }
 
-        protected override void UpdateView(object sender, EventArgs e)
+        private void UpdateControllerPosition()
         {
-            centerController.Position = SelectedShape.Center;
-            radiusController.Position = SelectedShape.Center +
+            centerController.Position = (Point) SelectedShape.Center;
+            radiusController.Position = (Point) SelectedShape.Center +
                 new Vector(SelectedShape.Radius, 0.0);
         }
 
         private void CenterController_Dragged(object sender, ControllerDraggedEventArgs e)
         {
-            SelectedShape.Center = e.Position;
-            SelectedShape.Update();
+            SelectedShape.Center.Set(e.Position);
+            UpdateControllerPosition();
         }
 
         private void RadiusController_Dragged(object sender, ControllerDraggedEventArgs e)
@@ -211,12 +200,11 @@ namespace CruPhysics
             SelectedShape.Radius =
                 e.Position.X <= center.X ?
                 0.0 : e.Position.X - center.Y;
-            SelectedShape.Update();
+            UpdateControllerPosition();
         }
 
         public override void Delete()
         {
-            base.Delete();
             centerController.Delete();
             radiusController.Delete();
         }
@@ -252,12 +240,7 @@ namespace CruPhysics
             controllers[7].Dragged += BottomController_Dragged;
             controllers[8].Dragged += RightbottomController_Dragged;
 
-            foreach (var i in controllers)
-            {
-                i.Dragged += UpdateAfterDraggedAndSetting;
-            }
-
-            UpdateView(this, EventArgs.Empty);
+            UpdateView();
         }
 
         private void LefttopController_Dragged(object sender, ControllerDraggedEventArgs e)
@@ -308,13 +291,8 @@ namespace CruPhysics
             SelectedShape.Right = Math.Max(SelectedShape.Left, e.Position.X);
             SelectedShape.Bottom = Math.Min(SelectedShape.Top, e.Position.Y);
         }
-
-        private void UpdateAfterDraggedAndSetting(object sender, ControllerDraggedEventArgs e)
-        {
-            SelectedShape.Update();
-        }
-
-        protected override void UpdateView(object sender, EventArgs e)
+        
+        private void UpdateView()
         {
             var rectangle = SelectedShape;
 
@@ -339,7 +317,6 @@ namespace CruPhysics
 
         public override void Delete()
         {
-            base.Delete();
             foreach (var i in controllers)
                 i.Delete();
         }

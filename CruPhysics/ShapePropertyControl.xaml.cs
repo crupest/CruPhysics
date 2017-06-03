@@ -26,13 +26,13 @@ namespace CruPhysics
             InitializeComponent();
         }
 
-        public void ShowProperty(Shape shape)
+        public void ShowProperty(CruShape shape)
         {
             HideAllPane();
             shape.ShowProperty(this);
         }
 
-        public Shape CreateShape(ref string errorInfo)
+        public CruShape CreateShape(ref string errorInfo)
         {
             if (rectangleRadioButton.IsChecked.Value)
             {
@@ -65,11 +65,12 @@ namespace CruPhysics
                 var radius = Common.ParseTextBox(radiusTextBox, x => x > 0.0, ref internalError);
                 errorInfo += internalError;
                 if (string.IsNullOrEmpty(internalError))
-                    return new Circle()
-                    {
-                        Center = new Point(centerX, centerY),
-                        Radius = radius
-                    };
+                {
+                    var circle = new Circle() { Radius = radius };
+                    circle.Center.X = centerX;
+                    circle.Center.Y = centerY;
+                    return circle;
+                }
             }
             return null;
         }

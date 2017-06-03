@@ -53,13 +53,12 @@ namespace CruPhysics
             if (string.IsNullOrEmpty(errorInfo))
             {
                 RelatedMovingObject.Name = name;
-                RelatedMovingObject.Position = new Point(positionX, positionY);
+                RelatedMovingObject.Position.X = positionX;
+                RelatedMovingObject.Position.Y = positionY;
                 RelatedMovingObject.Radius = radius;
                 RelatedMovingObject.Velocity = new Vector(velocityX, velocityY);
                 RelatedMovingObject.Mass = mass;
                 RelatedMovingObject.Charge = charge;
-
-                RelatedMovingObject.Update();
 
                 Close();
             }

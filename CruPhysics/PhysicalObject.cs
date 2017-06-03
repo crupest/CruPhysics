@@ -84,7 +84,7 @@ namespace CruPhysics
             }
         }
 
-        public Shape Shape
+        public CruShape Shape
         {
             get
             {
@@ -93,7 +93,7 @@ namespace CruPhysics
         }
 
 
-        protected abstract Shape GetShape();
+        protected abstract CruShape GetShape();
         public abstract Brush FillBrush { get; }
         public abstract int DefaultZIndex { get; }
 
@@ -126,11 +126,6 @@ namespace CruPhysics
                 if (value != null)
                     AddToScene(value);
             }
-        }
-
-        public void Update()
-        {
-            Shape.Update();
         }
 
         public void Move(Vector vector)
@@ -238,10 +233,17 @@ namespace CruPhysics
         {
             Name = "运动对象";
             PrepareShape();
+
+            _shape.PropertyChanged += (sender, args) =>
+            {
+                if (args.PropertyName == "Radius")
+                    RaisePropertyChangedEvent("Radius");
+            };
+
             Mass = 1.0;
         }
 
-        protected override Shape GetShape()
+        protected override CruShape GetShape()
         {
             return _shape;
         }
@@ -262,15 +264,11 @@ namespace CruPhysics
             }
         }
 
-        public Point Position
+        public BindablePoint Position
         {
             get
             {
                 return _shape.Center;
-            }
-            set
-            {
-                _shape.Center = value;
             }
         }
 
@@ -324,13 +322,13 @@ namespace CruPhysics
 
         public void StoreProperty()
         {
-            _originalPosition = Position;
+            _originalPosition = (Point)Position;
             _originalVelocity = Velocity;
         }
 
         public void RecoverProperty()
         {
-            Position = _originalPosition;
+            Position.Set(_originalPosition);
             Velocity = _originalVelocity;
         }
 
@@ -344,7 +342,7 @@ namespace CruPhysics
                 force.Y += i.Y;
             }
             var acceleration = force / Mass;
-            Position += Velocity * t + acceleration * Math.Pow(t, 2) / 2.0;
+            Move(Velocity * t + acceleration * Math.Pow(t, 2) / 2.0);
             Velocity += acceleration * t;
         }
     }
@@ -353,30 +351,28 @@ namespace CruPhysics
 
     public abstract class Field : PhysicalObject
     {
-        private Shape _shape = new Rectangle(); 
+        private CruShape _shape = new Rectangle(); 
 
         protected Field()
         {
-            _shape.AutoUpdate = true;
             PrepareShape();
         }
 
-        public void SetShape(Shape shape)
+        public void SetShape(CruShape shape)
         {
             _shape.Canvas = null;
             _shape = shape;
-            shape.AutoUpdate = true;
             PrepareShape();
         }
 
-        protected override Shape GetShape()
+        protected override CruShape GetShape()
         {
             return _shape;
         }
 
         public void Influence(MovingObject movingObject, TimeSpan time)
         {
-            if (Shape.IsPointInside(movingObject.Position))
+            if (Shape.IsPointInside((Point)movingObject.Position))
                 CalculateEffect(movingObject, time);
         }
 
@@ -579,9 +575,6 @@ namespace CruPhysics
                     i.Run(calculationInterval);
                     i.ClearForce();
                 }
-
-            foreach (var i in movingObjects)
-                i.Update();
         }
 
         public MainWindow RelatedMainWindow
@@ -673,7 +666,6 @@ namespace CruPhysics
             foreach (var item in movingObjects)
             {
                 item.RecoverProperty();
-                item.Update();
             }
             runningTime = TimeSpan.Zero;
             RelatedMainWindow.TimeTextBox.Visibility = Visibility.Collapsed;

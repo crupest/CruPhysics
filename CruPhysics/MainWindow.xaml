@@ -14,7 +14,7 @@
                       DataType="{x:Type local:MovingObject}">
             <StackPanel>
                 <TextBox Style="{StaticResource ResourceKey=AutoBorder}" Text="{Binding Path=Name}"/>
-                <controls:ObjectPropertyBox PropertyName="位置x" Value="{Binding Path=Position.X}" Unit="m"/>
+                <controls:ObjectPropertyBox PropertyName="位置x" Value="{Binding Path=Position.X, Mode=TwoWay}" Unit="m"/>
             </StackPanel>
         </DataTemplate>
         <DataTemplate x:Key="electricFieldDataTemplate"
