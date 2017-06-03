@@ -50,7 +50,7 @@ namespace CruPhysics
                     Stroke = Brushes.Black,
                     Fill = Brushes.White,
                     Canvas = canvas,
-                    ZIndex = PhysicalObjectZIndex.controller
+                    ZIndex = PhysicalObjectZIndex.Controller
                 };
 
                 shape.MouseDown += OnMouseDown;

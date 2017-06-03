@@ -56,10 +56,10 @@ namespace CruPhysics
 
     public static class PhysicalObjectZIndex
     {
-        public const int selected = 100;
-        public const int controller = 101;
-        public const int movingObject = 2;
-        public const int field = 1;
+        public const int Selected = 100;
+        public const int Controller = 101;
+        public const int MovingObject = 2;
+        public const int Field = 1;
     }
 
     public abstract class PhysicalObject : INotifyPropertyChanged
@@ -201,7 +201,7 @@ namespace CruPhysics
                 case SelectionState.select:
                     Shape.Stroke = select_stroke;
                     Shape.StrokeThickness = 2.0;
-                    Shape.ZIndex = PhysicalObjectZIndex.selected;
+                    Shape.ZIndex = PhysicalObjectZIndex.Selected;
                     break;
             }
         }
@@ -277,7 +277,7 @@ namespace CruPhysics
         {
             get
             {
-                return PhysicalObjectZIndex.movingObject;
+                return PhysicalObjectZIndex.MovingObject;
             }
         }
 
@@ -403,7 +403,7 @@ namespace CruPhysics
         {
             get
             {
-                return PhysicalObjectZIndex.field;
+                return PhysicalObjectZIndex.Field;
             }
         }
 
