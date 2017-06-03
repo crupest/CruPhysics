@@ -7,9 +7,32 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Input;
+using System.ComponentModel;
 
 namespace CruPhysics
 {
+    public class NotifyPropertyChangedObject : INotifyPropertyChanged
+    {
+        private PropertyChangedEventHandler propertyChanged;
+
+        public event PropertyChangedEventHandler PropertyChanged
+        {
+            add
+            {
+                propertyChanged += value;
+            }
+            remove
+            {
+                propertyChanged -= value;
+            }
+        }
+
+        protected void RaisePropertyChangedEvent(string propertyName)
+        {
+            propertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+    }
+
     public static class Common
     {
         public delegate bool CheckValue(double value);

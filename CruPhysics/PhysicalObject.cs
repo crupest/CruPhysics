@@ -62,32 +62,13 @@ namespace CruPhysics
         public const int Field = 1;
     }
 
-    public abstract class PhysicalObject : INotifyPropertyChanged
+    public abstract class PhysicalObject : NotifyPropertyChangedObject
     {
         private string name;
 
         public PhysicalObject()
         {
 
-        }
-
-        private PropertyChangedEventHandler propertyChanged;
-
-        protected void RaisePropertyChangedEvent(string propertyName)
-        {
-            propertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged
-        {
-            add
-            {
-                propertyChanged += value;
-            }
-            remove
-            {
-                propertyChanged -= value;
-            }
         }
 
         public string Name
@@ -508,7 +489,7 @@ namespace CruPhysics
     
 
 
-    public class Scene : INotifyPropertyChanged
+    public class Scene : NotifyPropertyChangedObject
     {
         private static Scene currentScene;
 
@@ -574,25 +555,6 @@ namespace CruPhysics
             Current = this;
             ScanInterval = TimeSpan.FromMilliseconds(50.0);
             timer.Tick += Run;
-        }
-
-        private PropertyChangedEventHandler propertyChanged;
-
-        private void RaisePropertyChangedEvent(string propertyName)
-        {
-            propertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged
-        {
-            add
-            {
-                propertyChanged += value;
-            }
-            remove
-            {
-                propertyChanged -= value;
-            }
         }
 
         public ObservableCollection<PhysicalObject> PhysicalObjects

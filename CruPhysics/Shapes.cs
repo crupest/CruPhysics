@@ -9,6 +9,7 @@ using System.Windows.Controls;
 using System.Windows.Shapes;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.ComponentModel;
 
 namespace CruPhysics.Shapes
 {
@@ -55,7 +56,7 @@ namespace CruPhysics.Shapes
     /// Represents a shape in a canvas.
     /// It preserves an internal shape object with cache of properties and provides some useful methods.
     /// </summary>
-    public abstract class Shape
+    public abstract class Shape : NotifyPropertyChangedObject
     {
         private bool _autoUpdate = false;
 
@@ -428,6 +429,7 @@ namespace CruPhysics.Shapes
             shapePropertyControl.centerYTextBox.Text = Center.Y.ToString();
             shapePropertyControl.radiusTextBox.Text = Radius.ToString();
         }
+
 
         public Point Center
         {
