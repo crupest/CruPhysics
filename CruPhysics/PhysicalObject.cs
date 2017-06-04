@@ -8,6 +8,7 @@ using System.Windows.Media;
 using System.Windows.Threading;
 
 using CruPhysics.Shapes;
+using System.Windows.Input;
 
 namespace CruPhysics
 {
@@ -100,6 +101,7 @@ namespace CruPhysics
         protected void PrepareShape()
         {
             Shape.Canvas = RelatedScene?.RelatedWorldCanvas;
+            Shape.Cursor = Cursors.Arrow;
             Shape.ContextMenu = (ContextMenu)Application.Current.FindResource("PhysicalObjectContextMenu");
             Shape.MouseEnter += PhysicalObject_OnMouseEnter;
             Shape.MouseLeave += PhysicalObject_OnMouseLeave;
