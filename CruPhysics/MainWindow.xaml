@@ -31,6 +31,8 @@
                       DataType="{x:Type local:ElectricField}">
             <StackPanel>
                 <TextBox Style="{StaticResource ResourceKey=AutoBorder}" Text="{Binding Path=Name}"/>
+                <controls:ObjectPropertyBox PropertyName="场强x" Value="{Binding Path=Intensity.X, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Unit="V/m" ValueTextBoxKeyDown="ObjectPropertyBox_ValueTextBoxKeyDown"/>
+                <controls:ObjectPropertyBox PropertyName="场强y" Value="{Binding Path=Intensity.Y, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Unit="V/m" ValueTextBoxKeyDown="ObjectPropertyBox_ValueTextBoxKeyDown"/>
             </StackPanel>
         </DataTemplate>
         <DataTemplate x:Key="magneticFieldDataTemplate"

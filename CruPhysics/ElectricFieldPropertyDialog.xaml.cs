@@ -45,7 +45,8 @@ namespace CruPhysics
             {
                 RelatedElectricField.Name = name;
                 RelatedElectricField.SetShape(shape);
-                RelatedElectricField.Intensity = new Vector(intensityX, intensityY);
+                RelatedElectricField.Intensity.X = intensityX;
+                RelatedElectricField.Intensity.Y = intensityY;
 
                 Close();
             }

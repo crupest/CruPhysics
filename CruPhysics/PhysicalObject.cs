@@ -12,6 +12,71 @@ using System.Windows.Input;
 
 namespace CruPhysics
 {
+    public class BindableVector : NotifyPropertyChangedObject
+    {
+        private double x = 0.0;
+        private double y = 0.0;
+
+        public BindableVector()
+        {
+
+        }
+
+        public BindableVector(double x, double y)
+        {
+            this.x = x;
+            this.y = y;
+        }
+
+        public BindableVector(Vector vector)
+        {
+            x = vector.X;
+            y = vector.Y;
+        }
+
+        public double X
+        {
+            get
+            {
+                return x;
+            }
+            set
+            {
+                x = value;
+                RaisePropertyChangedEvent("X");
+            }
+        }
+
+        public double Y
+        {
+            get
+            {
+                return y;
+            }
+            set
+            {
+                y = value;
+                RaisePropertyChangedEvent("Y");
+            }
+        }
+
+        public void Set(Vector vector)
+        {
+            X = vector.X;
+            Y = vector.Y;
+        }
+
+        public static explicit operator Vector(BindableVector vector)
+        {
+            return new Vector(vector.x, vector.y);
+        }
+
+        public static explicit operator BindableVector(Vector vector)
+        {
+            return new BindableVector(vector);
+        }
+    }
+
     public enum SelectionState
     {
         normal,
@@ -413,12 +478,21 @@ namespace CruPhysics
 
         private static readonly Brush fillBrush;
 
+
+        private BindableVector intensity = new BindableVector();
+
         public ElectricField()
         {
             Name = "电场";
         }
 
-        public Vector Intensity { get; set; }
+        public BindableVector Intensity
+        {
+            get
+            {
+                return intensity;
+            }
+        }
 
         public override Brush FillBrush
         {
