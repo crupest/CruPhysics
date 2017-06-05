@@ -71,5 +71,17 @@ namespace CruPhysics.Controls
                 SetValue(UnitProperty, value);
             }
         }
+
+        public event KeyEventHandler ValueTextBoxKeyDown
+        {
+            add
+            {
+                ValueTextBox.KeyDown += value;
+            }
+            remove
+            {
+                ValueTextBox.KeyDown -= value;
+            }
+        }
     }
 }

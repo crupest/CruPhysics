@@ -110,5 +110,16 @@ namespace CruPhysics
         {
             return new Point(point.X, -point.Y);
         }
+
+        public static DependencyObject FindAcestor(DependencyObject element, Func<DependencyObject, bool> predicate)
+        {
+            var parent = VisualTreeHelper.GetParent(element);
+            while (true)
+            {
+                if (parent == null || predicate(parent))
+                    return parent;
+                parent = VisualTreeHelper.GetParent(parent);
+            }
+        }
     }
 }

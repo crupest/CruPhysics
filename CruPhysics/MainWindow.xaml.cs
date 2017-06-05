@@ -150,6 +150,17 @@ namespace CruPhysics
         {
             MainCanvas.ReleaseMouseCapture();
         }
+
+        private void ObjectPropertyBox_ValueTextBoxKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Escape || e.Key == Key.Enter)
+            {
+                var selectedIndex = ObjectList.SelectedIndex;
+                ObjectList.Focus();
+                if (selectedIndex != -1)
+                    ObjectList.SelectedIndex = selectedIndex;
+            }
+        }
     }
 
 

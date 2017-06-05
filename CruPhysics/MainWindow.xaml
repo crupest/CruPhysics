@@ -9,12 +9,22 @@
         Title="CruPhysics" Height="350" Width="525">
 
     <Window.Resources>
+
+        <Style TargetType="ListViewItem">
+            <Style.Triggers>
+                <Trigger Property="IsKeyboardFocusWithin" Value="True">
+                    <Setter Property="IsSelected" Value="True"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        
         <local:ObjectListItemTemplateSelector x:Key="objectListItemTemplateSelector"/>
         <DataTemplate x:Key="movingObjectDataTemplate"
                       DataType="{x:Type local:MovingObject}">
             <StackPanel>
                 <TextBox Style="{StaticResource ResourceKey=AutoBorder}" Text="{Binding Path=Name}"/>
-                <controls:ObjectPropertyBox PropertyName="位置x" Value="{Binding Path=Position.X, Mode=TwoWay}" Unit="m"/>
+                <controls:ObjectPropertyBox PropertyName="位置x" Value="{Binding Path=Position.X, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Unit="m" ValueTextBoxKeyDown="ObjectPropertyBox_ValueTextBoxKeyDown"/>
+                <controls:ObjectPropertyBox PropertyName="位置y" Value="{Binding Path=Position.Y, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Unit="m" ValueTextBoxKeyDown="ObjectPropertyBox_ValueTextBoxKeyDown"/>
             </StackPanel>
         </DataTemplate>
         <DataTemplate x:Key="electricFieldDataTemplate"
