@@ -117,13 +117,38 @@ namespace CruPhysics
 
         private void MainCanvas_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            Canvas.SetLeft(WorldCanvas, MainCanvas.ActualWidth / 2.0);
-            Canvas.SetTop(WorldCanvas, MainCanvas.ActualHeight / 2.0);
+            var matrix = WorldCanvas.RenderTransform.Value;
+            matrix.Translate(-(e.PreviousSize.Width / 2.0), -(e.PreviousSize.Height / 2.0));
+            matrix.Translate(e.NewSize.Width / 2.0, e.NewSize.Height / 2.0);
+            WorldCanvas.RenderTransform = new MatrixTransform(matrix);
         }
+
+        private Point mainCanvasMousePosition;
 
         private void MainCanvas_MouseDown(object sender, MouseButtonEventArgs e)
         {
             ViewModel.Scene.SelectedObject = null;
+
+            mainCanvasMousePosition = e.GetPosition(MainCanvas);
+            MainCanvas.CaptureMouse();
+        }
+
+        private void MainCanvas_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (MainCanvas.IsMouseCaptured)
+            {
+                Func<Point, Point> TransformPoint = (point) => WorldCanvas.RenderTransform.Transform(point);
+                var displacement = TransformPoint(e.GetPosition(MainCanvas)) - TransformPoint(mainCanvasMousePosition);
+                var matrix = WorldCanvas.RenderTransform.Value;
+                matrix.Translate(displacement.X, displacement.Y);
+                WorldCanvas.RenderTransform = new MatrixTransform(matrix);
+                mainCanvasMousePosition = e.GetPosition(MainCanvas);
+            }
+        }
+
+        private void MainCanvas_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            MainCanvas.ReleaseMouseCapture();
         }
     }
 

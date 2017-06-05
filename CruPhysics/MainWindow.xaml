@@ -74,7 +74,7 @@
             </Grid.ColumnDefinitions>
             <Canvas Grid.Column="0"
                     Name="MainCanvas" ClipToBounds="True" Background="Transparent" Cursor="Cursors/HandRock.cur"
-                    SizeChanged="MainCanvas_SizeChanged" MouseDown="MainCanvas_MouseDown">
+                    SizeChanged="MainCanvas_SizeChanged" MouseDown="MainCanvas_MouseDown" MouseMove="MainCanvas_MouseMove" MouseUp="MainCanvas_MouseUp">
                 <Canvas.ContextMenu>
                     <ContextMenu>
                         <MenuItem Header="添加(_A)">
