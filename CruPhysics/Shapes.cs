@@ -198,22 +198,6 @@ namespace CruPhysics.Shapes
                     value.Children.Add(GetRawShape());
             }
         }
-        
-
-        public delegate void ShapeUpdatedHandler(object sender, EventArgs e);
-        private ShapeUpdatedHandler updated;
-        public event ShapeUpdatedHandler Updated
-        {
-            add
-            {
-                updated += value;
-            }
-
-            remove
-            {
-                updated -= value;
-            }
-        }
 
         public void Delete()
         {
@@ -511,6 +495,7 @@ namespace CruPhysics.Shapes
 
                 _radius = value;
                 Update();
+                RaisePropertyChangedEvent("Radius");
             }
         }
         
@@ -521,11 +506,8 @@ namespace CruPhysics.Shapes
 
         public void Set(Point center, double radius)
         {
-            if (radius < 0.0)
-                throw new ArgumentOutOfRangeException("radius", "Radius can't be below 0.");
-
-            _center.Set(center);
-            _radius = radius;
+            Center.Set(center);
+            Radius = radius;
         }
 
         public override bool IsPointInside(Point point)
@@ -548,6 +530,45 @@ namespace CruPhysics.Shapes
         {
             Initialize(_shape);
             Update();
+
+            PropertyChanged += (sender, args) => 
+            {
+                if (args.PropertyName == "Left")
+                {
+                    RaisePropertyChangedEvent("Width");
+                    RaisePropertyChangedEvent("LeftTop");
+                    RaisePropertyChangedEvent("LeftBottom");
+                    RaisePropertyChangedEvent("Center");
+                    return;
+                }
+
+                if (args.PropertyName == "Top")
+                {
+                    RaisePropertyChangedEvent("Height");
+                    RaisePropertyChangedEvent("LeftTop");
+                    RaisePropertyChangedEvent("RightTop");
+                    RaisePropertyChangedEvent("Center");
+                    return;
+                }
+
+                if (args.PropertyName == "Right")
+                {
+                    RaisePropertyChangedEvent("Width");
+                    RaisePropertyChangedEvent("RightTop");
+                    RaisePropertyChangedEvent("RightBottom");
+                    RaisePropertyChangedEvent("Center");
+                    return;
+                }
+
+                if (args.PropertyName == "Bottom")
+                {
+                    RaisePropertyChangedEvent("Height");
+                    RaisePropertyChangedEvent("LeftBottom");
+                    RaisePropertyChangedEvent("RightBottom");
+                    RaisePropertyChangedEvent("Center");
+                    return;
+                }
+            };
         }
 
         public override SelectionBox CreateSelectionBox()
@@ -588,11 +609,10 @@ namespace CruPhysics.Shapes
             {
                 var halfWidth = Width / 2.0;
                 var halfHeight = Height / 2.0;
-                _left = value.X - halfWidth;
-                _top = value.Y + halfHeight;
-                _right = value.X + halfWidth;
-                _bottom = value.Y - halfHeight;
-                Update();
+                Set(value.X - halfWidth,
+                    value.Y + halfHeight,
+                    value.X + halfWidth,
+                    value.Y - halfHeight);
             }
         }
 
@@ -625,6 +645,7 @@ namespace CruPhysics.Shapes
                         ("Left", value, "Left can't be bigger than Right.");
                 _left = value;
                 Update();
+                RaisePropertyChangedEvent("Left");
             }
         }
 
@@ -641,6 +662,7 @@ namespace CruPhysics.Shapes
                         ("Top", value, "Top can't be smaller than Bottom.");
                 _top = value;
                 Update();
+                RaisePropertyChangedEvent("Top");
             }
         }
 
@@ -657,6 +679,7 @@ namespace CruPhysics.Shapes
                         ("Right", value, "Right can't be smaller than Left.");
                 _right = value;
                 Update();
+                RaisePropertyChangedEvent("Right");
             }
         }
 
@@ -673,6 +696,7 @@ namespace CruPhysics.Shapes
                         ("Bottom", value, "Bottom can't be bigger than Top.");
                 _bottom = value;
                 Update();
+                RaisePropertyChangedEvent("Bottom");
             }
         }
 
@@ -708,6 +732,14 @@ namespace CruPhysics.Shapes
             }
         }
 
+        private void NotifyAllPropertiesChanged()
+        {
+            RaisePropertyChangedEvent("Left");
+            RaisePropertyChangedEvent("Top");
+            RaisePropertyChangedEvent("Right");
+            RaisePropertyChangedEvent("Bottom");
+        }
+
         public void Set(double left, double top, double right, double bottom)
         {
             if (left > right || bottom > top)
@@ -717,7 +749,9 @@ namespace CruPhysics.Shapes
             _top = top;
             _right = right;
             _bottom = bottom;
+
             Update();
+            NotifyAllPropertiesChanged();
         }
 
         public override void Move(Vector vector)
@@ -728,6 +762,7 @@ namespace CruPhysics.Shapes
             _bottom += vector.Y;
 
             Update();
+            NotifyAllPropertiesChanged();
         }
 
         public override bool IsPointInside(Point point)
