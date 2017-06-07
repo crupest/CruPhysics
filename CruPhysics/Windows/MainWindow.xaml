@@ -1,9 +1,10 @@
-﻿<Window x:Class="CruPhysics.MainWindow"
+﻿<Window x:Class="CruPhysics.Windows.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:CruPhysics"
+        xmlns:local="clr-namespace:CruPhysics.Windows"
+        xmlns:cru="clr-namespace:CruPhysics"
         xmlns:controls="clr-namespace:CruPhysics.Controls"
         mc:Ignorable="d"
         Title="CruPhysics" Height="350" Width="525">
@@ -20,7 +21,7 @@
         
         <local:ObjectListItemTemplateSelector x:Key="objectListItemTemplateSelector"/>
         <DataTemplate x:Key="movingObjectDataTemplate"
-                      DataType="{x:Type local:MovingObject}">
+                      DataType="{x:Type cru:MovingObject}">
             <StackPanel>
                 <TextBox Style="{StaticResource ResourceKey=AutoBorder}" Text="{Binding Path=Name}"/>
                 <controls:ObjectPropertyBox PropertyName="位置x" Value="{Binding Path=Position.X, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Unit="m" ValueTextBoxKeyDown="ObjectPropertyBox_ValueTextBoxKeyDown"/>
@@ -28,7 +29,7 @@
             </StackPanel>
         </DataTemplate>
         <DataTemplate x:Key="electricFieldDataTemplate"
-                      DataType="{x:Type local:ElectricField}">
+                      DataType="{x:Type cru:ElectricField}">
             <StackPanel>
                 <TextBox Style="{StaticResource ResourceKey=AutoBorder}" Text="{Binding Path=Name}"/>
                 <controls:ObjectPropertyBox PropertyName="场强x" Value="{Binding Path=Intensity.X, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Unit="V/m" ValueTextBoxKeyDown="ObjectPropertyBox_ValueTextBoxKeyDown"/>
@@ -36,7 +37,7 @@
             </StackPanel>
         </DataTemplate>
         <DataTemplate x:Key="magneticFieldDataTemplate"
-                      DataType="{x:Type local:MagneticField}">
+                      DataType="{x:Type cru:MagneticField}">
             <StackPanel>
                 <TextBox Style="{StaticResource ResourceKey=AutoBorder}" Text="{Binding Path=Name}"/>
             </StackPanel>
@@ -85,7 +86,7 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <Canvas Grid.Column="0"
-                    Name="MainCanvas" ClipToBounds="True" Background="Transparent" Cursor="Cursors/HandRock.cur"
+                    Name="MainCanvas" ClipToBounds="True" Background="Transparent" Cursor="../Cursors/HandRock.cur"
                     SizeChanged="MainCanvas_SizeChanged" MouseDown="MainCanvas_MouseDown" MouseMove="MainCanvas_MouseMove" MouseUp="MainCanvas_MouseUp">
                 <Canvas.ContextMenu>
                     <ContextMenu>

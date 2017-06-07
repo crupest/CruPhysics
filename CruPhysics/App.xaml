@@ -2,11 +2,12 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:CruPhysics"
-             StartupUri="MainWindow.xaml">
+             xmlns:windows="clr-namespace:CruPhysics.Windows"
+             StartupUri="Windows/MainWindow.xaml">
     <Application.Resources>
         <ContextMenu x:Key="PhysicalObjectContextMenu">
-            <MenuItem Command="local:MainWindow.Delete"></MenuItem>
-            <MenuItem Command="local:MainWindow.Property"></MenuItem>
+            <MenuItem Command="windows:MainWindow.Delete"></MenuItem>
+            <MenuItem Command="windows:MainWindow.Property"></MenuItem>
         </ContextMenu>
 
         <Style x:Key="AutoBorder" TargetType="TextBox">

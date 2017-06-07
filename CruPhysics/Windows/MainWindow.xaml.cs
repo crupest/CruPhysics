@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace CruPhysics
+namespace CruPhysics.Windows
 {
     /// <summary>
     /// MainWindow.xaml 的交互逻辑
