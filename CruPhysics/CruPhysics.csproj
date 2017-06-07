@@ -65,14 +65,14 @@
     <Compile Include="Controls\RectanglePropertyControl.xaml.cs">
       <DependentUpon>RectanglePropertyControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ElectricFieldPropertyDialog.xaml.cs">
+    <Compile Include="Windows\ElectricFieldPropertyDialog.xaml.cs">
       <DependentUpon>ElectricFieldPropertyDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MagneticFieldPropertyDialog.xaml.cs">
+    <Compile Include="Windows\MagneticFieldPropertyDialog.xaml.cs">
       <DependentUpon>MagneticFieldPropertyDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModel.cs" />
-    <Compile Include="MovingObjectPropertyDialog.xaml.cs">
+    <Compile Include="Windows\MovingObjectPropertyDialog.xaml.cs">
       <DependentUpon>MovingObjectPropertyDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="SelectionBox.cs" />
@@ -92,11 +92,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="ElectricFieldPropertyDialog.xaml">
+    <Page Include="Windows\ElectricFieldPropertyDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MagneticFieldPropertyDialog.xaml">
+    <Page Include="Windows\MagneticFieldPropertyDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -112,7 +112,7 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="MovingObjectPropertyDialog.xaml">
+    <Page Include="Windows\MovingObjectPropertyDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
