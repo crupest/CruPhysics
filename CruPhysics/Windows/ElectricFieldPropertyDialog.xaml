@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:CruPhysics"
         xmlns:controls="clr-namespace:CruPhysics.Controls"
         mc:Ignorable="d"
-        Title="ElectricFieldProperty" SizeToContent="WidthAndHeight" MinWidth="250"
+        Title="ElectricFieldProperty" SizeToContent="WidthAndHeight" MinWidth="250" ShowInTaskbar="False"
         DataContext="{Binding RelativeSource={RelativeSource Self}, Path=RelatedElectricField}">
 
     <Window.Resources>
