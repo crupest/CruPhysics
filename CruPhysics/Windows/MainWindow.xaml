@@ -7,7 +7,7 @@
         xmlns:cru="clr-namespace:CruPhysics"
         xmlns:controls="clr-namespace:CruPhysics.Controls"
         mc:Ignorable="d"
-        Title="CruPhysics" Height="350" Width="525">
+        Title="CruPhysics">
 
     <Window.Resources>
 
@@ -36,6 +36,11 @@
                       DataType="{x:Type cru:MagneticField}">
             <StackPanel>
                 <TextBox Style="{StaticResource ResourceKey=AutoBorder}" Text="{Binding Path=Name}"/>
+                <controls:ObjectPropertyBox PropertyName="磁感应强度" Value="{Binding Path=FluxDensity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Unit="T" ValueTextBoxKeyDown="ObjectPropertyBox_ValueTextBoxKeyDown">
+                    <controls:ObjectPropertyBox.ToolTip>
+                        为正时垂直纸面向里，为负时垂直于纸面向外
+                    </controls:ObjectPropertyBox.ToolTip>
+                </controls:ObjectPropertyBox>
             </StackPanel>
         </DataTemplate>
     </Window.Resources>

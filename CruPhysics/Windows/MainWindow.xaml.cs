@@ -162,7 +162,10 @@ namespace CruPhysics.Windows
             var hitTestResult = VisualTreeHelper.HitTest(ObjectList, e.GetPosition(ObjectList));
             var listViewItem  = Common.FindAcestor(hitTestResult.VisualHit, (element) => element is ListViewItem);
             if (listViewItem == null)
+            {
                 ObjectList.UnselectAll();
+                ObjectList.Focus();
+            }
         }
 
         private void ListViewItem_GotFocus(object sender, RoutedEventArgs e)
