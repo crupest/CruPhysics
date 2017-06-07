@@ -75,7 +75,7 @@
     <Compile Include="Windows\MovingObjectPropertyDialog.xaml.cs">
       <DependentUpon>MovingObjectPropertyDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SelectionBox.cs" />
+    <Compile Include="Controls\SelectionBox.cs" />
     <Compile Include="Shapes.cs" />
     <Compile Include="Controls\ShapePropertyControl.xaml.cs">
       <DependentUpon>ShapePropertyControl.xaml</DependentUpon>

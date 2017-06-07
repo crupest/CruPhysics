@@ -11,7 +11,7 @@ using System.Windows.Media;
 
 using CruPhysics.Shapes;
 
-namespace CruPhysics
+namespace CruPhysics.Controls
 {
     public abstract class SelectionBox
     {
