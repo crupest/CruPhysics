@@ -1,0 +1,26 @@
+﻿<UserControl x:Class="CruPhysics.Controls.ShapePropertyControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:CruPhysics.Controls"
+             mc:Ignorable="d"
+             MinWidth="200">
+
+    <UserControl.Resources>
+        <Style TargetType="RadioButton">
+            <Setter Property="Margin" Value="3"/>
+        </Style>
+    </UserControl.Resources>
+    
+    <StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <TextBlock Margin="3" HorizontalAlignment="Center" VerticalAlignment="Center" Text="形状"/>
+            <StackPanel>
+                <RadioButton Name="RectangleRadioButton" Checked="RectangleRadioButton_Checked">矩形</RadioButton>
+                <RadioButton Name="CircleRadioButton"    Checked="CircleRadioButton_Checked"   >圆形</RadioButton>
+            </StackPanel>
+        </StackPanel>
+        <ContentControl Name="PropertyControl"/>
+    </StackPanel>
+</UserControl>

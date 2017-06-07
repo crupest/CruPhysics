@@ -167,8 +167,6 @@ namespace CruPhysics.Shapes
         public abstract bool IsPointInside(Point point);
         public abstract Shape GetRawShape();
 
-        internal abstract void ShowProperty(ShapePropertyControl shapePropertyControl);
-
         public abstract SelectionBox CreateSelectionBox();
 
         public Shape Raw
@@ -423,20 +421,15 @@ namespace CruPhysics.Shapes
             this.point1.Set(point1);
             this.point2.Set(point2);
         }
-
-        internal override void ShowProperty(ShapePropertyControl shapePropertyControl)
-        {
-            throw new Exception("ShapePropertyControl can't show property of a line.");
-        }
     }
 
-    public sealed class Circle : CruShape
+    public sealed class CruCircle : CruShape
     {
         private Ellipse _shape = new Ellipse();
         private BindablePoint _center = new BindablePoint();
         private double _radius = 10.0;
 
-        public Circle()
+        public CruCircle()
         {
             Initialize(_shape);
 
@@ -462,16 +455,6 @@ namespace CruPhysics.Shapes
             Canvas.SetLeft(_shape, _center.X - _radius);
             Canvas.SetTop(_shape, -_center.Y - _radius);
         }
-
-        internal override void ShowProperty(ShapePropertyControl shapePropertyControl)
-        {
-            shapePropertyControl.circleRadioButton.IsChecked = true;
-            shapePropertyControl.circleGrid.Visibility = Visibility.Visible;
-            shapePropertyControl.centerXTextBox.Text = Center.X.ToString();
-            shapePropertyControl.centerYTextBox.Text = Center.Y.ToString();
-            shapePropertyControl.radiusTextBox.Text = Radius.ToString();
-        }
-
 
         public BindablePoint Center
         {
@@ -518,15 +501,15 @@ namespace CruPhysics.Shapes
         }
     }
 
-    public sealed class Rectangle : CruShape
+    public sealed class CruRectangle : CruShape
     {
-        private System.Windows.Shapes.Rectangle _shape = new System.Windows.Shapes.Rectangle();
+        private Rectangle _shape = new Rectangle();
         private double _left = -50.0;
         private double _top = 50.0;
         private double _right = 50.0;
         private double _bottom = -50.0;
 
-        public Rectangle()
+        public CruRectangle()
         {
             Initialize(_shape);
             Update();
@@ -582,16 +565,6 @@ namespace CruPhysics.Shapes
             _shape.Height = _top - _bottom;
             Canvas.SetLeft(_shape, _left);
             Canvas.SetTop(_shape, -_top);
-        }
-
-        internal override void ShowProperty(ShapePropertyControl shapePropertyControl)
-        {
-            shapePropertyControl.rectangleRadioButton.IsChecked = true;
-            shapePropertyControl.rectangleGrid.Visibility = Visibility.Visible;
-            shapePropertyControl.leftTextBox.Text = Left.ToString();
-            shapePropertyControl.topTextBox.Text = Top.ToString();
-            shapePropertyControl.rightTextBox.Text = Right.ToString();
-            shapePropertyControl.bottomTextBox.Text = Bottom.ToString();
         }
 
         public override Shape GetRawShape()

@@ -66,6 +66,12 @@ namespace CruPhysics
             Y = vector.Y;
         }
 
+        public void Add(Vector vector)
+        {
+            X += vector.X;
+            Y += vector.Y;
+        }
+
         public static explicit operator Vector(BindableVector vector)
         {
             return new Vector(vector.x, vector.y);
@@ -294,7 +300,7 @@ namespace CruPhysics
 
     public class MovingObject : PhysicalObject
     {
-        private Circle _shape = new Circle();
+        private CruCircle _shape = new CruCircle();
 
         public MovingObject()
         {
@@ -363,9 +369,43 @@ namespace CruPhysics
             forces.Clear();
         }
 
-        public Vector Velocity  { get; set; }
-        public double Mass      { get; set; }
-        public double Charge    { get; set; }
+        private BindableVector velocity = new BindableVector();
+        private double mass;
+        private double charge;
+
+        public BindableVector Velocity
+        {
+            get
+            {
+                return velocity;
+            }
+        }
+
+        public double Mass
+        {
+            get
+            {
+                return mass;
+            }
+            set
+            {
+                mass = value;
+                RaisePropertyChangedEvent("Mass");
+            }
+        }
+
+        public double Charge
+        {
+            get
+            {
+                return charge;
+            }
+            set
+            {
+                charge = value;
+                RaisePropertyChangedEvent("Charge");
+            }
+        }
 
         internal override Window CreatePropertyWindow()
         {
@@ -390,13 +430,13 @@ namespace CruPhysics
         public void StoreProperty()
         {
             _originalPosition = (Point)Position;
-            _originalVelocity = Velocity;
+            _originalVelocity = (Vector)Velocity;
         }
 
         public void RecoverProperty()
         {
             Position.Set(_originalPosition);
-            Velocity = _originalVelocity;
+            Velocity.Set(_originalVelocity);
         }
 
         public void Run(TimeSpan time)
@@ -409,8 +449,8 @@ namespace CruPhysics
                 force.Y += i.Y;
             }
             var acceleration = force / Mass;
-            Move(Velocity * t + acceleration * Math.Pow(t, 2) / 2.0);
-            Velocity += acceleration * t;
+            Move((Vector)Velocity * t + acceleration * Math.Pow(t, 2) / 2.0);
+            Velocity.Add(acceleration * t);
         }
     }
 
@@ -418,11 +458,23 @@ namespace CruPhysics
 
     public abstract class Field : PhysicalObject
     {
-        private CruShape _shape = new Rectangle(); 
+        private CruShape _shape = new CruRectangle(); 
 
         protected Field()
         {
             PrepareShape();
+        }
+
+        public new CruShape Shape
+        {
+            get
+            {
+                return GetShape();
+            }
+            set
+            {
+                SetShape(value);
+            }
         }
 
         public void SetShape(CruShape shape)
@@ -430,6 +482,7 @@ namespace CruPhysics
             _shape.Canvas = null;
             _shape = shape;
             PrepareShape();
+            RaisePropertyChangedEvent("Shape");
         }
 
         protected override CruShape GetShape()
@@ -528,6 +581,9 @@ namespace CruPhysics
 
         private static readonly Brush fillBrush;
 
+
+        private double fluxDensity;
+
         public MagneticField()
         {
             Name = "磁场";
@@ -536,7 +592,18 @@ namespace CruPhysics
         /// <summary>
         /// 为正时垂直纸面向里，为负时垂直于纸面向外
         /// </summary>
-        public double FluxDensity { get; set; }
+        public double FluxDensity
+        {
+            get
+            {
+                return fluxDensity;
+            }
+            set
+            {
+                fluxDensity = value;
+                RaisePropertyChangedEvent("FluxDensity");
+            }
+        }
 
         public override Brush FillBrush
         {
@@ -549,8 +616,8 @@ namespace CruPhysics
         protected override void CalculateEffect(MovingObject movingObject, TimeSpan time)
         {
             //qvB = mvω => ω = qB/m => α = ωt = qBt/m
-            movingObject.Velocity = Common.Rotate(movingObject.Velocity,
-                -time.TotalSeconds * movingObject.Charge * FluxDensity / movingObject.Mass);
+            movingObject.Velocity.Set(Common.Rotate((Vector)movingObject.Velocity,
+                -time.TotalSeconds * movingObject.Charge * FluxDensity / movingObject.Mass));
         }
 
         internal override Window CreatePropertyWindow()

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CruPhysics.Shapes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,20 +11,21 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace CruPhysics
+namespace CruPhysics.Controls
 {
     /// <summary>
-    /// MovingObjectProperty.xaml 的交互逻辑
+    /// Interaction logic for CirclePropertyControl.xaml
     /// </summary>
-    public partial class MovingObjectPropertyDialog : Window
+    public partial class CirclePropertyControl : UserControl
     {
-        public MovingObject RelatedMovingObject { get; private set; }
+        public CruCircle Shape { get; private set; }
 
-        public MovingObjectPropertyDialog(MovingObject movingObject)
+        public CirclePropertyControl(CruCircle shape)
         {
-            RelatedMovingObject = movingObject;
+            Shape = shape;
 
             InitializeComponent();
         }

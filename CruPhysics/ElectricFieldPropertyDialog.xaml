@@ -4,19 +4,36 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CruPhysics"
+        xmlns:controls="clr-namespace:CruPhysics.Controls"
         mc:Ignorable="d"
-        Title="ElectricFieldProperty" SizeToContent="WidthAndHeight" MinWidth="250">
+        Title="ElectricFieldProperty" SizeToContent="WidthAndHeight" MinWidth="250"
+        DataContext="{Binding RelativeSource={RelativeSource Self}, Path=RelatedElectricField}">
+
+    <Window.Resources>
+        <Style TargetType="TextBlock">
+            <Setter Property="Margin" Value="3"/>
+        </Style>
+
+        <Style TargetType="TextBox">
+            <Style.Setters>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="Margin" Value="3"/>
+                <Setter Property="Height" Value="Auto"/>
+            </Style.Setters>
+        </Style>
+    </Window.Resources>
+
     <StackPanel>
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Label Grid.Column="0" Margin="3">名称</Label>
-            <TextBox Grid.Column="1" Name="nameTextBox" Style="{StaticResource ResourceKey=textbox}"/>
+            <TextBlock Grid.Column="0" Text="名称"/>
+            <TextBox Grid.Column="1" Text="{Binding Path=Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         </Grid>
 
-        <local:ShapePropertyControl x:Name="shapePropertyControl"/>
+        <controls:ShapePropertyControl Shape="{Binding Path=Shape, Mode=TwoWay}"/>
 
         <Grid>
             <Grid.RowDefinitions>
@@ -29,17 +46,13 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <Label Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Margin="3" VerticalAlignment="Center">电场强度</Label>
-            <Label Grid.Row="0" Grid.Column="1" Margin="3">x轴</Label>
-            <Label Grid.Row="1" Grid.Column="1" Margin="3">y轴</Label>
-            <TextBox Name="intensityXTextBox" Grid.Row="0" Grid.Column="2" Style="{StaticResource ResourceKey=textbox}" Tag="电场强度x轴" TextChanged="textBox_TextChanged"/>
-            <TextBox Name="intensityYTextBox" Grid.Row="1" Grid.Column="2" Style="{StaticResource ResourceKey=textbox}" Tag="电场强度y轴" TextChanged="textBox_TextChanged"/>
-            <Label Grid.Row="0" Grid.Column="3" Margin="3">N/q</Label>
-            <Label Grid.Row="1" Grid.Column="3" Margin="3">N/q</Label>
+            <TextBlock Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" VerticalAlignment="Center" Text="电场强度"/>
+            <TextBlock Grid.Row="0" Grid.Column="1" Text="x轴"/>
+            <TextBlock Grid.Row="1" Grid.Column="1" Text="y轴"/>
+            <TextBox Grid.Row="0" Grid.Column="2" Text="{Binding Path=Intensity.X, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBox Grid.Row="1" Grid.Column="2" Text="{Binding Path=Intensity.Y, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBlock Grid.Row="0" Grid.Column="3" Text="N/q"/>
+            <TextBlock Grid.Row="1" Grid.Column="3" Text="N/q"/>
         </Grid>
-        <DockPanel LastChildFill="False">
-            <Button Name="confirmButton" DockPanel.Dock="Right" Margin="5" Click="confirmButton_Click">确定</Button>
-            <Button Name="cancleButton"  DockPanel.Dock="Right" Margin="5" Click="cancleButton_Click" >取消</Button>
-        </DockPanel>
     </StackPanel>
 </Window>

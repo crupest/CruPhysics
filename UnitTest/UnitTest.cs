@@ -29,7 +29,7 @@ namespace UnitTest
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
         public void CircleSetTest()
         {
-            var circle = new Circle();
+            var circle = new CruCircle();
             circle.Set(new Point(), -1);
         }
 
@@ -37,7 +37,7 @@ namespace UnitTest
         [ExpectedException(typeof(ArgumentException))]
         public void RectangleSetTest()
         {
-            var rect = new Rectangle();
+            var rect = new CruRectangle();
             rect.Set(10, -10, 0, 0);
         }
     }

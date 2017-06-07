@@ -4,19 +4,36 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CruPhysics"
+        xmlns:controls="clr-namespace:CruPhysics.Controls"
         mc:Ignorable="d"
-        Title="MagneticFieldPropertyDialog" SizeToContent="WidthAndHeight" MinWidth="250">
+        Title="MagneticFieldPropertyDialog" SizeToContent="WidthAndHeight" MinWidth="250"
+        DataContext="{Binding RelativeSource={RelativeSource Self}, Path=RelatedMagneticField}">
+
+    <Window.Resources>
+        <Style TargetType="TextBlock">
+            <Setter Property="Margin" Value="3"/>
+        </Style>
+
+        <Style TargetType="TextBox">
+            <Style.Setters>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="Margin" Value="3"/>
+                <Setter Property="Height" Value="Auto"/>
+            </Style.Setters>
+        </Style>
+    </Window.Resources>
+
     <StackPanel>
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Label Grid.Column="0" Margin="3">名称</Label>
-            <TextBox Grid.Column="1" Name="nameTextBox" Style="{StaticResource ResourceKey=textbox}"/>
+            <TextBlock Grid.Column="0" Text="名称"/>
+            <TextBox Grid.Column="1" Text="{Binding Path=Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         </Grid>
 
-        <local:ShapePropertyControl x:Name="shapePropertyControl"/>
+        <controls:ShapePropertyControl Shape="{Binding Path=Shape}"/>
         
         <Grid>
             <Grid.RowDefinitions>
@@ -27,14 +44,9 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <Label Grid.Row="0" Grid.Column="0" Margin="3">磁感应强度</Label>
-            <TextBox Name="fluxDensityTextBox" Grid.Row="0" Grid.Column="1" Style="{StaticResource ResourceKey=textbox}" Tag="磁感应强度" TextChanged="textBox_TextChanged"/>
-            <Label Grid.Row="0" Grid.Column="2" Margin="3">T</Label>
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="磁感应强度"/>
+            <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Path=FluxDensity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBlock Grid.Row="0" Grid.Column="2" Text="T"/>
         </Grid>
-
-        <DockPanel LastChildFill="False">
-            <Button Name="confirmButton" DockPanel.Dock="Right" Margin="5" Click="confirmButton_Click">确定</Button>
-            <Button Name="cancleButton"  DockPanel.Dock="Right" Margin="5" Click="cancleButton_Click" >取消</Button>
-        </DockPanel>
     </StackPanel>
 </Window>

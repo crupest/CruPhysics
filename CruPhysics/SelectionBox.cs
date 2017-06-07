@@ -39,11 +39,11 @@ namespace CruPhysics
         {
             private const double radius = 4.0;
 
-            private Circle shape;
+            private CruCircle shape;
 
             public Controller(Canvas canvas)
             {
-                shape = new Circle()
+                shape = new CruCircle()
                 {
                     Radius = radius,
                     Stroke = Brushes.Black,
@@ -161,7 +161,7 @@ namespace CruPhysics
         private Controller centerController;
         private Controller radiusController;
 
-        public CircleSelectionBox(Circle circle)
+        public CircleSelectionBox(CruCircle circle)
             : base(circle)
         {
             centerController = new Controller(circle.Canvas, Cursors.SizeAll);
@@ -173,11 +173,11 @@ namespace CruPhysics
             radiusController.Dragged += RadiusController_Dragged;
         }
 
-        public new Circle SelectedShape
+        public new CruCircle SelectedShape
         {
             get
             {
-                return (Circle)base.SelectedShape;
+                return (CruCircle)base.SelectedShape;
             }
         }
 
@@ -215,7 +215,7 @@ namespace CruPhysics
         //From left to right, from top to bottom.
         Controller[] controllers = new Controller[9];
 
-        public RectangleSelectionBox(Rectangle rectangle)
+        public RectangleSelectionBox(CruRectangle rectangle)
             : base(rectangle)
         {
             var canvas = rectangle.Canvas;
@@ -307,11 +307,11 @@ namespace CruPhysics
             controllers[8].Position = rectangle.Rightbottom;
         }
 
-        public new Rectangle SelectedShape
+        public new CruRectangle SelectedShape
         {
             get
             {
-                return (Rectangle)base.SelectedShape;
+                return (CruRectangle)base.SelectedShape;
             }
         }
 

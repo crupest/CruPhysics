@@ -5,12 +5,27 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CruPhysics"
         mc:Ignorable="d"
-        Title="MovingObjectProperty"
-        SizeToContent="WidthAndHeight"
-        MinWidth="250"
-        ShowInTaskbar="False">
+        Title="MovingObjectProperty" SizeToContent="WidthAndHeight" MinWidth="250" ShowInTaskbar="False"
+        DataContext="{Binding RelativeSource={RelativeSource Self}, Path=RelatedMovingObject}">
+
+    <Window.Resources>
+        <Style TargetType="TextBlock">
+            <Setter Property="Margin" Value="3"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+        </Style>
+
+        <Style TargetType="TextBox">
+            <Style.Setters>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="Margin" Value="3"/>
+                <Setter Property="Height" Value="Auto"/>
+            </Style.Setters>
+        </Style>
+    </Window.Resources>
+
     <StackPanel>
-        <Grid DockPanel.Dock="Top">
+        <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
@@ -27,35 +42,31 @@
                 <ColumnDefinition Width="*"></ColumnDefinition>
                 <ColumnDefinition Width="Auto"></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="3" HorizontalAlignment="Center">名字</Label>
-            <Label Grid.Row="1" Grid.RowSpan="2" Grid.Column="0" Margin="3" HorizontalAlignment="Center" VerticalAlignment="Center">位置</Label>
-            <Label Grid.Row="1" Grid.Column="1" Margin="3">x轴</Label>
-            <Label Grid.Row="2" Grid.Column="1" Margin="3">y轴</Label>
-            <Label Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Margin="3" HorizontalAlignment="Center">半径</Label>
-            <Label Grid.Row="4" Grid.RowSpan="2" Grid.Column="0" Margin="3" HorizontalAlignment="Center" VerticalAlignment="Center">初速度</Label>
-            <Label Grid.Row="4" Grid.Column="1" Margin="3">x轴</Label>
-            <Label Grid.Row="5" Grid.Column="1" Margin="3">y轴</Label>
-            <Label Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Margin="3" HorizontalAlignment="Center">质量</Label>
-            <Label Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" Margin="3" HorizontalAlignment="Center">电荷量</Label>
-            <TextBox Name="nameTextBox"      Grid.Row="0" Grid.Column="2" Style="{StaticResource ResourceKey=textbox}" TextChanged="textBox_TextChanged" Tag="名字"/>
-            <TextBox Name="positionXTextBox" Grid.Row="1" Grid.Column="2" Style="{StaticResource ResourceKey=textbox}" TextChanged="textBox_TextChanged" Tag="x轴位置"/>
-            <TextBox Name="positionYTextBox" Grid.Row="2" Grid.Column="2" Style="{StaticResource ResourceKey=textbox}" TextChanged="textBox_TextChanged" Tag="y轴位置"/>
-            <TextBox Name="radiusTextBox"    Grid.Row="3" Grid.Column="2" Style="{StaticResource ResourceKey=textbox}" TextChanged="textBox_TextChanged" Tag="半径"/>
-            <TextBox Name="velocityXTextBox" Grid.Row="4" Grid.Column="2" Style="{StaticResource ResourceKey=textbox}" TextChanged="textBox_TextChanged" Tag="x轴初速度"/>
-            <TextBox Name="velocityYTextBox" Grid.Row="5" Grid.Column="2" Style="{StaticResource ResourceKey=textbox}" TextChanged="textBox_TextChanged" Tag="y轴初速度"/>
-            <TextBox Name="massTextBox"      Grid.Row="6" Grid.Column="2" Style="{StaticResource ResourceKey=textbox}" TextChanged="textBox_TextChanged" Tag="质量"/>
-            <TextBox Name="chargeTextBox"    Grid.Row="7" Grid.Column="2" Style="{StaticResource ResourceKey=textbox}" TextChanged="textBox_TextChanged" Tag="电荷量"/>
-            <Label Grid.Row="1" Grid.Column="3" Margin="3" HorizontalAlignment="Center">m</Label>
-            <Label Grid.Row="2" Grid.Column="3" Margin="3" HorizontalAlignment="Center">m</Label>
-            <Label Grid.Row="3" Grid.Column="3" Margin="3" HorizontalAlignment="Center">m</Label>
-            <Label Grid.Row="4" Grid.Column="3" Margin="3" HorizontalAlignment="Center">m/s</Label>
-            <Label Grid.Row="5" Grid.Column="3" Margin="3" HorizontalAlignment="Center">m/s</Label>
-            <Label Grid.Row="6" Grid.Column="3" Margin="3" HorizontalAlignment="Center">kg</Label>
-            <Label Grid.Row="7" Grid.Column="3" Margin="3" HorizontalAlignment="Center">C</Label>
+            <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="名字"/>
+            <TextBlock Grid.Row="1" Grid.RowSpan="2" Grid.Column="0" Text="位置"/>
+            <TextBlock Grid.Row="1" Grid.Column="1" Margin="3" Text="x轴"/>
+            <TextBlock Grid.Row="2" Grid.Column="1" Margin="3" Text="y轴"/>
+            <TextBlock Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Text="半径"/>
+            <TextBlock Grid.Row="4" Grid.RowSpan="2" Grid.Column="0" Text="初速度"/>
+            <TextBlock Grid.Row="4" Grid.Column="1" Margin="3" Text="x轴"/>
+            <TextBlock Grid.Row="5" Grid.Column="1" Margin="3" Text="y轴"/>
+            <TextBlock Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Text="质量"/>
+            <TextBlock Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" Text="电荷量"/>
+            <TextBox Grid.Row="0" Grid.Column="2" Text="{Binding Path=Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBox Grid.Row="1" Grid.Column="2" Text="{Binding Path=Position.X, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBox Grid.Row="2" Grid.Column="2" Text="{Binding Path=Position.Y, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBox Grid.Row="3" Grid.Column="2" Text="{Binding Path=Radius, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBox Grid.Row="4" Grid.Column="2" Text="{Binding Path=Velocity.X, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBox Grid.Row="5" Grid.Column="2" Text="{Binding Path=Velocity.Y, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBox Grid.Row="6" Grid.Column="2" Text="{Binding Path=Mass, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBox Grid.Row="7" Grid.Column="2" Text="{Binding Path=Charge, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBlock Grid.Row="1" Grid.Column="3" Text="m"/>
+            <TextBlock Grid.Row="2" Grid.Column="3" Text="m"/>
+            <TextBlock Grid.Row="3" Grid.Column="3" Text="m"/>
+            <TextBlock Grid.Row="4" Grid.Column="3" Text="m/s"/>
+            <TextBlock Grid.Row="5" Grid.Column="3" Text="m/s"/>
+            <TextBlock Grid.Row="6" Grid.Column="3" Text="kg"/>
+            <TextBlock Grid.Row="7" Grid.Column="3" Text="C"/>
         </Grid>
-        <DockPanel LastChildFill="False">
-            <Button Name="confirmButton" DockPanel.Dock="Right" Margin="5" Click="confirmButton_Click">确定</Button>
-            <Button Name="cancleButton"  DockPanel.Dock="Right" Margin="5" Click="cancleButton_Click" >取消</Button>
-        </DockPanel>
     </StackPanel>
 </Window>
