@@ -191,14 +191,7 @@ namespace CruPhysics
             {
                 return _scene;
             }
-            set
-            {
-                if (_scene != null)
-                    RemoveFromScene(_scene);
-                _scene = value;
-                if (value != null)
-                    AddToScene(value);
-            }
+
         }
 
         public void Move(Vector vector)
@@ -258,14 +251,17 @@ namespace CruPhysics
 
         internal abstract Window CreatePropertyWindow();
 
-        protected virtual void AddToScene(Scene scene)
+        internal virtual void AddToScene(Scene scene)
         {
+            _scene = scene;
             Shape.Canvas = scene.RelatedWorldCanvas;
             scene.physicalObjects.Add(this);
         }
 
-        protected virtual void RemoveFromScene(Scene scene)
+        internal virtual void RemoveFromScene(Scene scene)
         {
+            _scene = null;
+
             if (IsSelected)
                 RelatedScene.SelectedObject = null;
 
@@ -412,13 +408,13 @@ namespace CruPhysics
             return new MovingObjectPropertyDialog(this);
         }
 
-        protected override void AddToScene(Scene scene)
+        internal override void AddToScene(Scene scene)
         {
             base.AddToScene(scene);
             scene.movingObjects.Add(this);
         }
 
-        protected override void RemoveFromScene(Scene scene)
+        internal override void RemoveFromScene(Scene scene)
         {
             base.RemoveFromScene(scene);
             scene.movingObjects.Remove(this);
@@ -506,13 +502,13 @@ namespace CruPhysics
 
         protected abstract void CalculateEffect(MovingObject movingObject, TimeSpan time);
 
-        protected override void AddToScene(Scene scene)
+        internal override void AddToScene(Scene scene)
         {
             base.AddToScene(scene);
             scene.fields.Add(this);
         }
 
-        protected override void RemoveFromScene(Scene scene)
+        internal override void RemoveFromScene(Scene scene)
         {
             base.RemoveFromScene(scene);
             scene.fields.Remove(this);
@@ -661,6 +657,11 @@ namespace CruPhysics
         private PhysicalObject selectedObject = null;
         private SelectionBox selectionBox = null;
 
+        private void CreateSelectionBox()
+        {
+            selectionBox = selectedObject.Shape.CreateSelectionBox();
+        }
+
         public PhysicalObject SelectedObject
         {
             get
@@ -681,7 +682,7 @@ namespace CruPhysics
                 if (value != null)
                 {
                     value.SetShowState(SelectionState.select);
-                    selectionBox = selectedObject.Shape.CreateSelectionBox();
+                    CreateSelectionBox();
                 }
 
                 RaisePropertyChangedEvent("SelectedObject");
@@ -736,14 +737,29 @@ namespace CruPhysics
             }
         }
 
+        private void PhysicalObjectShapeChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "Shape" && ((PhysicalObject)sender).IsSelected)
+            {
+                selectionBox.Delete();
+                CreateSelectionBox();
+            }
+        }
+
         public void Add(PhysicalObject physicalObject)
         {
-            physicalObject.RelatedScene = this;
+            physicalObject.AddToScene(this);
+
+            if (physicalObject is Field)
+                physicalObject.PropertyChanged += PhysicalObjectShapeChanged;
         }
 
         public void Remove(PhysicalObject physicalObject)
         {
-            physicalObject.RelatedScene = null;
+            physicalObject.RemoveFromScene(this);
+
+            if (physicalObject is Field)
+                physicalObject.PropertyChanged -= PhysicalObjectShapeChanged;
         }
 
         public double Bounds
