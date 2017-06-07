@@ -240,6 +240,9 @@ namespace CruPhysics
             controllers[7].Dragged += BottomController_Dragged;
             controllers[8].Dragged += RightbottomController_Dragged;
 
+            foreach (var c in controllers)
+                c.Dragged += (sender, args) => UpdateView();
+
             UpdateView();
         }
 

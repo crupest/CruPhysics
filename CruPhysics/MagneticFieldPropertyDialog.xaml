@@ -33,7 +33,7 @@
             <TextBox Grid.Column="1" Text="{Binding Path=Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         </Grid>
 
-        <controls:ShapePropertyControl Shape="{Binding Path=Shape}"/>
+        <controls:ShapePropertyControl Shape="{Binding Path=Shape, Mode=TwoWay}"/>
         
         <Grid>
             <Grid.RowDefinitions>

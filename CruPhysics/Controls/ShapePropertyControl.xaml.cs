@@ -72,7 +72,7 @@ namespace CruPhysics.Controls
         private void CircleRadioButton_Checked(object sender, RoutedEventArgs e)
         {
             if (!(Shape is CruCircle))
-                Shape = new CruCircle();
+                Shape = new CruCircle() { Radius = 50 };
         }
     }
 }
