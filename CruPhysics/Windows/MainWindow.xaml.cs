@@ -154,12 +154,7 @@ namespace CruPhysics.Windows
         private void ObjectPropertyBox_ValueTextBoxKeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Escape || e.Key == Key.Enter)
-            {
-                var selectedIndex = ObjectList.SelectedIndex;
                 ObjectList.Focus();
-                if (selectedIndex != -1)
-                    ObjectList.SelectedIndex = selectedIndex;
-            }
         }
 
         private void ObjectList_MouseDown(object sender, MouseButtonEventArgs e)
@@ -168,6 +163,11 @@ namespace CruPhysics.Windows
             var listViewItem  = Common.FindAcestor(hitTestResult.VisualHit, (element) => element is ListViewItem);
             if (listViewItem == null)
                 ObjectList.UnselectAll();
+        }
+
+        private void ListViewItem_GotFocus(object sender, RoutedEventArgs e)
+        {
+            ((ListViewItem)sender).IsSelected = true;
         }
     }
 

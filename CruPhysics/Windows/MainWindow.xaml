@@ -12,11 +12,7 @@
     <Window.Resources>
 
         <Style TargetType="ListViewItem">
-            <Style.Triggers>
-                <Trigger Property="IsKeyboardFocusWithin" Value="True">
-                    <Setter Property="IsSelected" Value="True"/>
-                </Trigger>
-            </Style.Triggers>
+            <EventSetter Event="GotFocus" Handler="ListViewItem_GotFocus"/>
         </Style>
         
         <local:ObjectListItemTemplateSelector x:Key="objectListItemTemplateSelector"/>
