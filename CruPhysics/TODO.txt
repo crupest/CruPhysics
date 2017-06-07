@@ -1,1 +1,2 @@
-﻿
+﻿1.color
+2.databinding validation

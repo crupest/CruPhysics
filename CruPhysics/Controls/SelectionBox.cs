@@ -161,11 +161,13 @@ namespace CruPhysics.Controls
         private Controller centerController;
         private Controller radiusController;
 
+        private double radiusControllerAngle;
+
         public CircleSelectionBox(CruCircle circle)
             : base(circle)
         {
             centerController = new Controller(circle.Canvas, Cursors.SizeAll);
-            radiusController = new Controller(circle.Canvas, Cursors.SizeWE);
+            radiusController = new Controller(circle.Canvas, Cursors.SizeAll);
 
             UpdateControllerPosition();
 
@@ -185,7 +187,7 @@ namespace CruPhysics.Controls
         {
             centerController.Position = (Point) SelectedShape.Center;
             radiusController.Position = (Point) SelectedShape.Center +
-                new Vector(SelectedShape.Radius, 0.0);
+                Common.Rotate(new Vector(SelectedShape.Radius, 0.0), radiusControllerAngle);
         }
 
         private void CenterController_Dragged(object sender, ControllerDraggedEventArgs e)
@@ -196,10 +198,9 @@ namespace CruPhysics.Controls
 
         private void RadiusController_Dragged(object sender, ControllerDraggedEventArgs e)
         {
-            var center = centerController.Position;
-            SelectedShape.Radius =
-                e.Position.X <= center.X ?
-                0.0 : e.Position.X - center.Y;
+            var vector = e.Position - (Point)SelectedShape.Center;
+            SelectedShape.Radius = vector.Length;
+            radiusControllerAngle = Common.GetAngleBetweenXAxis(vector);
             UpdateControllerPosition();
         }
 

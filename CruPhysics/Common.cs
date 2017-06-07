@@ -96,15 +96,30 @@ namespace CruPhysics
         }
 
         /// <summary>
-        /// 顺时针旋转一个向量一定角度
+        /// 计算向量与x轴之间的角度，顺时针
         /// </summary>
-        /// <param name="vector">要旋转的向量</param>
-        /// <param name="angle">顺时针旋转的角度</param>
-        public static void Rotate(ref Vector vector, double angle)
+        public static double GetAngleBetweenXAxis(Vector vector)
         {
-            vector = Rotate(vector, angle);
+            if (vector.X == 0.0)
+            {
+                if (vector.Y == 0.0)
+                    return 0.0;
+                else if (vector.Y > 0.0)
+                    return Math.PI * 3.0 / 2.0;
+                else
+                    return Math.PI / 2.0;
+            }
+
+            var a = Math.Atan(vector.Y / vector.X);
+            if (vector.X < 0.0)
+                a += Math.PI;
+            return Math.PI * 2.0 - a;
         }
 
+        public static double GetAngle(Vector vector1, Vector vector2)
+        {
+            return GetAngleBetweenXAxis(vector2) - GetAngleBetweenXAxis(vector1);
+        }
 
         public static Point TransformPoint(Point point)
         {
@@ -120,6 +135,11 @@ namespace CruPhysics
                     return parent;
                 parent = VisualTreeHelper.GetParent(parent);
             }
+        }
+
+        public static double GetDistance(Point point1, Point point2)
+        {
+            return Math.Sqrt(Math.Pow(point1.X - point2.X, 2) + Math.Pow(point1.Y - point2.Y, 2));
         }
     }
 }
