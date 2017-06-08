@@ -695,7 +695,7 @@ namespace CruPhysics
         {
             _mainWindow = mainWindow;
             Current = this;
-            ScanInterval = TimeSpan.FromMilliseconds(50.0);
+            ScanInterval = TimeSpan.FromMilliseconds(15.0);
             timer.Tick += Run;
         }
 
@@ -712,15 +712,14 @@ namespace CruPhysics
             runningTime += ScanInterval;
             RelatedMainWindow.TimeTextBox.Text = runningTime.ToString(timeFormat);
 
-            var calculationInterval = TimeSpan.FromTicks(ScanInterval.Ticks / 1000);
-            for (int k = 1; k <= 1000; k++)
-                foreach (var i in movingObjects)
-                {
-                    foreach (var j in fields)
-                        j.Influence(i, calculationInterval);
-                    i.Run(calculationInterval);
-                    i.ClearForce();
-                }
+            var calculationInterval = ScanInterval;
+            foreach (var i in movingObjects)
+            {
+                foreach (var j in fields)
+                    j.Influence(i, calculationInterval);
+                i.Run(calculationInterval);
+                i.ClearForce();
+            }
         }
 
         public MainWindow RelatedMainWindow
