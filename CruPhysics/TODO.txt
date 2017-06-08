@@ -1,3 +1,5 @@
-﻿1.color
-2.databinding validation
-3.thumbnail
+﻿1.databinding validation
+2.shape update problem
+3.color
+4.thumbnail
+5.main loop
