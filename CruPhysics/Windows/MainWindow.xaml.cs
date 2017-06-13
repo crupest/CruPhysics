@@ -151,12 +151,6 @@ namespace CruPhysics.Windows
             MainCanvas.ReleaseMouseCapture();
         }
 
-        private void ObjectPropertyBox_ValueTextBoxKeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Escape || e.Key == Key.Enter)
-                ObjectList.Focus();
-        }
-
         private void ObjectList_MouseDown(object sender, MouseButtonEventArgs e)
         {
             var hitTestResult = VisualTreeHelper.HitTest(ObjectList, e.GetPosition(ObjectList));

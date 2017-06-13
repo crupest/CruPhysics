@@ -23,12 +23,14 @@ namespace CruPhysics.Controls
         public static readonly DependencyProperty PropertyNameProperty;
         public static readonly DependencyProperty ValueProperty;
         public static readonly DependencyProperty UnitProperty;
+        public static readonly DependencyProperty LoseFocusTargetProperty;
 
         static ObjectPropertyBox()
         {
             PropertyNameProperty = DependencyProperty.Register("PropertyName", typeof(string), typeof(ObjectPropertyBox), new FrameworkPropertyMetadata(""));
             ValueProperty = DependencyProperty.Register("Value", typeof(double), typeof(ObjectPropertyBox), new FrameworkPropertyMetadata(0.0));
             UnitProperty = DependencyProperty.Register("Unit", typeof(string), typeof(ObjectPropertyBox), new FrameworkPropertyMetadata(""));
+            LoseFocusTargetProperty = DependencyProperty.Register("LoseFocusTarget", typeof(UIElement), typeof(ObjectPropertyBox), new FrameworkPropertyMetadata(null));
         }
 
         public ObjectPropertyBox()
@@ -72,15 +74,29 @@ namespace CruPhysics.Controls
             }
         }
 
-        public event KeyEventHandler ValueTextBoxKeyDown
+        public UIElement LoseFocusTarget
         {
-            add
+            get
             {
-                ValueTextBox.KeyDown += value;
+                return (UIElement)GetValue(LoseFocusTargetProperty);
             }
-            remove
+            set
             {
-                ValueTextBox.KeyDown -= value;
+                SetValue(LoseFocusTargetProperty, value);
+            }
+        }
+
+        private void ValueTextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Escape || e.Key == Key.Enter)
+            {
+                var target = LoseFocusTarget;
+                if (target == null)
+                {
+                    target = (UIElement)Common.FindAcestor(ValueTextBox, (element) => element is UIElement && ((UIElement)element).Focusable);
+                }
+                if (target != null)
+                    target.Focus();
             }
         }
     }

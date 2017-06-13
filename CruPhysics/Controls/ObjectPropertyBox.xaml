@@ -4,11 +4,29 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:CruPhysics.Controls"
+             xmlns:cru="clr-namespace:CruPhysics"
              mc:Ignorable="d"
              d:DesignWidth="200" d:DesignHeight="30">
+
     <StackPanel Orientation="Horizontal">
         <TextBlock Margin="0 0 10 0" Text="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:ObjectPropertyBox}}, Path=PropertyName}"/>
-        <TextBox Name="ValueTextBox" Style="{StaticResource ResourceKey=AutoBorder}" Text="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:ObjectPropertyBox}}, Path=Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        <TextBox Name="ValueTextBox" Style="{StaticResource ResourceKey=AutoBorder}" KeyDown="ValueTextBox_KeyDown">
+            <TextBox.Template>
+                <ControlTemplate>
+                    <StackPanel>
+                        <AdornedElementPlaceholder/>
+                        <TextBlock Text="123"/>
+                    </StackPanel>
+                </ControlTemplate>
+            </TextBox.Template>
+            <TextBox.Text>
+                <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=local:ObjectPropertyBox}" Path="Value" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
+                    <Binding.ValidationRules>
+                        <cru:NumberValidationRule/>
+                    </Binding.ValidationRules>
+                </Binding>
+            </TextBox.Text>
+        </TextBox>
         <TextBlock Text="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:ObjectPropertyBox}}, Path=Unit}"/>
     </StackPanel>
 </UserControl>

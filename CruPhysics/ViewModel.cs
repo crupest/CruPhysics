@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using System.ComponentModel;
 
 using CruPhysics.Windows;
+using System.Windows.Controls;
+using System.Globalization;
 
 namespace CruPhysics
 {
@@ -34,6 +36,28 @@ namespace CruPhysics
             {
                 return scene;
             }
+        }
+    }
+
+    public class NumberValidationRule : ValidationRule
+    {
+        protected double number;
+
+        public override ValidationResult Validate(object value, CultureInfo cultureInfo)
+        {
+            try
+            {
+                number = double.Parse(value.ToString());
+            }
+            catch (FormatException)
+            {
+                return new ValidationResult(false, "不是一个数字！");
+            }
+            catch (OverflowException)
+            {
+                return new ValidationResult(false, "超出范围！");
+            }
+            return new ValidationResult(true, null);
         }
     }
 }
