@@ -4,8 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:CruPhysics.Controls"
-             mc:Ignorable="d"
-             DataContext="{Binding RelativeSource={RelativeSource Self}, Path=Shape}">
+             mc:Ignorable="d">
 
     <UserControl.Resources>
         <Style TargetType="TextBox">
@@ -35,10 +34,10 @@
         <TextBlock Grid.Row="1" Grid.Column="0" Text="右边界"/>
         <TextBlock Grid.Row="2" Grid.Column="0" Text="上边界"/>
         <TextBlock Grid.Row="3" Grid.Column="0" Text="下边界"/>
-        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Path=Left, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Path=Right, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Path=Top, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-        <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Path=Bottom, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, Path=Shape.Left, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, Path=Shape.Right, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, Path=Shape.Top, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, Path=Shape.Bottom, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         <TextBlock Grid.Row="0" Grid.Column="2" Text="m"/>
         <TextBlock Grid.Row="1" Grid.Column="2" Text="m"/>
         <TextBlock Grid.Row="2" Grid.Column="2" Text="m"/>

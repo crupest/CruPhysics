@@ -26,29 +26,23 @@ namespace CruPhysics.Controls
 
         static ShapePropertyControl()
         {
-            ShapeProperty = DependencyProperty.Register("Shape", typeof(CruShape), typeof(ShapePropertyControl), new FrameworkPropertyMetadata() { PropertyChangedCallback = ShapePropertyChanged});
-        }
-
-        private static void ShapePropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args)
-        {
-            var control = (ShapePropertyControl) sender;
-
-            if (args.NewValue is CruRectangle)
-            {
-                control.RectangleRadioButton.IsChecked = true;
-                control.PropertyControl.Content = new RectanglePropertyControl((CruRectangle)args.NewValue);
-            }
-            else if (args.NewValue is CruCircle)
-            {
-                control.CircleRadioButton.IsChecked = true;
-                control.PropertyControl.Content = new CirclePropertyControl((CruCircle)args.NewValue);
-            }
+            ShapeProperty = DependencyProperty.Register("Shape", typeof(CruShape), typeof(ShapePropertyControl), new FrameworkPropertyMetadata());
         }
 
 
         public ShapePropertyControl()
         {
             InitializeComponent();
+
+            var descriptor = DependencyPropertyDescriptor.FromProperty(ShapeProperty, GetType());
+            descriptor.AddValueChanged(this, (sender, args) =>
+            {
+                var shape = Shape;
+                if (shape is CruRectangle)
+                    RectangleRadioButton.IsChecked = true;
+                else if (shape is CruCircle)
+                    CircleRadioButton.IsChecked = true;
+            });
         }
 
         public CruShape Shape

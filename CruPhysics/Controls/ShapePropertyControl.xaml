@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:CruPhysics.Controls"
+             xmlns:shapes="clr-namespace:CruPhysics.Shapes"
              mc:Ignorable="d"
              MinWidth="200">
 
@@ -11,6 +12,15 @@
         <Style TargetType="RadioButton">
             <Setter Property="Margin" Value="3"/>
         </Style>
+
+        <DataTemplate DataType="{x:Type shapes:CruRectangle}">
+            <local:RectanglePropertyControl Shape="{Binding}"/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type shapes:CruCircle}">
+            <local:CirclePropertyControl Shape="{Binding}"/>
+        </DataTemplate>
+        
     </UserControl.Resources>
     
     <StackPanel>
@@ -21,6 +31,6 @@
                 <RadioButton Name="CircleRadioButton"    Checked="CircleRadioButton_Checked"   >圆形</RadioButton>
             </StackPanel>
         </StackPanel>
-        <ContentControl Name="PropertyControl"/>
+        <ContentPresenter Content="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, Path=Shape}"/>
     </StackPanel>
 </UserControl>

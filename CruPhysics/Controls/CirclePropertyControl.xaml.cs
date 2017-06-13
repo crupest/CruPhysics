@@ -21,13 +21,24 @@ namespace CruPhysics.Controls
     /// </summary>
     public partial class CirclePropertyControl : UserControl
     {
-        public CruCircle Shape { get; private set; }
+        public static readonly DependencyProperty ShapeProperty = DependencyProperty.Register("Shape", typeof(CruCircle), typeof(CirclePropertyControl), new FrameworkPropertyMetadata());
 
-        public CirclePropertyControl(CruCircle shape)
+
+        public CirclePropertyControl()
         {
-            Shape = shape;
-
             InitializeComponent();
+        }
+
+        public CruCircle Shape
+        {
+            get
+            {
+                return (CruCircle)GetValue(ShapeProperty);
+            }
+            set
+            {
+                SetValue(ShapeProperty, value);
+            }
         }
     }
 }

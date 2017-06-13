@@ -14,7 +14,7 @@
         <Style TargetType="ListViewItem">
             <EventSetter Event="GotFocus" Handler="ListViewItem_GotFocus"/>
         </Style>
-        
+
         <local:ObjectListItemTemplateSelector x:Key="objectListItemTemplateSelector"/>
         <DataTemplate x:Key="movingObjectDataTemplate"
                       DataType="{x:Type cru:MovingObject}">

@@ -21,13 +21,24 @@ namespace CruPhysics.Controls
     /// </summary>
     public partial class RectanglePropertyControl : UserControl
     {
-        public CruRectangle Shape { get; private set; }
+        public static readonly DependencyProperty ShapeProperty = DependencyProperty.Register("Shape", typeof(CruRectangle), typeof(RectanglePropertyControl), new FrameworkPropertyMetadata());
 
-        public RectanglePropertyControl(CruRectangle shape)
+
+        public RectanglePropertyControl()
         {
-            Shape = shape;
-
             InitializeComponent();
+        }
+
+        public CruRectangle Shape
+        {
+            get
+            {
+                return (CruRectangle)GetValue(ShapeProperty);
+            }
+            set
+            {
+                SetValue(ShapeProperty, value);
+            }
         }
     }
 }

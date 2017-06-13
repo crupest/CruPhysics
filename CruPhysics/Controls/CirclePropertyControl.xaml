@@ -4,8 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:CruPhysics.Controls"
-             mc:Ignorable="d"
-             DataContext="{Binding RelativeSource={RelativeSource Self}, Path=Shape}">
+             mc:Ignorable="d">
 
     <UserControl.Resources>
         <Style TargetType="TextBox">
@@ -35,9 +34,9 @@
         <TextBlock Grid.Row="0" Grid.Column="1" Text="y轴"/>
         <TextBlock Grid.Row="1" Grid.Column="1" Text="x轴"/>
         <TextBlock Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" Text="半径"/>
-        <TextBox Grid.Row="0" Grid.Column="2" Text="{Binding Path=Center.X, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-        <TextBox Grid.Row="1" Grid.Column="2" Text="{Binding Path=Center.Y, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-        <TextBox Grid.Row="2" Grid.Column="2" Text="{Binding Path=Radius, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        <TextBox Grid.Row="0" Grid.Column="2" Text="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, Path=Shape.Center.X, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        <TextBox Grid.Row="1" Grid.Column="2" Text="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, Path=Shape.Center.Y, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        <TextBox Grid.Row="2" Grid.Column="2" Text="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, Path=Shape.Radius, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         <TextBlock Grid.Row="0" Grid.Column="3" Text="m"/>
         <TextBlock Grid.Row="1" Grid.Column="3" Text="m"/>
         <TextBlock Grid.Row="2" Grid.Column="3" Text="m"/>
