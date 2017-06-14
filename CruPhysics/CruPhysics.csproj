@@ -56,14 +56,8 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Common.cs" />
-    <Compile Include="Controls\CirclePropertyControl.xaml.cs">
-      <DependentUpon>CirclePropertyControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\ObjectPropertyBox.xaml.cs">
       <DependentUpon>ObjectPropertyBox.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\RectanglePropertyControl.xaml.cs">
-      <DependentUpon>RectanglePropertyControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\ElectricFieldPropertyDialog.xaml.cs">
       <DependentUpon>ElectricFieldPropertyDialog.xaml</DependentUpon>
@@ -80,15 +74,7 @@
     <Compile Include="Controls\ShapePropertyControl.xaml.cs">
       <DependentUpon>ShapePropertyControl.xaml</DependentUpon>
     </Compile>
-    <Page Include="Controls\CirclePropertyControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Controls\ObjectPropertyBox.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\RectanglePropertyControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

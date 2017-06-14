@@ -14,11 +14,79 @@
         </Style>
 
         <DataTemplate DataType="{x:Type shapes:CruRectangle}">
-            <local:RectanglePropertyControl Shape="{Binding}"/>
+            <DataTemplate.Resources>
+                <Style TargetType="TextBox">
+                    <Setter Property="VerticalAlignment" Value="Center"/>
+                    <Setter Property="Margin" Value="3"/>
+                    <Setter Property="Height" Value="Auto"/>
+                </Style>
+
+                <Style TargetType="TextBlock">
+                    <Setter Property="Margin" Value="3"/>
+                </Style>
+            </DataTemplate.Resources>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="左边界"/>
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="右边界"/>
+                <TextBlock Grid.Row="2" Grid.Column="0" Text="上边界"/>
+                <TextBlock Grid.Row="3" Grid.Column="0" Text="下边界"/>
+                <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Path=Left, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Path=Right, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Path=Top, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Path=Bottom, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBlock Grid.Row="0" Grid.Column="2" Text="m"/>
+                <TextBlock Grid.Row="1" Grid.Column="2" Text="m"/>
+                <TextBlock Grid.Row="2" Grid.Column="2" Text="m"/>
+                <TextBlock Grid.Row="3" Grid.Column="2" Text="m"/>
+            </Grid>
         </DataTemplate>
 
         <DataTemplate DataType="{x:Type shapes:CruCircle}">
-            <local:CirclePropertyControl Shape="{Binding}"/>
+            <DataTemplate.Resources>
+                <Style TargetType="TextBox">
+                    <Setter Property="VerticalAlignment" Value="Center"/>
+                    <Setter Property="Margin" Value="3"/>
+                    <Setter Property="Height" Value="Auto"/>
+                </Style>
+
+                <Style TargetType="TextBlock">
+                    <Setter Property="Margin" Value="3"/>
+                </Style>
+            </DataTemplate.Resources>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Text="圆心"/>
+                <TextBlock Grid.Row="0" Grid.Column="1" Text="y轴"/>
+                <TextBlock Grid.Row="1" Grid.Column="1" Text="x轴"/>
+                <TextBlock Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" Text="半径"/>
+                <TextBox Grid.Row="0" Grid.Column="2" Text="{Binding Path=Center.X, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBox Grid.Row="1" Grid.Column="2" Text="{Binding Path=Center.Y, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBox Grid.Row="2" Grid.Column="2" Text="{Binding Path=Radius, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBlock Grid.Row="0" Grid.Column="3" Text="m"/>
+                <TextBlock Grid.Row="1" Grid.Column="3" Text="m"/>
+                <TextBlock Grid.Row="2" Grid.Column="3" Text="m"/>
+            </Grid>
         </DataTemplate>
         
     </UserControl.Resources>
