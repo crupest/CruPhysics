@@ -8,6 +8,8 @@ using System.ComponentModel;
 using CruPhysics.Windows;
 using System.Windows.Controls;
 using System.Globalization;
+using System.Windows.Data;
+using System.Windows;
 
 namespace CruPhysics
 {
@@ -39,25 +41,17 @@ namespace CruPhysics
         }
     }
 
-    public class NumberValidationRule : ValidationRule
+    [ValueConversion(typeof(bool), typeof(Visibility))]
+    public class BoolToVisibilityConverter : IValueConverter
     {
-        protected double number;
-
-        public override ValidationResult Validate(object value, CultureInfo cultureInfo)
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            try
-            {
-                number = double.Parse(value.ToString());
-            }
-            catch (FormatException)
-            {
-                return new ValidationResult(false, "不是一个数字！");
-            }
-            catch (OverflowException)
-            {
-                return new ValidationResult(false, "超出范围！");
-            }
-            return new ValidationResult(true, null);
+            return ((bool)value) ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return null;
         }
     }
 }

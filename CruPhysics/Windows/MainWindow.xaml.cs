@@ -72,7 +72,10 @@ namespace CruPhysics.Windows
 
         private void Property_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            ViewModel.Scene.SelectedObject.CreatePropertyWindow().ShowDialog();
+            var window = ViewModel.Scene.SelectedObject.CreatePropertyWindow();
+            window.Owner = this;
+            window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            window.ShowDialog();
         }
 
         private void Delete_Executed(object sender, ExecutedRoutedEventArgs e)

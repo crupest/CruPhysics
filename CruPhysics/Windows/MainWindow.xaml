@@ -20,15 +20,7 @@
                       DataType="{x:Type cru:MovingObject}">
             <StackPanel>
                 <TextBox Style="{StaticResource ResourceKey=AutoBorder}" Text="{Binding Path=Name}"/>
-                <controls:ObjectPropertyBox PropertyName="位置x" Unit="m">
-                    <controls:ObjectPropertyBox.Value>
-                        <Binding Path="Position.X" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
-                            <Binding.ValidationRules>
-                                <cru:NumberValidationRule/>
-                            </Binding.ValidationRules>
-                        </Binding>
-                    </controls:ObjectPropertyBox.Value>
-                </controls:ObjectPropertyBox>
+                <controls:ObjectPropertyBox PropertyName="位置x" Value="{Binding Path=Position.X, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Unit="m"/>
                 <controls:ObjectPropertyBox PropertyName="位置y" Value="{Binding Path=Position.Y, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Unit="m"/>
             </StackPanel>
         </DataTemplate>

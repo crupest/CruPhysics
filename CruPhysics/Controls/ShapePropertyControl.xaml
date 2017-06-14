@@ -41,10 +41,22 @@
                 <TextBlock Grid.Row="1" Grid.Column="0" Text="右边界"/>
                 <TextBlock Grid.Row="2" Grid.Column="0" Text="上边界"/>
                 <TextBlock Grid.Row="3" Grid.Column="0" Text="下边界"/>
-                <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Path=Left, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Path=Right, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Path=Top, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Path=Bottom, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <StackPanel Grid.Row="0" Grid.Column="1">
+                    <TextBox Name="LeftBorderTextBox" Text="{Binding Path=Left, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True}"/>
+                    <local:ValidationErrorPresenter Target="{Binding ElementName=LeftBorderTextBox}"/>
+                </StackPanel>
+                <StackPanel Grid.Row="1" Grid.Column="1">
+                    <TextBox Name="RightBorderTextBox" Text="{Binding Path=Right, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True}"/>
+                    <local:ValidationErrorPresenter Target="{Binding ElementName=RightBorderTextBox}"/>
+                </StackPanel>
+                <StackPanel Grid.Row="2" Grid.Column="1">
+                    <TextBox Name="TopBorderTextBox" Text="{Binding Path=Top, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True}"/>
+                    <local:ValidationErrorPresenter Target="{Binding ElementName=TopBorderTextBox}"/>
+                </StackPanel>
+                <StackPanel Grid.Row="3" Grid.Column="1">
+                    <TextBox Name="BottomBorderTextBox" Text="{Binding Path=Bottom, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True}"/>
+                    <local:ValidationErrorPresenter Target="{Binding ElementName=BottomBorderTextBox}"/>
+                </StackPanel>
                 <TextBlock Grid.Row="0" Grid.Column="2" Text="m"/>
                 <TextBlock Grid.Row="1" Grid.Column="2" Text="m"/>
                 <TextBlock Grid.Row="2" Grid.Column="2" Text="m"/>
@@ -80,17 +92,26 @@
                 <TextBlock Grid.Row="0" Grid.Column="1" Text="y轴"/>
                 <TextBlock Grid.Row="1" Grid.Column="1" Text="x轴"/>
                 <TextBlock Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" Text="半径"/>
-                <TextBox Grid.Row="0" Grid.Column="2" Text="{Binding Path=Center.X, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                <TextBox Grid.Row="1" Grid.Column="2" Text="{Binding Path=Center.Y, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                <TextBox Grid.Row="2" Grid.Column="2" Text="{Binding Path=Radius, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <StackPanel Grid.Row="0" Grid.Column="2">
+                    <TextBox Name="CenterXTextBox" Text="{Binding Path=Center.X, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True}"/>
+                    <local:ValidationErrorPresenter Target="{Binding ElementName=CenterXTextBox}"/>
+                </StackPanel>
+                <StackPanel Grid.Row="1" Grid.Column="2">
+                    <TextBox Name="CenterYTextBox" Text="{Binding Path=Center.Y, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True}"/>
+                    <local:ValidationErrorPresenter Target="{Binding ElementName=CenterYTextBox}"/>
+                </StackPanel>
+                <StackPanel Grid.Row="2" Grid.Column="2">
+                    <TextBox Name="RadiusTextBox" Text="{Binding Path=Radius, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True}"/>
+                    <local:ValidationErrorPresenter Target="{Binding ElementName=RadiusTextBox}"/>
+                </StackPanel>
                 <TextBlock Grid.Row="0" Grid.Column="3" Text="m"/>
                 <TextBlock Grid.Row="1" Grid.Column="3" Text="m"/>
                 <TextBlock Grid.Row="2" Grid.Column="3" Text="m"/>
             </Grid>
         </DataTemplate>
-        
+
     </UserControl.Resources>
-    
+
     <StackPanel>
         <StackPanel Orientation="Horizontal">
             <TextBlock Margin="3" HorizontalAlignment="Center" VerticalAlignment="Center" Text="形状"/>
