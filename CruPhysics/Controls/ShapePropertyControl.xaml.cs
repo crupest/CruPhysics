@@ -14,12 +14,10 @@ using System.Windows.Navigation;
 
 using CruPhysics.Shapes;
 using System.ComponentModel;
+using System.Globalization;
 
 namespace CruPhysics.Controls
 {
-    /// <summary>
-    /// ShapePropertyControl.xaml 的交互逻辑
-    /// </summary>
     public partial class ShapePropertyControl : UserControl
     {
         public static readonly DependencyProperty ShapeProperty;

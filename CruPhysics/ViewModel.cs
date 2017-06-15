@@ -54,4 +54,28 @@ namespace CruPhysics
             return null;
         }
     }
+
+
+    public abstract class NumberValidationRule : ValidationRule
+    {
+        protected abstract ValidationResult Validate(double value);
+
+        public sealed override ValidationResult Validate(object value, CultureInfo cultureInfo)
+        {
+            double result;
+            try
+            {
+                result = double.Parse(value.ToString());
+            }
+            catch (FormatException)
+            {
+                return new ValidationResult(false, "不是一个数字!");
+            }
+            catch (OverflowException)
+            {
+                return new ValidationResult(false, "超出范围！");
+            }
+            return Validate(result);
+        }
+    }
 }
