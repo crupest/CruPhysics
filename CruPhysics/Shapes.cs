@@ -135,6 +135,7 @@ namespace CruPhysics.Shapes
     public abstract class CruShape : NotifyPropertyChangedObject
     {
         private DispatcherOperation updateOperation;
+        private EventHandler updated;
 
         protected CruShape()
         {
@@ -150,13 +151,27 @@ namespace CruPhysics.Shapes
             shape.MouseMove += (sender, e) => this.mouseMove?.Invoke(this, new ShapeMouseEventArgs(this, e));
         }
 
-        protected abstract void DoUpdate();
+        public event EventHandler Updated
+        {
+            add
+            {
+                updated += value;
+            }
+            remove
+            {
+                updated -= value;
+            }
+        }
+
+        protected virtual void DoUpdate()
+        {
+            updated?.Invoke(this, new EventArgs());
+        }
 
         public void Update()
         {
-            if (updateOperation != null)
-                updateOperation.Abort();
-            updateOperation = Raw.Dispatcher.BeginInvoke(DispatcherPriority.DataBind, new Action(DoUpdate));
+            if (updateOperation == null || updateOperation.Status == DispatcherOperationStatus.Completed)
+                updateOperation = Raw.Dispatcher.BeginInvoke(DispatcherPriority.DataBind, new Action(DoUpdate));
         }
 
         public void ForceUpdate()
@@ -403,6 +418,7 @@ namespace CruPhysics.Shapes
             shape.Y1 = -point1.Y;
             shape.X2 = point2.X;
             shape.Y2 = -point2.Y;
+            base.DoUpdate();
         }
 
         public override bool IsPointInside(Point point)
@@ -455,6 +471,7 @@ namespace CruPhysics.Shapes
             _shape.Height = _radius * 2.0;
             Canvas.SetLeft(_shape, _center.X - _radius);
             Canvas.SetTop(_shape, -_center.Y - _radius);
+            base.DoUpdate();
         }
 
         public BindablePoint Center
@@ -498,7 +515,7 @@ namespace CruPhysics.Shapes
         {
             var center = Center;
             return Math.Pow(point.X - center.X, 2) +
-                Math.Pow(point.Y - center.Y, 2) < Math.Pow(Radius, 2);
+                Math.Pow(point.Y - center.Y, 2) <= Math.Pow(Radius, 2);
         }
     }
 
@@ -507,8 +524,8 @@ namespace CruPhysics.Shapes
         private Rectangle _shape = new Rectangle();
         private double _left = -50.0;
         private double _top = 50.0;
-        private double _right = 50.0;
-        private double _bottom = -50.0;
+        private double _width = 100.0;
+        private double _height = 100.0;
 
         public CruRectangle()
         {
@@ -519,34 +536,38 @@ namespace CruPhysics.Shapes
             {
                 if (args.PropertyName == "Left")
                 {
-                    RaisePropertyChangedEvent("Width");
+                    RaisePropertyChangedEvent("Right");
                     RaisePropertyChangedEvent("LeftTop");
                     RaisePropertyChangedEvent("LeftBottom");
-                    RaisePropertyChangedEvent("Center");
-                    return;
-                }
-
-                if (args.PropertyName == "Top")
-                {
-                    RaisePropertyChangedEvent("Height");
-                    RaisePropertyChangedEvent("LeftTop");
-                    RaisePropertyChangedEvent("RightTop");
-                    RaisePropertyChangedEvent("Center");
-                    return;
-                }
-
-                if (args.PropertyName == "Right")
-                {
-                    RaisePropertyChangedEvent("Width");
                     RaisePropertyChangedEvent("RightTop");
                     RaisePropertyChangedEvent("RightBottom");
                     RaisePropertyChangedEvent("Center");
                     return;
                 }
 
-                if (args.PropertyName == "Bottom")
+                if (args.PropertyName == "Top")
                 {
-                    RaisePropertyChangedEvent("Height");
+                    RaisePropertyChangedEvent("Bottom");
+                    RaisePropertyChangedEvent("LeftTop");
+                    RaisePropertyChangedEvent("LeftBottom");
+                    RaisePropertyChangedEvent("RightTop");
+                    RaisePropertyChangedEvent("RightBottom");
+                    RaisePropertyChangedEvent("Center");
+                    return;
+                }
+
+                if (args.PropertyName == "Width")
+                {
+                    RaisePropertyChangedEvent("Right");
+                    RaisePropertyChangedEvent("RightTop");
+                    RaisePropertyChangedEvent("RightBottom");
+                    RaisePropertyChangedEvent("Center");
+                    return;
+                }
+
+                if (args.PropertyName == "Height")
+                {
+                    RaisePropertyChangedEvent("Bottom");
                     RaisePropertyChangedEvent("LeftBottom");
                     RaisePropertyChangedEvent("RightBottom");
                     RaisePropertyChangedEvent("Center");
@@ -562,10 +583,11 @@ namespace CruPhysics.Shapes
 
         protected override void DoUpdate()
         {
-            _shape.Width = _right - _left;
-            _shape.Height = _top - _bottom;
+            _shape.Width = _width;
+            _shape.Height = _height;
             Canvas.SetLeft(_shape, _left);
             Canvas.SetTop(_shape, -_top);
+            base.DoUpdate();
         }
 
         public override Shape GetRawShape()
@@ -573,28 +595,20 @@ namespace CruPhysics.Shapes
             return _shape;
         }
 
-        public Point Center
-        {
-            get
-            {
-                return new Point((Left + Right) / 2.0, (Top + Bottom) / 2.0);
-            }
-            set
-            {
-                var halfWidth = Width / 2.0;
-                var halfHeight = Height / 2.0;
-                Set(value.X - halfWidth,
-                    value.Y + halfHeight,
-                    value.X + halfWidth,
-                    value.Y - halfHeight);
-            }
-        }
 
         public double Width
         {
             get
             {
-                return Right - Left;
+                return _width;
+            }
+            set
+            {
+                if (value < 0.0)
+                    throw new ArgumentOutOfRangeException("value", value, "Width can't below 0.");
+                _width = value;
+                Update();
+                RaisePropertyChangedEvent("Width");
             }
         }
 
@@ -602,7 +616,15 @@ namespace CruPhysics.Shapes
         {
             get
             {
-                return Top - Bottom;
+                return _height;
+            }
+            set
+            {
+                if (value < 0.0)
+                    throw new ArgumentOutOfRangeException("value", value, "Height can't below 0.");
+                _height = value;
+                Update();
+                RaisePropertyChangedEvent("Height");
             }
         }
 
@@ -614,9 +636,6 @@ namespace CruPhysics.Shapes
             }
             set
             {
-                if (value > Right)
-                    throw new ArgumentOutOfRangeException
-                        ("Left", value, "Left can't be bigger than Right.");
                 _left = value;
                 Update();
                 RaisePropertyChangedEvent("Left");
@@ -631,9 +650,6 @@ namespace CruPhysics.Shapes
             }
             set
             {
-                if (value < Bottom)
-                    throw new ArgumentOutOfRangeException
-                        ("Top", value, "Top can't be smaller than Bottom.");
                 _top = value;
                 Update();
                 RaisePropertyChangedEvent("Top");
@@ -644,16 +660,7 @@ namespace CruPhysics.Shapes
         {
             get
             {
-                return _right;
-            }
-            set
-            {
-                if (value < Left)
-                    throw new ArgumentOutOfRangeException
-                        ("Right", value, "Right can't be smaller than Left.");
-                _right = value;
-                Update();
-                RaisePropertyChangedEvent("Right");
+                return Left + Width;
             }
         }
 
@@ -661,18 +668,18 @@ namespace CruPhysics.Shapes
         {
             get
             {
-                return _bottom;
-            }
-            set
-            {
-                if (value > Top)
-                    throw new ArgumentOutOfRangeException
-                        ("Bottom", value, "Bottom can't be bigger than Top.");
-                _bottom = value;
-                Update();
-                RaisePropertyChangedEvent("Bottom");
+                return Top - Height;
             }
         }
+
+        public Point Center
+        {
+            get
+            {
+                return new Point(Left + Width / 2.0, Top - Height / 2.0);
+            }
+        }
+
 
         public Point Lefttop
         {
@@ -706,46 +713,19 @@ namespace CruPhysics.Shapes
             }
         }
 
-        private void NotifyAllPropertiesChanged()
-        {
-            RaisePropertyChangedEvent("Left");
-            RaisePropertyChangedEvent("Top");
-            RaisePropertyChangedEvent("Right");
-            RaisePropertyChangedEvent("Bottom");
-        }
-
-        public void Set(double left, double top, double right, double bottom)
-        {
-            if (left > right || bottom > top)
-                throw new ArgumentException();
-
-            _left = left;
-            _top = top;
-            _right = right;
-            _bottom = bottom;
-
-            Update();
-            NotifyAllPropertiesChanged();
-        }
-
         public override void Move(Vector vector)
         {
-            _left += vector.X;
-            _right += vector.X;
-            _top += vector.Y;
-            _bottom += vector.Y;
-
-            Update();
-            NotifyAllPropertiesChanged();
+            Left += vector.X;
+            Top += vector.Y;
         }
 
         public override bool IsPointInside(Point point)
         {
             return
-                point.X > _left &&
-                point.X < _right &&
-                point.Y > _bottom &&
-                point.Y < _top;
+                point.X > Left &&
+                point.X < Right &&
+                point.Y > Bottom &&
+                point.Y < Top;
         }
     }
 }

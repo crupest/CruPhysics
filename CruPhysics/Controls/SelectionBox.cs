@@ -163,6 +163,8 @@ namespace CruPhysics.Controls
 
         private double radiusControllerAngle;
 
+        private EventHandler updateEventHandler;
+
         public CircleSelectionBox(CruCircle circle)
             : base(circle)
         {
@@ -171,8 +173,12 @@ namespace CruPhysics.Controls
 
             UpdateControllerPosition();
 
+            updateEventHandler = (sender, args) => UpdateControllerPosition();
+
             centerController.Dragged += CenterController_Dragged;
             radiusController.Dragged += RadiusController_Dragged;
+
+            circle.Updated += updateEventHandler;
         }
 
         public new CruCircle SelectedShape
@@ -193,7 +199,6 @@ namespace CruPhysics.Controls
         private void CenterController_Dragged(object sender, ControllerDraggedEventArgs e)
         {
             SelectedShape.Center.Set(e.Position);
-            UpdateControllerPosition();
         }
 
         private void RadiusController_Dragged(object sender, ControllerDraggedEventArgs e)
@@ -201,20 +206,22 @@ namespace CruPhysics.Controls
             var vector = e.Position - (Point)SelectedShape.Center;
             SelectedShape.Radius = vector.Length;
             radiusControllerAngle = Common.GetAngleBetweenXAxis(vector);
-            UpdateControllerPosition();
         }
 
         public override void Delete()
         {
             centerController.Delete();
             radiusController.Delete();
+            SelectedShape.Updated -= updateEventHandler;
         }
     }
 
     public sealed class RectangleSelectionBox : SelectionBox
     {
         //From left to right, from top to bottom.
-        Controller[] controllers = new Controller[9];
+        private Controller[] controllers = new Controller[9];
+
+        private EventHandler updateEventHandler;
 
         public RectangleSelectionBox(CruRectangle rectangle)
             : base(rectangle)
@@ -241,62 +248,102 @@ namespace CruPhysics.Controls
             controllers[7].Dragged += BottomController_Dragged;
             controllers[8].Dragged += RightbottomController_Dragged;
 
-            foreach (var c in controllers)
-                c.Dragged += (sender, args) => UpdateView();
+            updateEventHandler = (sender, args) => UpdateControllerPosition();
+            rectangle.Updated += updateEventHandler;
 
-            UpdateView();
+            UpdateControllerPosition();
         }
 
         private void LefttopController_Dragged(object sender, ControllerDraggedEventArgs e)
         {
-            SelectedShape.Left = Math.Min(SelectedShape.Right, e.Position.X);
-            SelectedShape.Top = Math.Max(SelectedShape.Bottom, e.Position.Y);
+            var left = Math.Min(SelectedShape.Right, e.Position.X);
+            var top = Math.Max(SelectedShape.Bottom, e.Position.Y);
+            var width = SelectedShape.Right - left;
+            var height = top - SelectedShape.Bottom;
+
+            SelectedShape.Left = left;
+            SelectedShape.Top = top;
+            SelectedShape.Width = width;
+            SelectedShape.Height = height;
         }
 
         private void TopController_Dragged(object sender, ControllerDraggedEventArgs e)
         {
-            SelectedShape.Top = Math.Max(SelectedShape.Bottom, e.Position.Y);
+            var top = Math.Max(SelectedShape.Bottom, e.Position.Y);
+            var height = top - SelectedShape.Bottom;
+
+            SelectedShape.Top = top;
+            SelectedShape.Height = height;
         }
 
         private void RighttopController_Dragged(object sender, ControllerDraggedEventArgs e)
         {
-            SelectedShape.Right = Math.Max(SelectedShape.Left, e.Position.X);
-            SelectedShape.Top = Math.Max(SelectedShape.Bottom, e.Position.Y);
+            var right = Math.Max(SelectedShape.Left, e.Position.X);
+            var top = Math.Max(SelectedShape.Bottom, e.Position.Y);
+            var width = right - SelectedShape.Left;
+            var height = top - SelectedShape.Bottom;
+
+            SelectedShape.Top = top;
+            SelectedShape.Width = width;
+            SelectedShape.Height = height;
         }
 
         private void LeftController_Dragged(object sender, ControllerDraggedEventArgs e)
         {
-            SelectedShape.Left = Math.Min(SelectedShape.Right, e.Position.X);
+            var left = Math.Min(SelectedShape.Right, e.Position.X);
+            var width = SelectedShape.Right - left;
+
+            SelectedShape.Left = left;
+            SelectedShape.Width = width;
         }
 
         private void CenterController_Dragged(object sender, ControllerDraggedEventArgs e)
         {
-            SelectedShape.Center = e.Position;
+            var vector = e.Position - SelectedShape.Center;
+
+            SelectedShape.Move(vector);
         }
 
         private void RightController_Dragged(object sender, ControllerDraggedEventArgs e)
         {
-            SelectedShape.Right = Math.Max(SelectedShape.Left, e.Position.X);
+            var right = Math.Max(SelectedShape.Left, e.Position.X);
+            var width = right - SelectedShape.Left;
+
+            SelectedShape.Width = width;
         }
 
         private void LeftbottomController_Dragged(object sender, ControllerDraggedEventArgs e)
         {
-            SelectedShape.Left = Math.Min(SelectedShape.Right, e.Position.X);
-            SelectedShape.Bottom = Math.Min(SelectedShape.Top, e.Position.Y);
+            var left = Math.Min(SelectedShape.Right, e.Position.X);
+            var bottom = Math.Min(SelectedShape.Top, e.Position.Y);
+            var width = SelectedShape.Right - left;
+            var height = SelectedShape.Top - bottom;
+
+            SelectedShape.Left = left;
+            SelectedShape.Width = width;
+            SelectedShape.Height = height;
         }
 
         private void BottomController_Dragged(object sender, ControllerDraggedEventArgs e)
         {
-            SelectedShape.Bottom = Math.Min(SelectedShape.Top, e.Position.Y);
+            var bottom = Math.Min(SelectedShape.Top, e.Position.Y);
+            var height = SelectedShape.Top - bottom;
+
+            SelectedShape.Height = height;
         }
 
         private void RightbottomController_Dragged(object sender, ControllerDraggedEventArgs e)
         {
-            SelectedShape.Right = Math.Max(SelectedShape.Left, e.Position.X);
-            SelectedShape.Bottom = Math.Min(SelectedShape.Top, e.Position.Y);
+            var right = Math.Max(SelectedShape.Left, e.Position.X);
+            var bottom = Math.Min(SelectedShape.Top, e.Position.Y);
+            var width = right - SelectedShape.Left;
+            var height = SelectedShape.Top - bottom;
+
+            SelectedShape.Width = width;
+            SelectedShape.Height = height;
         }
         
-        private void UpdateView()
+        private void UpdateControllerPosition()
         {
             var rectangle = SelectedShape;
 
@@ -323,6 +370,7 @@ namespace CruPhysics.Controls
         {
             foreach (var i in controllers)
                 i.Delete();
+            SelectedShape.Updated -= updateEventHandler;
         }
     }
 }
