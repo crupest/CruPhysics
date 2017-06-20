@@ -58,9 +58,9 @@ namespace CruPhysics.Controls
                 };
                 errorTextBox.SetBinding(TextBlock.VisibilityProperty, binding1);
 
-                var binding2 = new Binding("(Validation.Errors)[0].ErrorContent")
+                var binding2 = new Binding("(Validation.Errors).CurrentItem.ErrorContent")
                 {
-                    Source = Content,
+                    Source = Content
                 };
                 errorTextBox.SetBinding(TextBlock.TextProperty, binding2);
             }
