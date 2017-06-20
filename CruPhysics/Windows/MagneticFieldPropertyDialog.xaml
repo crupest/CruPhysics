@@ -34,7 +34,7 @@
         </Grid>
 
         <controls:ShapePropertyControl Shape="{Binding Path=Shape, Mode=TwoWay}"/>
-        
+
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -45,15 +45,17 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <TextBlock Grid.Row="0" Grid.Column="0" Text="磁感应强度"/>
-            <TextBox Grid.Row="0" Grid.Column="1">
-                <TextBox.Text>
-                    <Binding Path="FluxDensity" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
-                        <Binding.ValidationRules>
-                            <local:NumberValidationRule/>
-                        </Binding.ValidationRules>
-                    </Binding>
-                </TextBox.Text>
-            </TextBox>
+            <controls:ValidationContainer Grid.Row="0" Grid.Column="1">
+                <TextBox>
+                    <TextBox.Text>
+                        <Binding Path="FluxDensity" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
+                            <Binding.ValidationRules>
+                                <local:NumberValidationRule/>
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
+                </TextBox>
+            </controls:ValidationContainer>
             <TextBlock Grid.Row="0" Grid.Column="2" Text="T"/>
         </Grid>
     </StackPanel>
