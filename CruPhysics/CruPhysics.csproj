@@ -59,9 +59,7 @@
     <Compile Include="Controls\ObjectPropertyBox.xaml.cs">
       <DependentUpon>ObjectPropertyBox.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ValidationErrorPresenter.xaml.cs">
-      <DependentUpon>ValidationErrorPresenter.xaml</DependentUpon>
-    </Compile>
+    <Compile Include="Controls\ValidationContainer.cs" />
     <Compile Include="Windows\ElectricFieldPropertyDialog.xaml.cs">
       <DependentUpon>ElectricFieldPropertyDialog.xaml</DependentUpon>
     </Compile>
@@ -81,9 +79,9 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\ValidationErrorPresenter.xaml">
-      <SubType>Designer</SubType>
+    <Page Include="Themes\Generic.xaml">
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Windows\ElectricFieldPropertyDialog.xaml">
       <SubType>Designer</SubType>

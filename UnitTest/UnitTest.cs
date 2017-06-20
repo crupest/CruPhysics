@@ -32,13 +32,5 @@ namespace UnitTest
             var circle = new CruCircle();
             circle.Set(new Point(), -1);
         }
-
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
-        public void RectangleSetTest()
-        {
-            var rect = new CruRectangle();
-            rect.Set(10, -10, 0, 0);
-        }
     }
 }
