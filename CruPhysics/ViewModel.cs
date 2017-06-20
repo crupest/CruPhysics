@@ -56,9 +56,12 @@ namespace CruPhysics
     }
 
 
-    public abstract class NumberValidationRule : ValidationRule
+    public class NumberValidationRule : ValidationRule
     {
-        protected abstract ValidationResult Validate(double value);
+        protected virtual ValidationResult Validate(double value)
+        {
+            return new ValidationResult(true, null);
+        }
 
         public sealed override ValidationResult Validate(object value, CultureInfo cultureInfo)
         {
@@ -76,6 +79,40 @@ namespace CruPhysics
                 return new ValidationResult(false, "超出范围！");
             }
             return Validate(result);
+        }
+    }
+
+    public class PositiveValidationRule : NumberValidationRule
+    {
+        public PositiveValidationRule()
+        {
+            Info = "必须是一个正数！";
+        }
+
+        public string Info { get; set; }
+
+        protected override ValidationResult Validate(double value)
+        {
+            if (value <= 0.0)
+                return new ValidationResult(false, Info);
+            return base.Validate(value);
+        }
+    }
+
+    public class PositiveOrZeroValidationRule : NumberValidationRule
+    {
+        public PositiveOrZeroValidationRule()
+        {
+            Info = "必须是一个非负数！";
+        }
+
+        public string Info { get; set; }
+
+        protected override ValidationResult Validate(double value)
+        {
+            if (value < 0.0)
+                return new ValidationResult(false, Info);
+            return base.Validate(value);
         }
     }
 }

@@ -53,13 +53,69 @@
             <TextBlock Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Text="质量"/>
             <TextBlock Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" Text="电荷量"/>
             <TextBox Grid.Row="0" Grid.Column="2" Text="{Binding Path=Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-            <TextBox Grid.Row="1" Grid.Column="2" Text="{Binding Path=Position.X, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-            <TextBox Grid.Row="2" Grid.Column="2" Text="{Binding Path=Position.Y, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-            <TextBox Grid.Row="3" Grid.Column="2" Text="{Binding Path=Radius, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-            <TextBox Grid.Row="4" Grid.Column="2" Text="{Binding Path=Velocity.X, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-            <TextBox Grid.Row="5" Grid.Column="2" Text="{Binding Path=Velocity.Y, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-            <TextBox Grid.Row="6" Grid.Column="2" Text="{Binding Path=Mass, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-            <TextBox Grid.Row="7" Grid.Column="2" Text="{Binding Path=Charge, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBox Grid.Row="1" Grid.Column="2">
+                <TextBox.Text>
+                    <Binding Path="Position.X" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
+                        <Binding.ValidationRules>
+                            <local:NumberValidationRule/>
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
+            <TextBox Grid.Row="2" Grid.Column="2">
+                <TextBox.Text>
+                    <Binding Path="Position.Y" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
+                        <Binding.ValidationRules>
+                            <local:NumberValidationRule/>
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
+            <TextBox Grid.Row="3" Grid.Column="2">
+                <TextBox.Text>
+                    <Binding Path="Radius" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
+                        <Binding.ValidationRules>
+                            <local:PositiveOrZeroValidationRule Info="半径不能小于0！"/>
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
+            <TextBox Grid.Row="4" Grid.Column="2">
+                <TextBox.Text>
+                    <Binding Path="Velocity.X" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
+                        <Binding.ValidationRules>
+                            <local:NumberValidationRule/>
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
+            <TextBox Grid.Row="5" Grid.Column="2">
+                <TextBox.Text>
+                    <Binding Path="Velocity.Y" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
+                        <Binding.ValidationRules>
+                            <local:NumberValidationRule/>
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
+            <TextBox Grid.Row="6" Grid.Column="2">
+                <TextBox.Text>
+                    <Binding Path="Mass" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
+                        <Binding.ValidationRules>
+                            <local:PositiveValidationRule Info="质量必须大于0！"/>
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
+            <TextBox Grid.Row="7" Grid.Column="2">
+                <TextBox.Text>
+                    <Binding Path="Charge" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
+                        <Binding.ValidationRules>
+                            <local:NumberValidationRule/>
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
             <TextBlock Grid.Row="1" Grid.Column="3" Text="m"/>
             <TextBlock Grid.Row="2" Grid.Column="3" Text="m"/>
             <TextBlock Grid.Row="3" Grid.Column="3" Text="m"/>
