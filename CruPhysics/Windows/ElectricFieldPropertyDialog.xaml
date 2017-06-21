@@ -19,6 +19,7 @@
                 <Setter Property="VerticalAlignment" Value="Center"/>
                 <Setter Property="Margin" Value="3"/>
                 <Setter Property="Height" Value="Auto"/>
+                <Setter Property="Validation.ErrorTemplate" Value="{StaticResource ResourceKey=ValidationErrorTemplate}"/>
             </Style.Setters>
         </Style>
     </Window.Resources>
@@ -49,28 +50,24 @@
             <TextBlock Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" VerticalAlignment="Center" Text="电场强度"/>
             <TextBlock Grid.Row="0" Grid.Column="1" Text="x轴"/>
             <TextBlock Grid.Row="1" Grid.Column="1" Text="y轴"/>
-            <controls:ValidationContainer Grid.Row="0" Grid.Column="2">
-                <TextBox>
-                    <TextBox.Text>
-                        <Binding Path="Intensity.X" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
-                            <Binding.ValidationRules>
-                                <local:NumberValidationRule/>
-                            </Binding.ValidationRules>
-                        </Binding>
-                    </TextBox.Text>
-                </TextBox>
-            </controls:ValidationContainer>
-            <controls:ValidationContainer Grid.Row="1" Grid.Column="2">
-                <TextBox>
-                    <TextBox.Text>
-                        <Binding Path="Intensity.Y" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
-                            <Binding.ValidationRules>
-                                <local:NumberValidationRule/>
-                            </Binding.ValidationRules>
-                        </Binding>
-                    </TextBox.Text>
-                </TextBox>
-            </controls:ValidationContainer>
+            <TextBox Grid.Row="0" Grid.Column="2">
+                <TextBox.Text>
+                    <Binding Path="Intensity.X" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" NotifyOnValidationError="True">
+                        <Binding.ValidationRules>
+                            <local:NumberValidationRule/>
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
+            <TextBox Grid.Row="1" Grid.Column="2">
+                <TextBox.Text>
+                    <Binding Path="Intensity.Y" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" NotifyOnValidationError="True">
+                        <Binding.ValidationRules>
+                            <local:NumberValidationRule/>
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
             <TextBlock Grid.Row="0" Grid.Column="3" Text="N/q"/>
             <TextBlock Grid.Row="1" Grid.Column="3" Text="N/q"/>
         </Grid>

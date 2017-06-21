@@ -20,6 +20,7 @@
                     <Setter Property="VerticalAlignment" Value="Center"/>
                     <Setter Property="Margin" Value="3"/>
                     <Setter Property="Height" Value="Auto"/>
+                    <Setter Property="Validation.ErrorTemplate" Value="{StaticResource ValidationErrorTemplate}"/>
                 </Style>
 
                 <Style TargetType="TextBlock">
@@ -42,50 +43,42 @@
                 <TextBlock Grid.Row="1" Grid.Column="0" Text="上边界"/>
                 <TextBlock Grid.Row="2" Grid.Column="0" Text="宽度"/>
                 <TextBlock Grid.Row="3" Grid.Column="0" Text="高度"/>
-                <local:ValidationContainer Grid.Row="0" Grid.Column="1">
-                    <TextBox Name="LeftBorderTextBox">
-                        <TextBox.Text>
-                            <Binding Path="Left" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
-                                <Binding.ValidationRules>
-                                    <cru:NumberValidationRule/>
-                                </Binding.ValidationRules>
-                            </Binding>
-                        </TextBox.Text>
-                    </TextBox>
-                </local:ValidationContainer>
-                <local:ValidationContainer Grid.Row="1" Grid.Column="1">
-                    <TextBox Name="TopBorderTextBox">
-                        <TextBox.Text>
-                            <Binding Path="Top" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
-                                <Binding.ValidationRules>
-                                    <cru:NumberValidationRule/>
-                                </Binding.ValidationRules>
-                            </Binding>
-                        </TextBox.Text>
-                    </TextBox>
-                </local:ValidationContainer>
-                <local:ValidationContainer Grid.Row="2" Grid.Column="1">
-                    <TextBox Name="WidthTextBox">
-                        <TextBox.Text>
-                            <Binding Path="Width" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
-                                <Binding.ValidationRules>
-                                    <cru:PositiveOrZeroValidationRule Info="宽度不能小于0！"/>
-                                </Binding.ValidationRules>
-                            </Binding>
-                        </TextBox.Text>
-                    </TextBox>
-                </local:ValidationContainer>
-                <local:ValidationContainer Grid.Row="3" Grid.Column="1">
-                    <TextBox Name="HeightTextBox">
-                        <TextBox.Text>
-                            <Binding Path="Height" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
-                                <Binding.ValidationRules>
-                                    <cru:PositiveOrZeroValidationRule Info="高度不能小于0！"/>
-                                </Binding.ValidationRules>
-                            </Binding>
-                        </TextBox.Text>
-                    </TextBox>
-                </local:ValidationContainer>
+                <TextBox Name="LeftBorderTextBox" Grid.Row="0" Grid.Column="1">
+                    <TextBox.Text>
+                        <Binding Path="Left" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" NotifyOnValidationError="True">
+                            <Binding.ValidationRules>
+                                <cru:NumberValidationRule/>
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
+                </TextBox>
+                <TextBox Name="TopBorderTextBox" Grid.Row="1" Grid.Column="1">
+                    <TextBox.Text>
+                        <Binding Path="Top" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" NotifyOnValidationError="True">
+                            <Binding.ValidationRules>
+                                <cru:NumberValidationRule/>
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
+                </TextBox>
+                <TextBox Name="WidthTextBox" Grid.Row="2" Grid.Column="1">
+                    <TextBox.Text>
+                        <Binding Path="Width" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" NotifyOnValidationError="True">
+                            <Binding.ValidationRules>
+                                <cru:PositiveOrZeroValidationRule Info="宽度不能小于0！"/>
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
+                </TextBox>
+                <TextBox Name="HeightTextBox" Grid.Row="3" Grid.Column="1">
+                    <TextBox.Text>
+                        <Binding Path="Height" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" NotifyOnValidationError="True">
+                            <Binding.ValidationRules>
+                                <cru:PositiveOrZeroValidationRule Info="高度不能小于0！"/>
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
+                </TextBox>
                 <TextBlock Grid.Row="0" Grid.Column="2" Text="m"/>
                 <TextBlock Grid.Row="1" Grid.Column="2" Text="m"/>
                 <TextBlock Grid.Row="2" Grid.Column="2" Text="m"/>
@@ -99,6 +92,7 @@
                     <Setter Property="VerticalAlignment" Value="Center"/>
                     <Setter Property="Margin" Value="3"/>
                     <Setter Property="Height" Value="Auto"/>
+                    <Setter Property="Validation.ErrorTemplate" Value="{StaticResource ResourceKey=ValidationErrorTemplate}"/>
                 </Style>
 
                 <Style TargetType="TextBlock">
@@ -121,39 +115,33 @@
                 <TextBlock Grid.Row="0" Grid.Column="1" Text="y轴"/>
                 <TextBlock Grid.Row="1" Grid.Column="1" Text="x轴"/>
                 <TextBlock Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" Text="半径"/>
-                <local:ValidationContainer Grid.Row="0" Grid.Column="2">
-                    <TextBox Name="CenterXTextBox">
-                        <TextBox.Text>
-                            <Binding Path="Center.X" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
-                                <Binding.ValidationRules>
-                                    <cru:NumberValidationRule/>
-                                </Binding.ValidationRules>
-                            </Binding>
-                        </TextBox.Text>
-                    </TextBox>
-                </local:ValidationContainer>
-                <local:ValidationContainer Grid.Row="1" Grid.Column="2">
-                    <TextBox Name="CenterYTextBox">
-                        <TextBox.Text>
-                            <Binding Path="Center.Y" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
-                                <Binding.ValidationRules>
-                                    <cru:NumberValidationRule/>
-                                </Binding.ValidationRules>
-                            </Binding>
-                        </TextBox.Text>
-                    </TextBox>
-                </local:ValidationContainer>
-                <local:ValidationContainer Grid.Row="2" Grid.Column="2">
-                    <TextBox Name="RadiusTextBox">
-                        <TextBox.Text>
-                            <Binding Path="Radius" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
-                                <Binding.ValidationRules>
-                                    <cru:PositiveOrZeroValidationRule Info="半径不能小于0！"/>
-                                </Binding.ValidationRules>
-                            </Binding>
-                        </TextBox.Text>
-                    </TextBox>
-                </local:ValidationContainer>
+                <TextBox Name="CenterXTextBox" Grid.Row="0" Grid.Column="2">
+                    <TextBox.Text>
+                        <Binding Path="Center.X" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" NotifyOnValidationError="True">
+                            <Binding.ValidationRules>
+                                <cru:NumberValidationRule/>
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
+                </TextBox>
+                <TextBox Name="CenterYTextBox" Grid.Row="1" Grid.Column="2">
+                    <TextBox.Text>
+                        <Binding Path="Center.Y" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" NotifyOnValidationError="True">
+                            <Binding.ValidationRules>
+                                <cru:NumberValidationRule/>
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
+                </TextBox>
+                <TextBox Name="RadiusTextBox" Grid.Row="2" Grid.Column="2">
+                    <TextBox.Text>
+                        <Binding Path="Radius" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" NotifyOnValidationError="True">
+                            <Binding.ValidationRules>
+                                <cru:PositiveOrZeroValidationRule Info="半径不能小于0！"/>
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
+                </TextBox>
                 <TextBlock Grid.Row="0" Grid.Column="3" Text="m"/>
                 <TextBlock Grid.Row="1" Grid.Column="3" Text="m"/>
                 <TextBlock Grid.Row="2" Grid.Column="3" Text="m"/>

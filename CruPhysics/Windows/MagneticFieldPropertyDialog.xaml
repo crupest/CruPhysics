@@ -19,6 +19,7 @@
                 <Setter Property="VerticalAlignment" Value="Center"/>
                 <Setter Property="Margin" Value="3"/>
                 <Setter Property="Height" Value="Auto"/>
+                <Setter Property="Validation.ErrorTemplate" Value="{StaticResource ResourceKey=ValidationErrorTemplate}"/>
             </Style.Setters>
         </Style>
     </Window.Resources>
@@ -45,17 +46,15 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <TextBlock Grid.Row="0" Grid.Column="0" Text="磁感应强度"/>
-            <controls:ValidationContainer Grid.Row="0" Grid.Column="1">
-                <TextBox>
-                    <TextBox.Text>
-                        <Binding Path="FluxDensity" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
-                            <Binding.ValidationRules>
-                                <local:NumberValidationRule/>
-                            </Binding.ValidationRules>
-                        </Binding>
-                    </TextBox.Text>
-                </TextBox>
-            </controls:ValidationContainer>
+            <TextBox Grid.Row="0" Grid.Column="1">
+                <TextBox.Text>
+                    <Binding Path="FluxDensity" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" NotifyOnValidationError="True">
+                        <Binding.ValidationRules>
+                            <local:NumberValidationRule/>
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
             <TextBlock Grid.Row="0" Grid.Column="2" Text="T"/>
         </Grid>
     </StackPanel>
