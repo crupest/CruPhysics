@@ -1,4 +1,3 @@
-﻿1.databinding validation
-3.color
+﻿3.color
 4.thumbnail
 5.main loop
