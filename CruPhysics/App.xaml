@@ -22,5 +22,21 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
+
+        <Storyboard x:Key="ErrorTextBlockStoryboard">
+            <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                             From="1.0" To="0.0" Duration="0:0:3"/>
+        </Storyboard>
+
+        <ControlTemplate x:Key="ValidationErrorTemplate">
+            <StackPanel>
+                <Border HorizontalAlignment="Left" BorderThickness="1" BorderBrush="Red">
+                    <AdornedElementPlaceholder Name="Placeholder"/>
+                </Border>
+                <TextBlock Name="ErrorTextBlock" HorizontalAlignment="Left" Foreground="Red" Background="White"
+                                   Text="{Binding ElementName=Placeholder, Path=AdornedElement.(Validation.Errors).CurrentItem.ErrorContent}"
+                                   Loaded="ErrorTextBlock_Loaded" Unloaded="ErrorTextBlock_Unloaded"/>
+            </StackPanel>
+        </ControlTemplate>
     </Application.Resources>
 </Application>

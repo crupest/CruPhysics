@@ -10,11 +10,17 @@
 
     <StackPanel Orientation="Horizontal">
         <TextBlock Margin="0 0 10 0" Text="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:ObjectPropertyBox}}, Path=PropertyName}"/>
-        <local:ValidationContainer>
-            <TextBox Name="ValueTextBox" Style="{StaticResource ResourceKey=AutoBorder}"
-                     Text="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:ObjectPropertyBox}, Path=Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True}"
-                     KeyDown="ValueTextBox_KeyDown"/>
-        </local:ValidationContainer>
+        <TextBox Name="ValueTextBox" Style="{StaticResource ResourceKey=AutoBorder}" Validation.ErrorTemplate="{StaticResource ResourceKey=ValidationErrorTemplate}"
+                 KeyDown="ValueTextBox_KeyDown">
+            <TextBox.Text>
+                <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=local:ObjectPropertyBox}"
+                         Path="Value" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" NotifyOnValidationError="True">
+                    <Binding.ValidationRules>
+                        <cru:NumberValidationRule/>
+                    </Binding.ValidationRules>
+                </Binding>
+            </TextBox.Text>
+        </TextBox>
         <TextBlock Text="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:ObjectPropertyBox}}, Path=Unit}"/>
     </StackPanel>
 </UserControl>
