@@ -80,7 +80,6 @@
     <Compile Include="Controls\PhysicalObjectCommonPropertyControl.xaml.cs">
       <DependentUpon>PhysicalObjectCommonPropertyControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ValidationContainer.cs" />
     <Compile Include="Windows\ElectricFieldPropertyDialog.xaml.cs">
       <DependentUpon>ElectricFieldPropertyDialog.xaml</DependentUpon>
     </Compile>
