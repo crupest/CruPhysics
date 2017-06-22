@@ -77,6 +77,9 @@
     <Compile Include="Controls\ObjectPropertyBox.xaml.cs">
       <DependentUpon>ObjectPropertyBox.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\PhysicalObjectCommonPropertyControl.xaml.cs">
+      <DependentUpon>PhysicalObjectCommonPropertyControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\ValidationContainer.cs" />
     <Compile Include="Windows\ElectricFieldPropertyDialog.xaml.cs">
       <DependentUpon>ElectricFieldPropertyDialog.xaml</DependentUpon>
@@ -94,6 +97,10 @@
       <DependentUpon>ShapePropertyControl.xaml</DependentUpon>
     </Compile>
     <Page Include="Controls\ObjectPropertyBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\PhysicalObjectCommonPropertyControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

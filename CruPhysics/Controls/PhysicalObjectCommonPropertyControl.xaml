@@ -1,0 +1,32 @@
+﻿<UserControl x:Class="CruPhysics.Controls.PhysicalObjectCommonPropertyControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:local="clr-namespace:CruPhysics.Controls"
+             mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <Style TargetType="TextBox">
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="3"/>
+            <Setter Property="Height" Value="Auto"/>
+        </Style>
+
+        <Style TargetType="TextBlock">
+            <Setter Property="Margin" Value="3"/>
+        </Style>
+    </UserControl.Resources>
+    
+    <StackPanel>
+        <DockPanel>
+            <TextBlock Text="名称"/>
+            <TextBox Text="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, Path=Object.Name, Mode=TwoWay}"/>
+        </DockPanel>
+        <StackPanel Orientation="Horizontal">
+            <TextBlock Text="颜色"/>
+            <xctk:ColorPicker Width="50" SelectedColor="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, Path=Object.Color, Mode=TwoWay}"/>
+        </StackPanel>
+    </StackPanel>
+</UserControl>

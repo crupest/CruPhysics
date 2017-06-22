@@ -138,12 +138,13 @@ namespace CruPhysics
 
     public abstract class PhysicalObject : NotifyPropertyChangedObject
     {
-        private string name;
-        private Brush fill = new SolidColorBrush(Common.GetRamdomColor());
+        private string name = string.Empty;
+        private SolidColorBrush fill = new SolidColorBrush();
 
         public PhysicalObject()
         {
-            OnFillChanged(fill);
+            OnCreateFillBrush(fill);
+            Color = Common.GetRamdomColor();
         }
 
         public string Name
@@ -167,7 +168,20 @@ namespace CruPhysics
             }
         }
 
-        protected virtual void OnFillChanged(Brush newBrush)
+        public Color Color
+        {
+            get
+            {
+                return fill.Color;
+            }
+            set
+            {
+                fill.Color = value;
+                RaisePropertyChangedEvent("Color");
+            }
+        }
+
+        protected virtual void OnCreateFillBrush(SolidColorBrush brush)
         {
 
         }
@@ -479,10 +493,10 @@ namespace CruPhysics
             RaisePropertyChangedEvent("Shape");
         }
 
-        protected override void OnFillChanged(Brush newBrush)
+        protected override void OnCreateFillBrush(SolidColorBrush brush)
         {
-            base.OnFillChanged(newBrush);
-            newBrush.Opacity = 0.3;
+            base.OnCreateFillBrush(brush);
+            brush.Opacity = 0.3;
         }
 
         protected override CruShape GetShape()

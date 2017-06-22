@@ -27,9 +27,9 @@
     </Window.Resources>
 
     <StackPanel>
+        <controls:PhysicalObjectCommonPropertyControl Margin="3" Object="{Binding}"/>
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
@@ -44,18 +44,16 @@
                 <ColumnDefinition Width="*"></ColumnDefinition>
                 <ColumnDefinition Width="Auto"></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="名字"/>
-            <TextBlock Grid.Row="1" Grid.RowSpan="2" Grid.Column="0" Text="位置"/>
-            <TextBlock Grid.Row="1" Grid.Column="1" Margin="3" Text="x轴"/>
-            <TextBlock Grid.Row="2" Grid.Column="1" Margin="3" Text="y轴"/>
-            <TextBlock Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Text="半径"/>
-            <TextBlock Grid.Row="4" Grid.RowSpan="2" Grid.Column="0" Text="初速度"/>
-            <TextBlock Grid.Row="4" Grid.Column="1" Margin="3" Text="x轴"/>
-            <TextBlock Grid.Row="5" Grid.Column="1" Margin="3" Text="y轴"/>
-            <TextBlock Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Text="质量"/>
-            <TextBlock Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" Text="电荷量"/>
-            <TextBox Grid.Row="0" Grid.Column="2" Text="{Binding Path=Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-            <TextBox Grid.Row="1" Grid.Column="2">
+            <TextBlock Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Text="位置"/>
+            <TextBlock Grid.Row="0" Grid.Column="1" Margin="3" Text="x轴"/>
+            <TextBlock Grid.Row="1" Grid.Column="1" Margin="3" Text="y轴"/>
+            <TextBlock Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Text="半径"/>
+            <TextBlock Grid.Row="3" Grid.RowSpan="2" Grid.Column="0" Text="初速度"/>
+            <TextBlock Grid.Row="3" Grid.Column="1" Margin="3" Text="x轴"/>
+            <TextBlock Grid.Row="4" Grid.Column="1" Margin="3" Text="y轴"/>
+            <TextBlock Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Text="质量"/>
+            <TextBlock Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Text="电荷量"/>
+            <TextBox Grid.Row="0" Grid.Column="2">
                 <TextBox.Text>
                     <Binding Path="Position.X" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" NotifyOnValidationError="True">
                         <Binding.ValidationRules>
@@ -64,7 +62,7 @@
                     </Binding>
                 </TextBox.Text>
             </TextBox>
-            <TextBox Grid.Row="2" Grid.Column="2">
+            <TextBox Grid.Row="1" Grid.Column="2">
                 <TextBox.Text>
                     <Binding Path="Position.Y" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" NotifyOnValidationError="True">
                         <Binding.ValidationRules>
@@ -73,7 +71,7 @@
                     </Binding>
                 </TextBox.Text>
             </TextBox>
-            <TextBox Grid.Row="3" Grid.Column="2">
+            <TextBox Grid.Row="2" Grid.Column="2">
                 <TextBox.Text>
                     <Binding Path="Radius" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" NotifyOnValidationError="True">
                         <Binding.ValidationRules>
@@ -82,7 +80,7 @@
                     </Binding>
                 </TextBox.Text>
             </TextBox>
-            <TextBox Grid.Row="4" Grid.Column="2">
+            <TextBox Grid.Row="3" Grid.Column="2">
                 <TextBox.Text>
                     <Binding Path="Velocity.X" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" NotifyOnValidationError="True">
                         <Binding.ValidationRules>
@@ -91,7 +89,7 @@
                     </Binding>
                 </TextBox.Text>
             </TextBox>
-            <TextBox Grid.Row="5" Grid.Column="2">
+            <TextBox Grid.Row="4" Grid.Column="2">
                 <TextBox.Text>
                     <Binding Path="Velocity.Y" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" NotifyOnValidationError="True">
                         <Binding.ValidationRules>
@@ -100,7 +98,7 @@
                     </Binding>
                 </TextBox.Text>
             </TextBox>
-            <TextBox Grid.Row="6" Grid.Column="2">
+            <TextBox Grid.Row="5" Grid.Column="2">
                 <TextBox.Text>
                     <Binding Path="Mass" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" NotifyOnValidationError="True">
                         <Binding.ValidationRules>
@@ -109,7 +107,7 @@
                     </Binding>
                 </TextBox.Text>
             </TextBox>
-            <TextBox Grid.Row="7" Grid.Column="2">
+            <TextBox Grid.Row="6" Grid.Column="2">
                 <TextBox.Text>
                     <Binding Path="Charge" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" NotifyOnValidationError="True">
                         <Binding.ValidationRules>
@@ -118,13 +116,13 @@
                     </Binding>
                 </TextBox.Text>
             </TextBox>
+            <TextBlock Grid.Row="0" Grid.Column="3" Text="m"/>
             <TextBlock Grid.Row="1" Grid.Column="3" Text="m"/>
             <TextBlock Grid.Row="2" Grid.Column="3" Text="m"/>
-            <TextBlock Grid.Row="3" Grid.Column="3" Text="m"/>
+            <TextBlock Grid.Row="3" Grid.Column="3" Text="m/s"/>
             <TextBlock Grid.Row="4" Grid.Column="3" Text="m/s"/>
-            <TextBlock Grid.Row="5" Grid.Column="3" Text="m/s"/>
-            <TextBlock Grid.Row="6" Grid.Column="3" Text="kg"/>
-            <TextBlock Grid.Row="7" Grid.Column="3" Text="C"/>
+            <TextBlock Grid.Row="5" Grid.Column="3" Text="kg"/>
+            <TextBlock Grid.Row="6" Grid.Column="3" Text="C"/>
         </Grid>
     </StackPanel>
 </Window>
