@@ -139,10 +139,11 @@ namespace CruPhysics
     public abstract class PhysicalObject : NotifyPropertyChangedObject
     {
         private string name;
+        private Brush fill = new SolidColorBrush(Common.GetRamdomColor());
 
         public PhysicalObject()
         {
-
+            OnFillChanged(fill);
         }
 
         public string Name
@@ -166,9 +167,12 @@ namespace CruPhysics
             }
         }
 
+        protected virtual void OnFillChanged(Brush newBrush)
+        {
+
+        }
 
         protected abstract CruShape GetShape();
-        public abstract Brush FillBrush { get; }
         public abstract int DefaultZIndex { get; }
 
         protected void PrepareShape()
@@ -182,7 +186,7 @@ namespace CruPhysics
 
             SetShowState(GetSelectionState());
 
-            Shape.Fill = FillBrush;
+            Shape.Fill = fill;
         }
 
         private Scene _scene;
@@ -317,14 +321,6 @@ namespace CruPhysics
         protected override CruShape GetShape()
         {
             return _shape;
-        }
-
-        public override Brush FillBrush
-        {
-            get
-            {
-                return Brushes.SkyBlue;
-            }
         }
 
         public override int DefaultZIndex
@@ -483,6 +479,12 @@ namespace CruPhysics
             RaisePropertyChangedEvent("Shape");
         }
 
+        protected override void OnFillChanged(Brush newBrush)
+        {
+            base.OnFillChanged(newBrush);
+            newBrush.Opacity = 0.3;
+        }
+
         protected override CruShape GetShape()
         {
             return _shape;
@@ -519,17 +521,6 @@ namespace CruPhysics
 
     public class ElectricField : Field
     {
-        static ElectricField()
-        {
-            fillBrush = new SolidColorBrush(Colors.Green)
-            {
-                Opacity = 0.5
-            };
-        }
-
-        private static readonly Brush fillBrush;
-
-
         private BindableVector intensity = new BindableVector();
 
         public ElectricField()
@@ -544,15 +535,6 @@ namespace CruPhysics
                 return intensity;
             }
         }
-
-        public override Brush FillBrush
-        {
-            get
-            {
-                return fillBrush;
-            }
-        }
-
 
         protected override void CalculateEffect(MovingObject movingObject, TimeSpan no_use)
         {
@@ -569,17 +551,6 @@ namespace CruPhysics
 
     public class MagneticField : Field
     {
-        static MagneticField()
-        {
-            fillBrush = new SolidColorBrush(Colors.Orange)
-            {
-                Opacity = 0.5
-            };
-        }
-
-        private static readonly Brush fillBrush;
-
-
         private double fluxDensity;
 
         public MagneticField()
@@ -600,14 +571,6 @@ namespace CruPhysics
             {
                 fluxDensity = value;
                 RaisePropertyChangedEvent("FluxDensity");
-            }
-        }
-
-        public override Brush FillBrush
-        {
-            get
-            {
-                return fillBrush;
             }
         }
 

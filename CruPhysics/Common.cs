@@ -141,5 +141,12 @@ namespace CruPhysics
         {
             return Math.Sqrt(Math.Pow(point1.X - point2.X, 2) + Math.Pow(point1.Y - point2.Y, 2));
         }
+
+        private static Random random = new Random();
+
+        public static Color GetRamdomColor()
+        {
+            return Color.FromRgb((byte)random.Next(256), (byte)random.Next(256), (byte)random.Next(256));
+        }
     }
 }
