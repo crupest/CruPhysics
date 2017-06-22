@@ -157,7 +157,7 @@ namespace CruPhysics.Windows
         private void ObjectList_MouseDown(object sender, MouseButtonEventArgs e)
         {
             var hitTestResult = VisualTreeHelper.HitTest(ObjectList, e.GetPosition(ObjectList));
-            var listViewItem  = Common.FindAcestor(hitTestResult.VisualHit, (element) => element is ListViewItem);
+            var listViewItem  = Common.FindAncestor(hitTestResult.VisualHit, (element) => element is ListViewItem);
             if (listViewItem == null)
             {
                 ObjectList.UnselectAll();

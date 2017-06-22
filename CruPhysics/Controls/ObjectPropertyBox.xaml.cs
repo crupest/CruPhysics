@@ -93,7 +93,7 @@ namespace CruPhysics.Controls
                 var target = LoseFocusTarget;
                 if (target == null)
                 {
-                    target = (UIElement)Common.FindAcestor(ValueTextBox, (element) => element is UIElement && ((UIElement)element).Focusable);
+                    target = (UIElement)Common.FindAncestor(ValueTextBox, (element) => element is UIElement && ((UIElement)element).Focusable);
                 }
                 if (target != null)
                     target.Focus();
