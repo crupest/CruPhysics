@@ -1,3 +1,2 @@
-﻿4.thumbnail
-5.main loop
+﻿5.main loop
 6.SelectionBox context menu problem

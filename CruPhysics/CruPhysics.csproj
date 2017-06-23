@@ -80,6 +80,9 @@
     <Compile Include="Controls\PhysicalObjectCommonPropertyControl.xaml.cs">
       <DependentUpon>PhysicalObjectCommonPropertyControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\PhysicalObjectThumbnail.xaml.cs">
+      <DependentUpon>PhysicalObjectThumbnail.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\ElectricFieldPropertyDialog.xaml.cs">
       <DependentUpon>ElectricFieldPropertyDialog.xaml</DependentUpon>
     </Compile>
@@ -100,6 +103,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\PhysicalObjectCommonPropertyControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\PhysicalObjectThumbnail.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
