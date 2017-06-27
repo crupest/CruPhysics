@@ -10,13 +10,14 @@ using System.Windows.Input;
 using System.Windows.Media;
 
 using CruPhysics.Shapes;
+using System.Windows.Controls.Primitives;
 
 namespace CruPhysics.Controls
 {
     public abstract class SelectionBox
     {
 
-        internal class ControllerDraggedEventArgs : EventArgs
+        public class ControllerDraggedEventArgs : EventArgs
         {
             private Point position;
 
@@ -35,7 +36,7 @@ namespace CruPhysics.Controls
             }
         }
 
-        internal class Controller
+        public class Controller
         {
             private const double radius = 4.0;
 
@@ -55,6 +56,14 @@ namespace CruPhysics.Controls
                 shape.MouseDown += OnMouseDown;
                 shape.MouseUp += OnMouseUp;
                 shape.MouseMove += OnMouseMove;
+                shape.MouseRightButtonUp += OnMouseRightButtonUp;
+            }
+
+            private bool mouseRightButtonUp = false;
+
+            private void OnMouseRightButtonUp(object sender, ShapeMouseEventArgs e)
+            {
+                mouseRightButtonUp = true;
             }
 
             public Controller(Canvas canvas, Cursor cursor)
@@ -85,6 +94,18 @@ namespace CruPhysics.Controls
                 set
                 {
                     shape.Cursor = value;
+                }
+            }
+
+            public ContextMenu ContextMenu
+            {
+                get
+                {
+                    return shape.ContextMenu;
+                }
+                set
+                {
+                    shape.ContextMenu = value;
                 }
             }
 
@@ -124,6 +145,13 @@ namespace CruPhysics.Controls
             {
                 Mouse.Capture(null);
                 args.Raw.Handled = true;
+                if (mouseRightButtonUp && ContextMenu != null)
+                {
+                    ContextMenu.PlacementTarget = shape.Raw;
+                    ContextMenu.Placement = PlacementMode.MousePoint;
+                    ContextMenu.IsOpen = true;
+                }
+                mouseRightButtonUp = false;
             }
 
             private void OnMouseMove(object sender, ShapeMouseEventArgs args)
@@ -138,6 +166,7 @@ namespace CruPhysics.Controls
 
 
         private CruShape selectedShape;
+        private ContextMenu contextMenu;
 
         public SelectionBox(CruShape shape)
         {
@@ -152,6 +181,22 @@ namespace CruPhysics.Controls
             }
         }
 
+        public abstract IEnumerable<Controller> Controllers { get; }
+
+        public ContextMenu ContextMenu
+        {
+            get
+            {
+                return contextMenu;
+            }
+            set
+            {
+                contextMenu = value;
+                foreach (var controller in Controllers)
+                    controller.ContextMenu = value;
+            }
+        }
+
         public abstract void Delete();
     }
 
@@ -160,6 +205,7 @@ namespace CruPhysics.Controls
     {
         private Controller centerController;
         private Controller radiusController;
+        private Controller[] controllers = new Controller[2];
 
         private double radiusControllerAngle;
 
@@ -170,6 +216,9 @@ namespace CruPhysics.Controls
         {
             centerController = new Controller(circle.Canvas, Cursors.SizeAll);
             radiusController = new Controller(circle.Canvas, Cursors.SizeAll);
+
+            controllers[0] = centerController;
+            controllers[1] = radiusController;
 
             UpdateControllerPosition();
 
@@ -207,6 +256,8 @@ namespace CruPhysics.Controls
             SelectedShape.Radius = vector.Length;
             radiusControllerAngle = Common.GetAngleBetweenXAxis(vector);
         }
+
+        public override IEnumerable<Controller> Controllers => controllers;
 
         public override void Delete()
         {
@@ -365,6 +416,8 @@ namespace CruPhysics.Controls
                 return (CruRectangle)base.SelectedShape;
             }
         }
+
+        public override IEnumerable<Controller> Controllers => controllers;
 
         public override void Delete()
         {

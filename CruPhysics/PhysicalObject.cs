@@ -639,6 +639,7 @@ namespace CruPhysics
         private void CreateSelectionBox()
         {
             selectionBox = selectedObject.Shape.CreateSelectionBox();
+            selectionBox.ContextMenu = (ContextMenu)Application.Current.FindResource("PhysicalObjectContextMenu");
         }
 
         public PhysicalObject SelectedObject
