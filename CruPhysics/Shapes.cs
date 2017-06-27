@@ -144,11 +144,15 @@ namespace CruPhysics.Shapes
 
         protected void Initialize(Shape shape)
         {
-            shape.MouseDown += (sender, e) => this.mouseDown?.Invoke(this, new ShapeMouseEventArgs(this, e));
-            shape.MouseUp += (sender, e) => this.mouseUp?.Invoke(this, new ShapeMouseEventArgs(this, e));
-            shape.MouseEnter += (sender, e) => this.mouseEnter?.Invoke(this, new ShapeMouseEventArgs(this, e));
-            shape.MouseLeave += (sender, e) => this.mouseLeave?.Invoke(this, new ShapeMouseEventArgs(this, e));
-            shape.MouseMove += (sender, e) => this.mouseMove?.Invoke(this, new ShapeMouseEventArgs(this, e));
+            shape.MouseDown += (sender, e) => this.MouseDown?.Invoke(this, new ShapeMouseEventArgs(this, e));
+            shape.MouseUp += (sender, e) => this.MouseUp?.Invoke(this, new ShapeMouseEventArgs(this, e));
+            shape.MouseEnter += (sender, e) => this.MouseEnter?.Invoke(this, new ShapeMouseEventArgs(this, e));
+            shape.MouseLeave += (sender, e) => this.MouseLeave?.Invoke(this, new ShapeMouseEventArgs(this, e));
+            shape.MouseMove += (sender, e) => this.MouseMove?.Invoke(this, new ShapeMouseEventArgs(this, e));
+            shape.MouseLeftButtonDown += (sender, e) => this.MouseLeftButtonDown?.Invoke(this, new ShapeMouseEventArgs(this, e));
+            shape.MouseLeftButtonUp += (sender, e) => this.MouseLeftButtonUp?.Invoke(this, new ShapeMouseEventArgs(this, e));
+            shape.MouseRightButtonDown += (sender, e) => this.MouseRightButtonDown?.Invoke(this, new ShapeMouseEventArgs(this, e));
+            shape.MouseRightButtonUp += (sender, e) => this.MouseRightButtonUp?.Invoke(this, new ShapeMouseEventArgs(this, e));
         }
 
         public event EventHandler Updated
@@ -297,77 +301,15 @@ namespace CruPhysics.Shapes
             }
         }
 
-        private ShapeMouseEventHandler mouseDown;
-        private ShapeMouseEventHandler mouseUp;
-        private ShapeMouseEventHandler mouseEnter;
-        private ShapeMouseEventHandler mouseLeave;
-        private ShapeMouseEventHandler mouseMove;
-
-
-        public event ShapeMouseEventHandler MouseDown
-        {
-            add
-            {
-                mouseDown += value;
-            }
-
-            remove
-            {
-                mouseDown -= value;
-            }
-        }
-
-        public event ShapeMouseEventHandler MouseUp
-        {
-            add
-            {
-                mouseUp += value;
-            }
-
-            remove
-            {
-                mouseUp -= value;
-            }
-        }
-
-        public event ShapeMouseEventHandler MouseEnter
-        {
-            add
-            {
-                mouseEnter += value;
-            }
-
-            remove
-            {
-                mouseEnter -= value;
-            }
-        }
-
-        public event ShapeMouseEventHandler MouseLeave
-        {
-            add
-            {
-                mouseLeave += value;
-            }
-
-            remove
-            {
-                mouseLeave -= value;
-            }
-        }
-
-        public event ShapeMouseEventHandler MouseMove
-        {
-            add
-            {
-                mouseMove += value;
-            }
-
-            remove
-            {
-                mouseMove -= value;
-            }
-        }
+        public event ShapeMouseEventHandler MouseDown;
+        public event ShapeMouseEventHandler MouseUp;
+        public event ShapeMouseEventHandler MouseEnter;
+        public event ShapeMouseEventHandler MouseLeave;
+        public event ShapeMouseEventHandler MouseMove;
+        public event ShapeMouseEventHandler MouseLeftButtonDown;
+        public event ShapeMouseEventHandler MouseLeftButtonUp;
+        public event ShapeMouseEventHandler MouseRightButtonDown;
+        public event ShapeMouseEventHandler MouseRightButtonUp;
     }
 
     public sealed class CruLine : CruShape
