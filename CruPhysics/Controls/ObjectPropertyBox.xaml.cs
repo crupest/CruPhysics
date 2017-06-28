@@ -24,6 +24,7 @@ namespace CruPhysics.Controls
         public static readonly DependencyProperty ValueProperty;
         public static readonly DependencyProperty UnitProperty;
         public static readonly DependencyProperty LoseFocusTargetProperty;
+        public static readonly DependencyProperty ValidationRuleProperty;
 
         static ObjectPropertyBox()
         {
@@ -31,6 +32,26 @@ namespace CruPhysics.Controls
             ValueProperty = DependencyProperty.Register("Value", typeof(double), typeof(ObjectPropertyBox), new FrameworkPropertyMetadata(0.0));
             UnitProperty = DependencyProperty.Register("Unit", typeof(string), typeof(ObjectPropertyBox), new FrameworkPropertyMetadata(""));
             LoseFocusTargetProperty = DependencyProperty.Register("LoseFocusTarget", typeof(UIElement), typeof(ObjectPropertyBox), new FrameworkPropertyMetadata(null));
+            ValidationRuleProperty = DependencyProperty.Register("ValidationRule", typeof(NumberValidationRule), typeof(ObjectPropertyBox), new FrameworkPropertyMetadata(new NumberValidationRule(), OnValidationRulePeropertyChanged), ValidationRulePropertyValidateValue);
+        }
+
+        private static bool ValidationRulePropertyValidateValue(object value)
+        {
+            return value != null;
+        }
+
+        private static void OnValidationRulePeropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args)
+        {
+            var control = sender as ObjectPropertyBox;
+            var binding = new Binding("Value")
+            {
+                Source = control,
+                Mode = BindingMode.TwoWay,
+                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
+                NotifyOnValidationError = true
+            };
+            binding.ValidationRules.Add(args.NewValue as ValidationRule);
+            control.ValueTextBox.SetBinding(TextBox.TextProperty, binding);
         }
 
         public ObjectPropertyBox()
@@ -83,6 +104,18 @@ namespace CruPhysics.Controls
             set
             {
                 SetValue(LoseFocusTargetProperty, value);
+            }
+        }
+
+        public NumberValidationRule ValidationRule
+        {
+            get
+            {
+                return (NumberValidationRule)GetValue(ValidationRuleProperty);
+            }
+            set
+            {
+                SetValue(ValidationRuleProperty, value);
             }
         }
 
