@@ -121,6 +121,10 @@
                     <Style TargetType="controls:ObjectPropertyBox">
                         <Setter Property="LoseFocusTarget" Value="{Binding ElementName=ObjectList}"/>
                     </Style>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="BorderBrush" Value="Black"/>
+                        <Setter Property="BorderThickness" Value="1"/>
+                    </Style>
                 </ListView.Resources>
             </ListView>
         </Grid>
