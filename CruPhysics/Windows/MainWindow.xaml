@@ -23,8 +23,10 @@
                     <controls:PhysicalObjectThumbnail Object="{Binding}" Width="50" Height="50"/>
                     <TextBox VerticalAlignment="Center" Style="{StaticResource ResourceKey=AutoBorder}" Text="{Binding Path=Name}"/>
                 </DockPanel>
-                <controls:ObjectPropertyBox PropertyName="位置x" Value="{Binding Path=Position.X, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Unit="m"/>
-                <controls:ObjectPropertyBox PropertyName="位置y" Value="{Binding Path=Position.Y, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Unit="m"/>
+                <controls:ObjectPropertyBox PropertyName="位置x" Value="{Binding Path=Position.X, Mode=TwoWay}" Unit="m"/>
+                <controls:ObjectPropertyBox PropertyName="位置y" Value="{Binding Path=Position.Y, Mode=TwoWay}" Unit="m"/>
+                <controls:ObjectPropertyBox PropertyName="速度x" Value="{Binding Path=Velocity.X, Mode=TwoWay}" Unit="m/s"/>
+                <controls:ObjectPropertyBox PropertyName="速度y" Value="{Binding Path=Velocity.Y, Mode=TwoWay}" Unit="m/s"/>
             </StackPanel>
         </DataTemplate>
         <DataTemplate x:Key="electricFieldDataTemplate"
@@ -34,8 +36,8 @@
                     <controls:PhysicalObjectThumbnail Object="{Binding}" Width="50" Height="50"/>
                     <TextBox VerticalAlignment="Center" Style="{StaticResource ResourceKey=AutoBorder}" Text="{Binding Path=Name}"/>
                 </DockPanel>
-                <controls:ObjectPropertyBox PropertyName="场强x" Value="{Binding Path=Intensity.X, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Unit="V/m"/>
-                <controls:ObjectPropertyBox PropertyName="场强y" Value="{Binding Path=Intensity.Y, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Unit="V/m"/>
+                <controls:ObjectPropertyBox PropertyName="场强x" Value="{Binding Path=Intensity.X, Mode=TwoWay}" Unit="V/m"/>
+                <controls:ObjectPropertyBox PropertyName="场强y" Value="{Binding Path=Intensity.Y, Mode=TwoWay}" Unit="V/m"/>
             </StackPanel>
         </DataTemplate>
         <DataTemplate x:Key="magneticFieldDataTemplate"
@@ -45,7 +47,7 @@
                     <controls:PhysicalObjectThumbnail Object="{Binding}" Width="50" Height="50"/>
                     <TextBox VerticalAlignment="Center" Style="{StaticResource ResourceKey=AutoBorder}" Text="{Binding Path=Name}"/>
                 </DockPanel>
-                <controls:ObjectPropertyBox PropertyName="磁感应强度" Value="{Binding Path=FluxDensity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Unit="T">
+                <controls:ObjectPropertyBox PropertyName="磁感应强度" Value="{Binding Path=FluxDensity, Mode=TwoWay}" Unit="T">
                     <controls:ObjectPropertyBox.ToolTip>
                         为正时垂直纸面向里，为负时垂直于纸面向外
                     </controls:ObjectPropertyBox.ToolTip>
