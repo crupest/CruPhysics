@@ -20,6 +20,7 @@ namespace CruPhysics
 
         public void AddPoint(Point point)
         {
+            point = Common.TransformPoint(point);
             if (pathFigure == null)
             {
                 pathFigure = new PathFigure()
