@@ -160,13 +160,7 @@ namespace CruPhysics
             }
         }
 
-        public CruShape Shape
-        {
-            get
-            {
-                return GetShape();
-            }
-        }
+        public CruShape Shape => GetShape();
 
         public Color Color
         {
@@ -198,23 +192,16 @@ namespace CruPhysics
             Shape.MouseLeave += PhysicalObject_OnMouseLeave;
             Shape.MouseDown  += PhysicalObject_OnMouseDown;
 
-            SetShowState(GetSelectionState());
+            SetShowState(SelectionState);
 
             Shape.Fill = fill;
         }
 
         private Scene _scene;
 
-        public Scene RelatedScene
-        {
-            get
-            {
-                return _scene;
-            }
+        public Scene RelatedScene => _scene;
 
-        }
-
-        public void Move(Vector vector)
+        public virtual void Move(Vector vector)
         {
             Shape.Move(vector);
         }
@@ -233,17 +220,20 @@ namespace CruPhysics
             }
         }
 
-        public SelectionState GetSelectionState()
+        public SelectionState SelectionState
         {
-            if (RelatedScene == null)
-                return SelectionState.normal;
+            get
+            {
+                if (RelatedScene == null)
+                    return SelectionState.normal;
 
-            if (RelatedScene.SelectedObject == this)
-                return SelectionState.select;
-            else if (Shape.Raw.IsMouseDirectlyOver == true)
-                return SelectionState.hover;
-            else
-                return SelectionState.normal;
+                if (RelatedScene.SelectedObject == this)
+                    return SelectionState.select;
+                else if (Shape.Raw.IsMouseDirectlyOver == true)
+                    return SelectionState.hover;
+                else
+                    return SelectionState.normal;
+            }
         }
 
         internal void SetShowState(SelectionState selectionState)
@@ -308,8 +298,6 @@ namespace CruPhysics
 
         }
 
-        internal abstract Window CreatePropertyWindow();
-
         internal void AddToScene(Scene scene)
         {
             OnAddToScene(scene);
@@ -359,6 +347,8 @@ namespace CruPhysics
             RelatedScene.SelectedObject = this;
             args.Raw.Handled = true;
         }
+
+        internal abstract Window CreatePropertyWindow();
     }
 
 
@@ -387,13 +377,7 @@ namespace CruPhysics
             return _shape;
         }
 
-        public override int DefaultZIndex
-        {
-            get
-            {
-                return PhysicalObjectZIndex.MovingObject;
-            }
-        }
+        public override int DefaultZIndex => PhysicalObjectZIndex.MovingObject;
 
         public BindablePoint Position
         {
@@ -431,13 +415,7 @@ namespace CruPhysics
         private double mass;
         private double charge;
 
-        public BindableVector Velocity
-        {
-            get
-            {
-                return velocity;
-            }
-        }
+        public BindableVector Velocity => velocity;
 
         public double Mass
         {
@@ -582,13 +560,7 @@ namespace CruPhysics
                 CalculateEffect(movingObject, time);
         }
 
-        public override int DefaultZIndex
-        {
-            get
-            {
-                return PhysicalObjectZIndex.Field;
-            }
-        }
+        public override int DefaultZIndex => PhysicalObjectZIndex.Field;
 
         protected abstract void CalculateEffect(MovingObject movingObject, TimeSpan time);
 
