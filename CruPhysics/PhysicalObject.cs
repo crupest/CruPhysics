@@ -268,17 +268,66 @@ namespace CruPhysics
             }
         }
 
+        internal void FinishCalculate(Scene scene)
+        {
+            OnCalculated(scene);
+        }
+
+        internal void BeginRunning(Scene scene)
+        {
+            OnBeginRunning(scene);
+        }
+
+        internal void StopRunning(Scene scene)
+        {
+            OnStopRunning(scene);
+        }
+
+        internal void Refresh(Scene scene)
+        {
+            OnRefresh(scene);
+        }
+
+        protected virtual void OnCalculated(Scene scene)
+        {
+
+        }
+
+        protected virtual void OnBeginRunning(Scene scene)
+        {
+
+        }
+
+        protected virtual void OnStopRunning(Scene scene)
+        {
+
+        }
+
+        protected virtual void OnRefresh(Scene scene)
+        {
+
+        }
 
         internal abstract Window CreatePropertyWindow();
 
-        internal virtual void AddToScene(Scene scene)
+        internal void AddToScene(Scene scene)
+        {
+            OnAddToScene(scene);
+        }
+
+        internal void RemoveFromScene(Scene scene)
+        {
+            OnRemoveFromScene(scene);
+        }
+
+        protected virtual void OnAddToScene(Scene scene)
         {
             _scene = scene;
             Shape.Canvas = scene.RelatedWorldCanvas;
             scene.physicalObjects.Add(this);
         }
 
-        internal virtual void RemoveFromScene(Scene scene)
+        protected virtual void OnRemoveFromScene(Scene scene)
         {
             _scene = null;
 
@@ -317,6 +366,7 @@ namespace CruPhysics
     public class MovingObject : PhysicalObject
     {
         private CruCircle _shape = new CruCircle();
+        private MotionTrail trail = new MotionTrail();
 
         public MovingObject()
         {
@@ -420,28 +470,50 @@ namespace CruPhysics
             return new MovingObjectPropertyDialog(this);
         }
 
-        internal override void AddToScene(Scene scene)
+        protected override void OnAddToScene(Scene scene)
         {
-            base.AddToScene(scene);
+            base.OnAddToScene(scene);
             scene.movingObjects.Add(this);
+            scene.RelatedWorldCanvas.Children.Add(trail.Shape);
         }
 
-        internal override void RemoveFromScene(Scene scene)
+        protected override void OnRemoveFromScene(Scene scene)
         {
-            base.RemoveFromScene(scene);
+            base.OnRemoveFromScene(scene);
             scene.movingObjects.Remove(this);
+            scene.RelatedWorldCanvas.Children.Remove(trail.Shape);
+        }
+
+        protected override void OnBeginRunning(Scene scene)
+        {
+            base.OnBeginRunning(scene);
+            StoreProperty();
+            trail.AddPoint((Point)Position);
+        }
+
+        protected override void OnRefresh(Scene scene)
+        {
+            base.OnRefresh(scene);
+            RecoverProperty();
+            trail.Clear();
+        }
+
+        protected override void OnCalculated(Scene scene)
+        {
+            base.OnCalculated(scene);
+            trail.AddPoint((Point)Position);
         }
 
         private Point _originalPosition;
         private Vector _originalVelocity;
 
-        public void StoreProperty()
+        private void StoreProperty()
         {
             _originalPosition = (Point)Position;
             _originalVelocity = (Vector)Velocity;
         }
 
-        public void RecoverProperty()
+        private void RecoverProperty()
         {
             Position.Set(_originalPosition);
             Velocity.Set(_originalVelocity);
@@ -520,15 +592,15 @@ namespace CruPhysics
 
         protected abstract void CalculateEffect(MovingObject movingObject, TimeSpan time);
 
-        internal override void AddToScene(Scene scene)
+        protected override void OnAddToScene(Scene scene)
         {
-            base.AddToScene(scene);
+            base.OnAddToScene(scene);
             scene.fields.Add(this);
         }
 
-        internal override void RemoveFromScene(Scene scene)
+        protected override void OnRemoveFromScene(Scene scene)
         {
-            base.RemoveFromScene(scene);
+            base.OnRemoveFromScene(scene);
             scene.fields.Remove(this);
         }
     }
@@ -698,6 +770,11 @@ namespace CruPhysics
                 i.Run(calculationInterval);
                 i.ClearForce();
             }
+
+            foreach (var i in physicalObjects)
+            {
+                i.FinishCalculate(this);
+            }
         }
 
         public MainWindow RelatedMainWindow
@@ -769,6 +846,9 @@ namespace CruPhysics
             }
         }
 
+        /// <summary>
+        /// <see cref="HasBegun"/> will be true even if it is paused.
+        /// </summary>
         public bool HasBegun
         {
             get
@@ -777,13 +857,21 @@ namespace CruPhysics
             }
         }
 
+        public TimeSpan RunningTime
+        {
+            get
+            {
+                return runningTime;
+            }
+        }
+
         public void Begin()
         {
             if (!hasBegun)
             {
-                foreach (var i in movingObjects)
+                foreach (var i in physicalObjects)
                 {
-                    i.StoreProperty();
+                    i.BeginRunning(this);
                 }
                 hasBegun = true;
             }
@@ -794,6 +882,10 @@ namespace CruPhysics
         public void Stop()
         {
             timer.Stop();
+            foreach (var i in physicalObjects)
+            {
+                i.StopRunning(this);
+            }
         }
 
         public void Restart()
@@ -801,11 +893,11 @@ namespace CruPhysics
             if (IsRunning)
                 Stop();
             hasBegun = false;
-            foreach (var item in movingObjects)
-            {
-                item.RecoverProperty();
-            }
             runningTime = TimeSpan.Zero;
+            foreach (var i in physicalObjects)
+            {
+                i.Refresh(this);
+            }
             RelatedMainWindow.TimeTextBox.Visibility = Visibility.Collapsed;
             RelatedMainWindow.TimeTextBox.Text = runningTime.ToString(timeFormat);
         }

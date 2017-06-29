@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
+using System.Windows.Shapes;
 
 namespace CruPhysics
 {
@@ -12,10 +13,13 @@ namespace CruPhysics
     {
         private PathFigure pathFigure = null;
         private PathGeometry geometry = new PathGeometry();
+        private Path shape = new Path();
 
         public MotionTrail()
         {
-
+            shape.Data = geometry;
+            shape.Stroke = new SolidColorBrush(Common.GetRamdomColor());
+            shape.StrokeThickness = 1.0;
         }
 
         public void AddPoint(Point point)
@@ -45,12 +49,8 @@ namespace CruPhysics
             }
         }
 
-        public Geometry Geometry
-        {
-            get
-            {
-                return geometry;
-            }
-        }
+        public Geometry Geometry => geometry;
+
+        public Path Shape => shape;
     }
 }
