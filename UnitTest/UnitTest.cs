@@ -24,13 +24,5 @@ namespace UnitTest
                     ),
                 Common.Rotate(vector, -Math.PI / 6.0));
         }
-
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentOutOfRangeException))]
-        public void CircleSetTest()
-        {
-            var circle = new CruCircle();
-            circle.Set(new Point(), -1);
-        }
     }
 }
