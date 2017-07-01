@@ -27,6 +27,12 @@
                 <controls:ObjectPropertyBox PropertyName="位置y" Value="{Binding Path=Position.Y, Mode=TwoWay}" Unit="m"/>
                 <controls:ObjectPropertyBox PropertyName="速度x" Value="{Binding Path=Velocity.X, Mode=TwoWay}" Unit="m/s"/>
                 <controls:ObjectPropertyBox PropertyName="速度y" Value="{Binding Path=Velocity.Y, Mode=TwoWay}" Unit="m/s"/>
+                <controls:ObjectPropertyBox PropertyName="质量" Value="{Binding Path=Mass, Mode=TwoWay}" Unit="kg">
+                    <controls:ObjectPropertyBox.ValidationRule>
+                        <cru:PositiveValidationRule Info="质量必须大于0！"/>
+                    </controls:ObjectPropertyBox.ValidationRule>
+                </controls:ObjectPropertyBox>
+                <controls:ObjectPropertyBox PropertyName="电荷量" Value="{Binding Path=Charge, Mode=TwoWay}" Unit="C"/>
             </StackPanel>
         </DataTemplate>
         <DataTemplate x:Key="electricFieldDataTemplate"
