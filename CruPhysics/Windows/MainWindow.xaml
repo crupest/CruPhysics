@@ -133,6 +133,7 @@
                         <Setter Property="BorderBrush" Value="Black"/>
                         <Setter Property="BorderThickness" Value="1"/>
                         <Setter Property="ContextMenu" Value="{StaticResource ResourceKey=PhysicalObjectContextMenu}"/>
+                        <Setter Property="KeyboardNavigation.TabNavigation" Value="Cycle"/>
                     </Style>
                 </ListView.Resources>
             </ListView>
