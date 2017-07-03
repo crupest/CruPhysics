@@ -126,9 +126,9 @@ namespace CruPhysics
             return new Point(point.X, -point.Y);
         }
 
-        public static DependencyObject FindAncestor(DependencyObject element, Func<DependencyObject, bool> predicate)
+        public static DependencyObject FindAncestor(DependencyObject element, Func<DependencyObject, bool> predicate, bool includeSelf = false)
         {
-            var parent = VisualTreeHelper.GetParent(element);
+            var parent = includeSelf ? element : VisualTreeHelper.GetParent(element);
             while (true)
             {
                 if (parent == null || predicate(parent))

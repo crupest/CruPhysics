@@ -169,6 +169,15 @@ namespace CruPhysics.Windows
         {
             ((ListViewItem)sender).IsSelected = true;
         }
+
+        private void Window_PreviewMouseDown(object sender, MouseButtonEventArgs args)
+        {
+            var e = Common.FindAncestor((Visual)args.OriginalSource, element => ((UIElement)element).Focusable, true) as UIElement;
+            if (e == null)
+                ObjectList.Focus();
+            else
+                e.Focus();
+        }
     }
 
 
