@@ -28,7 +28,7 @@ namespace CruPhysics.Windows
         public static RoutedUICommand Begin             = new RoutedUICommand("开始(_B)",     "begin",            typeof(MainWindow));
         public static RoutedUICommand Stop              = new RoutedUICommand("停止(_S)",     "stop",             typeof(MainWindow));
         public static RoutedUICommand Restart           = new RoutedUICommand("重新(_R)",     "restart",          typeof(MainWindow));
-        
+        public static RoutedUICommand ResetView         = new RoutedUICommand("重置视图(_R)",  "reset_view",       typeof(MainWindow));
 
         private MainViewModel viewModel;
         private CoordinateSystem coordinateSystem;
@@ -177,6 +177,11 @@ namespace CruPhysics.Windows
                 ObjectList.Focus();
             else
                 e.Focus();
+        }
+
+        private void ResetView_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            WorldCanvas.RenderTransform = new TranslateTransform(MainCanvas.ActualWidth / 2.0, MainCanvas.ActualHeight / 2.0);
         }
     }
 

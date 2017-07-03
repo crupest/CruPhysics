@@ -73,6 +73,7 @@
         <CommandBinding Command="local:MainWindow.Begin"            Executed="Begin_Executed"           CanExecute="Begin_CanExecute"  />
         <CommandBinding Command="local:MainWindow.Stop"             Executed="Stop_Executed"            CanExecute="Stop_CanExecute"   />
         <CommandBinding Command="local:MainWindow.Restart"          Executed="Restart_Executed"         CanExecute="Restart_CanExecute"/>
+        <CommandBinding Command="local:MainWindow.ResetView"        Executed="ResetView_Executed"/>
     </Window.CommandBindings>
 
     <DockPanel LastChildFill="True">
@@ -90,6 +91,9 @@
                 <Separator/>
                 <MenuItem Command="local:MainWindow.Delete"/>
                 <MenuItem Command="local:MainWindow.Property"/>
+            </MenuItem>
+            <MenuItem Header="视图(_V)">
+                <MenuItem Command="local:MainWindow.ResetView"/>
             </MenuItem>
             <MenuItem Header="运行(_R)">
                 <MenuItem Name="beginMenuItem"
