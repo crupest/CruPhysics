@@ -172,7 +172,11 @@ namespace CruPhysics.Windows
 
         private void Window_PreviewMouseDown(object sender, MouseButtonEventArgs args)
         {
-            var e = Common.FindAncestor((DependencyObject)args.OriginalSource, element => element is UIElement && ((UIElement)element).Focusable, true) as UIElement;
+            var e = Common.FindAncestor(
+                (DependencyObject)args.OriginalSource,
+                //Next line makes me crazy.
+                element => element is UIElement && ((UIElement)element).Focusable && !FocusManager.GetIsFocusScope(element) && !(element is MenuItem),
+                true) as UIElement;
             if (e == null)
                 ObjectList.Focus();
             else
