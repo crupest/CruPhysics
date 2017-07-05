@@ -94,12 +94,20 @@ namespace CruPhysics
 
         public static DependencyObject FindAncestor(DependencyObject element, Func<DependencyObject, bool> predicate, bool includeSelf = false)
         {
-            var parent = includeSelf ? element : VisualTreeHelper.GetParent(element);
+            Func<DependencyObject, DependencyObject> getParent = (e) =>
+            {
+                if (e is Visual)
+                    return VisualTreeHelper.GetParent(e);
+                else
+                    return LogicalTreeHelper.GetParent(e);
+            };
+
+            var parent = includeSelf ? element : getParent(element);
             while (true)
             {
                 if (parent == null || predicate(parent))
                     return parent;
-                parent = VisualTreeHelper.GetParent(parent);
+                parent = getParent(parent);
             }
         }
 
