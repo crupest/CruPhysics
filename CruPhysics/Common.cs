@@ -13,6 +13,11 @@ namespace CruPhysics
 {
     public class NotifyPropertyChangedObject : INotifyPropertyChanged
     {
+        public NotifyPropertyChangedObject()
+        {
+            IsNotifying = true;
+        }
+
         private PropertyChangedEventHandler propertyChanged;
 
         public event PropertyChangedEventHandler PropertyChanged
@@ -27,9 +32,12 @@ namespace CruPhysics
             }
         }
 
+        public bool IsNotifying { get; set; }
+
         protected void RaisePropertyChangedEvent(string propertyName)
         {
-            propertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            if (IsNotifying)
+                propertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 
