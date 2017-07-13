@@ -84,6 +84,7 @@
       <DependentUpon>PhysicalObjectThumbnail.xaml</DependentUpon>
     </Compile>
     <Compile Include="MotionTrail.cs" />
+    <Compile Include="Scene.cs" />
     <Compile Include="Windows\ElectricFieldPropertyDialog.xaml.cs">
       <DependentUpon>ElectricFieldPropertyDialog.xaml</DependentUpon>
     </Compile>

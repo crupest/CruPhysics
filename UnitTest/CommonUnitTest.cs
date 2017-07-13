@@ -46,6 +46,8 @@ namespace UnitTest
     [TestClass]
     public class CommonUnitTest
     {
+        public object Property { get; set; }
+
         [TestMethod]
         public void VectorRotateTest()
         {
@@ -58,6 +60,13 @@ namespace UnitTest
                     Math.Sin(Math.PI * (1.0 / 2.0 + 1.0 / 6.0))
                     ),
                 Common.Rotate(vector, -Math.PI / 6.0));
+        }
+
+        [TestMethod]
+        public void GetPropertyNameTest()
+        {
+            Assert.AreEqual("Property", PropertyManager.GetPropertyName(() => Property));
+            Assert.AreEqual("A", PropertyManager.GetPropertyName(() => ((ClassA)PropertyManager.Object).A));
         }
 
         [TestMethod]
