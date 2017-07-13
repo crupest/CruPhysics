@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Input;
 using System.ComponentModel;
+using System.Linq.Expressions;
 
 namespace CruPhysics
 {
@@ -43,6 +44,14 @@ namespace CruPhysics
 
     public static class PropertyManager
     {
+        public static object Object { get; set; }
+
+        public static string GetPropertyName<TProperty>(Expression<Func<TProperty>> property)
+        {
+            var memberExpression = (MemberExpression)property.Body;
+            return memberExpression.Member.Name;
+        }
+
         public static object GetPropertyValue(object target, string propertyName)
         {
             return target.GetType().GetProperty(propertyName).GetValue(target);
