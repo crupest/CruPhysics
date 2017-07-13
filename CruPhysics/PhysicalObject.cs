@@ -78,18 +78,13 @@ namespace CruPhysics
         {
             return new Vector(vector.x, vector.y);
         }
-
-        public static explicit operator BindableVector(Vector vector)
-        {
-            return new BindableVector(vector);
-        }
     }
 
     public enum SelectionState
     {
-        normal,
-        hover,
-        select
+        Normal,
+        Hover,
+        Select
     }
 
     public struct Force
@@ -138,13 +133,44 @@ namespace CruPhysics
 
     public abstract class PhysicalObject : NotifyPropertyChangedObject
     {
+        static PhysicalObject()
+        {
+            strokeBrushes.Add(SelectionState.Normal, Brushes.Black);
+            strokeBrushes.Add(SelectionState.Hover, Brushes.Red);
+            strokeBrushes.Add(SelectionState.Select, Brushes.Blue);
+
+            strokeThickness.Add(SelectionState.Normal, 1.0);
+            strokeThickness.Add(SelectionState.Hover, 2.0);
+            strokeThickness.Add(SelectionState.Select, 2.0);
+        }
+
+        private static readonly Dictionary<SelectionState, Brush> strokeBrushes = new Dictionary<SelectionState, Brush>();
+        private static readonly Dictionary<SelectionState, double> strokeThickness = new Dictionary<SelectionState, double>(); 
+
+        public static IReadOnlyDictionary<SelectionState, Brush> StrokeBrushes => strokeBrushes;
+        public static IReadOnlyDictionary<SelectionState, double> StrokeThickness => strokeThickness;
+
+
+        private Scene scene;
         private string name = string.Empty;
-        private SolidColorBrush fill = new SolidColorBrush();
+        private SelectionState selectionState = SelectionState.Normal;
 
         public PhysicalObject()
         {
-            OnCreateFillBrush(fill);
-            Color = Common.GetRamdomColor();
+
+        }
+
+        public Scene RelatedScene
+        {
+            get
+            {
+                return scene;
+            }
+            private set
+            {
+                scene = value;
+                RaisePropertyChangedEvent("RelatedScene");
+            }
         }
 
         public string Name
@@ -160,107 +186,56 @@ namespace CruPhysics
             }
         }
 
-        public CruShape Shape => GetShape();
-
-        public Color Color
-        {
-            get
-            {
-                return fill.Color;
-            }
-            set
-            {
-                fill.Color = value;
-                RaisePropertyChangedEvent("Color");
-            }
-        }
-
-        protected virtual void OnCreateFillBrush(SolidColorBrush brush)
-        {
-
-        }
-
-        protected abstract CruShape GetShape();
-        public abstract int DefaultZIndex { get; }
-
-        protected void PrepareShape()
-        {
-            Shape.Canvas = RelatedScene?.RelatedWorldCanvas;
-            Shape.Cursor = Cursors.Arrow;
-            Shape.ContextMenu = (ContextMenu)Application.Current.FindResource("PhysicalObjectContextMenu");
-            Shape.MouseEnter += PhysicalObject_OnMouseEnter;
-            Shape.MouseLeave += PhysicalObject_OnMouseLeave;
-            Shape.MouseDown  += PhysicalObject_OnMouseDown;
-
-            SetShowState(SelectionState);
-
-            Shape.Fill = fill;
-        }
-
-        private Scene _scene;
-
-        public Scene RelatedScene => _scene;
-
-        public virtual void Move(Vector vector)
-        {
-            Shape.Move(vector);
-        }
-
-        private static readonly Brush normal_stroke = Brushes.Black;
-        private static readonly Brush hover_stroke  = Brushes.Red;
-        private static readonly Brush select_stroke = Brushes.Blue;
-        
-        public bool IsSelected
-        {
-            get
-            {
-                if (RelatedScene == null)
-                    return false;
-                return RelatedScene.SelectedObject == this; 
-            }
-        }
-
         public SelectionState SelectionState
         {
             get
             {
-                if (RelatedScene == null)
-                    return SelectionState.normal;
-
-                if (RelatedScene.SelectedObject == this)
-                    return SelectionState.select;
-                else if (Shape.Raw.IsMouseDirectlyOver == true)
-                    return SelectionState.hover;
-                else
-                    return SelectionState.normal;
+                return selectionState;
+            }
+            set
+            {
+                selectionState = value;
+                RaisePropertyChangedEvent("SelectionState");
             }
         }
 
-        internal void SetShowState(SelectionState selectionState)
+        public abstract Color Color { get; set; }
+        public abstract int DefaultZIndex { get; }
+        public abstract void Move(Vector vector);
+        public abstract Window CreatePropertyWindow();
+
+
+        protected void PrepareShape(CruShape shape)
         {
+            shape.Canvas = RelatedScene?.RelatedWorldCanvas;
+            shape.Cursor = Cursors.Arrow;
+            shape.ContextMenu = (ContextMenu)Application.Current.FindResource("PhysicalObjectContextMenu");
+
+            SetShowState(shape, SelectionState);
+        }
+
+        private void SetShowState(CruShape shape, SelectionState selectionState)
+        {
+            shape.Stroke = StrokeBrushes[SelectionState];
+            shape.StrokeThickness = StrokeThickness[SelectionState];
             switch (selectionState)
             {
-                case SelectionState.normal:
-                    Shape.Stroke = normal_stroke;
-                    Shape.StrokeThickness = 1.0;
-                    Shape.ZIndex = DefaultZIndex;
+                case SelectionState.Normal:
+                    shape.ZIndex = DefaultZIndex;
                     break;
-                case SelectionState.hover:
-                    Shape.Stroke = hover_stroke;
-                    Shape.StrokeThickness = 2.0;
-                    Shape.ZIndex = DefaultZIndex;
+                case SelectionState.Hover:
+                    shape.ZIndex = DefaultZIndex;
                     break;
-                case SelectionState.select:
-                    Shape.Stroke = select_stroke;
-                    Shape.StrokeThickness = 2.0;
-                    Shape.ZIndex = PhysicalObjectZIndex.Selected;
+                case SelectionState.Select:
+                    shape.ZIndex = PhysicalObjectZIndex.Selected;
                     break;
             }
         }
 
-        internal void FinishCalculate(Scene scene)
+
+        internal void FinishOneScan(Scene scene)
         {
-            OnCalculated(scene);
+            OnOneScanned(scene);
         }
 
         internal void BeginRunning(Scene scene)
@@ -278,7 +253,7 @@ namespace CruPhysics
             OnRefresh(scene);
         }
 
-        protected virtual void OnCalculated(Scene scene)
+        protected virtual void OnOneScanned(Scene scene)
         {
 
         }
@@ -310,71 +285,35 @@ namespace CruPhysics
 
         protected virtual void OnAddToScene(Scene scene)
         {
-            _scene = scene;
-            Shape.Canvas = scene.RelatedWorldCanvas;
+            this.scene = scene;
             scene.physicalObjects.Add(this);
         }
 
         protected virtual void OnRemoveFromScene(Scene scene)
         {
-            _scene = null;
-
-            if (IsSelected)
-                RelatedScene.SelectedObject = null;
-
-            Shape.Canvas = null;
+            this.scene = null;
             scene.physicalObjects.Remove(this);
         }
-
-        private void PhysicalObject_OnMouseEnter(object sender, ShapeMouseEventArgs args)
-        {
-            if (IsSelected)
-                return;
-            SetShowState(SelectionState.hover);
-        }
-
-
-        private void PhysicalObject_OnMouseLeave(object sender, ShapeMouseEventArgs args)
-        {
-            if (IsSelected)
-                return;
-            SetShowState(SelectionState.normal);
-        }
-
-
-        private void PhysicalObject_OnMouseDown(object sender, ShapeMouseEventArgs args)
-        {
-            RelatedScene.SelectedObject = this;
-            args.Raw.Handled = true;
-        }
-
-        internal abstract Window CreatePropertyWindow();
     }
-
 
 
     public class MovingObject : PhysicalObject
     {
-        private CruCircle _shape = new CruCircle();
+        private CruCircle shape = new CruCircle();
         private MotionTrail trail = new MotionTrail();
+
+        private double radius;
+        private BindableVector velocity = new BindableVector();
+        private double mass;
+        private double charge;
+
+        private List<Force> forces = new List<Force>();
 
         public MovingObject()
         {
             Name = "运动对象";
-            PrepareShape();
-
-            _shape.PropertyChanged += (sender, args) =>
-            {
-                if (args.PropertyName == "Radius")
-                    RaisePropertyChangedEvent("Radius");
-            };
-
+            Radius = 10.0;
             Mass = 1.0;
-        }
-
-        protected override CruShape GetShape()
-        {
-            return _shape;
         }
 
         public override int DefaultZIndex => PhysicalObjectZIndex.MovingObject;
@@ -383,7 +322,7 @@ namespace CruPhysics
         {
             get
             {
-                return _shape.Center;
+                return shape.Center;
             }
         }
 
@@ -391,15 +330,15 @@ namespace CruPhysics
         {
             get
             {
-                return _shape.Radius;
+                return radius;
             }
             set
             {
-                _shape.Radius = value;
+                radius = value;
+                RaisePropertyChangedEvent("Radius");
             }
         }
 
-        private List<Force> forces = new List<Force>();
 
         public void AddForce(Force force)
         {
@@ -410,10 +349,6 @@ namespace CruPhysics
         {
             forces.Clear();
         }
-
-        private BindableVector velocity = new BindableVector();
-        private double mass;
-        private double charge;
 
         public BindableVector Velocity => velocity;
 
@@ -443,7 +378,7 @@ namespace CruPhysics
             }
         }
 
-        internal override Window CreatePropertyWindow()
+        public override Window CreatePropertyWindow()
         {
             return new MovingObjectPropertyDialog(this);
         }
@@ -476,9 +411,9 @@ namespace CruPhysics
             trail.Clear();
         }
 
-        protected override void OnCalculated(Scene scene)
+        protected override void OnOneScanned(Scene scene)
         {
-            base.OnCalculated(scene);
+            base.OnOneScanned(scene);
             trail.AddPoint((Point)Position);
         }
 
@@ -520,38 +455,21 @@ namespace CruPhysics
 
         protected Field()
         {
-            PrepareShape();
+
         }
 
-        public new CruShape Shape
+        public CruShape Shape
         {
             get
             {
-                return GetShape();
             }
             set
             {
-                SetShape(value);
+                _shape.Canvas = null;
+                _shape = shape;
+                PrepareShape();
+                RaisePropertyChangedEvent("Shape");
             }
-        }
-
-        public void SetShape(CruShape shape)
-        {
-            _shape.Canvas = null;
-            _shape = shape;
-            PrepareShape();
-            RaisePropertyChangedEvent("Shape");
-        }
-
-        protected override void OnCreateFillBrush(SolidColorBrush brush)
-        {
-            base.OnCreateFillBrush(brush);
-            brush.Opacity = 0.3;
-        }
-
-        protected override CruShape GetShape()
-        {
-            return _shape;
         }
 
         public void Influence(MovingObject movingObject, TimeSpan time)
@@ -601,7 +519,7 @@ namespace CruPhysics
                     Intensity.Y * movingObject.Charge));
         }
 
-        internal override Window CreatePropertyWindow()
+        public override Window CreatePropertyWindow()
         {
             return new ElectricFieldPropertyDialog(this);
         }
@@ -639,239 +557,9 @@ namespace CruPhysics
                 -time.TotalSeconds * movingObject.Charge * FluxDensity / movingObject.Mass));
         }
 
-        internal override Window CreatePropertyWindow()
+        public override Window CreatePropertyWindow()
         {
             return new MagneticFieldPropertyDialog(this);
-        }
-    }
-    
-
-
-    public class Scene : NotifyPropertyChangedObject
-    {
-        private static Scene currentScene;
-
-        public static Scene Current
-        {
-            get
-            {
-                return currentScene;
-            }
-            set
-            {
-                currentScene = value;
-            }
-        }
-
-        private const string timeFormat = @"mm\:ss\.ff";
-
-
-        private readonly MainWindow _mainWindow;
-
-        internal ObservableCollection<PhysicalObject> physicalObjects = new ObservableCollection<PhysicalObject>();
-        internal ObservableCollection<MovingObject> movingObjects = new ObservableCollection<MovingObject>();
-        internal ObservableCollection<Field> fields = new ObservableCollection<Field>();
-
-        private DispatcherTimer timer = new DispatcherTimer(DispatcherPriority.Normal);
-        private TimeSpan runningTime = TimeSpan.Zero;
-        private bool hasBegun = false;
-
-
-        private PhysicalObject selectedObject = null;
-        private SelectionBox selectionBox = null;
-
-        private void CreateSelectionBox()
-        {
-            selectionBox = selectedObject.Shape.CreateSelectionBox();
-            selectionBox.ContextMenu = (ContextMenu)Application.Current.FindResource("PhysicalObjectContextMenu");
-        }
-
-        public PhysicalObject SelectedObject
-        {
-            get
-            {
-                return selectedObject;
-            }
-            set
-            {
-                if (selectedObject == value)
-                    return;
-
-                if (selectedObject != null)
-                {
-                    selectedObject.SetShowState(SelectionState.normal);
-                    selectionBox.Delete();
-                }
-                selectedObject = value;
-                if (value != null)
-                {
-                    value.SetShowState(SelectionState.select);
-                    CreateSelectionBox();
-                }
-
-                RaisePropertyChangedEvent("SelectedObject");
-            }
-        }
-
-        public Scene(MainWindow mainWindow)
-        {
-            _mainWindow = mainWindow;
-            Current = this;
-            ScanInterval = TimeSpan.FromMilliseconds(15.0);
-            timer.Tick += Run;
-        }
-
-        public ObservableCollection<PhysicalObject> PhysicalObjects
-        {
-            get
-            {
-                return physicalObjects;
-            }
-        }
-
-        private void Run(object sender, EventArgs e)
-        {
-            runningTime += ScanInterval;
-            RelatedMainWindow.TimeTextBox.Text = runningTime.ToString(timeFormat);
-
-            var calculationInterval = ScanInterval;
-            foreach (var i in movingObjects)
-            {
-                foreach (var j in fields)
-                    j.Influence(i, calculationInterval);
-                i.Run(calculationInterval);
-                i.ClearForce();
-            }
-
-            foreach (var i in physicalObjects)
-            {
-                i.FinishCalculate(this);
-            }
-        }
-
-        public MainWindow RelatedMainWindow
-        {
-            get
-            {
-                return _mainWindow;
-            }
-        }
-
-        public Canvas RelatedWorldCanvas
-        {
-            get
-            {
-                return RelatedMainWindow.WorldCanvas;
-            }
-        }
-
-        private void PhysicalObjectShapeChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == "Shape" && ((PhysicalObject)sender).IsSelected)
-            {
-                selectionBox.Delete();
-                CreateSelectionBox();
-            }
-        }
-
-        public void Add(PhysicalObject physicalObject)
-        {
-            physicalObject.AddToScene(this);
-
-            if (physicalObject is Field)
-                physicalObject.PropertyChanged += PhysicalObjectShapeChanged;
-        }
-
-        public void Remove(PhysicalObject physicalObject)
-        {
-            physicalObject.RemoveFromScene(this);
-
-            if (physicalObject is Field)
-                physicalObject.PropertyChanged -= PhysicalObjectShapeChanged;
-        }
-
-        public double Bounds
-        {
-            get
-            {
-                return 1000.0;
-            }
-        }
-
-        public TimeSpan ScanInterval
-        {
-            get
-            {
-                return timer.Interval;
-            }
-            set
-            {
-                timer.Interval = value;
-            }
-        }
-
-        public bool IsRunning
-        {
-            get
-            {
-                return timer.IsEnabled;
-            }
-        }
-
-        /// <summary>
-        /// <see cref="HasBegun"/> will be true even if it is paused.
-        /// </summary>
-        public bool HasBegun
-        {
-            get
-            {
-                return hasBegun;
-            }
-        }
-
-        public TimeSpan RunningTime
-        {
-            get
-            {
-                return runningTime;
-            }
-        }
-
-        public void Begin()
-        {
-            if (!hasBegun)
-            {
-                foreach (var i in physicalObjects)
-                {
-                    i.BeginRunning(this);
-                }
-                hasBegun = true;
-            }
-            RelatedMainWindow.TimeTextBox.Visibility = Visibility.Visible;
-            timer.Start();
-        }
-        
-        public void Stop()
-        {
-            timer.Stop();
-            foreach (var i in physicalObjects)
-            {
-                i.StopRunning(this);
-            }
-        }
-
-        public void Restart()
-        {
-            if (IsRunning)
-                Stop();
-            hasBegun = false;
-            runningTime = TimeSpan.Zero;
-            foreach (var i in physicalObjects)
-            {
-                i.Refresh(this);
-            }
-            RelatedMainWindow.TimeTextBox.Visibility = Visibility.Collapsed;
-            RelatedMainWindow.TimeTextBox.Text = runningTime.ToString(timeFormat);
         }
     }
 }
