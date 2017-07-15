@@ -14,72 +14,6 @@ using CruPhysics.Controls;
 
 namespace CruPhysics
 {
-    public class BindableVector : NotifyPropertyChangedObject
-    {
-        private double x = 0.0;
-        private double y = 0.0;
-
-        public BindableVector()
-        {
-
-        }
-
-        public BindableVector(double x, double y)
-        {
-            this.x = x;
-            this.y = y;
-        }
-
-        public BindableVector(Vector vector)
-        {
-            x = vector.X;
-            y = vector.Y;
-        }
-
-        public double X
-        {
-            get
-            {
-                return x;
-            }
-            set
-            {
-                x = value;
-                RaisePropertyChangedEvent("X");
-            }
-        }
-
-        public double Y
-        {
-            get
-            {
-                return y;
-            }
-            set
-            {
-                y = value;
-                RaisePropertyChangedEvent("Y");
-            }
-        }
-
-        public void Set(Vector vector)
-        {
-            X = vector.X;
-            Y = vector.Y;
-        }
-
-        public void Add(Vector vector)
-        {
-            X += vector.X;
-            Y += vector.Y;
-        }
-
-        public static explicit operator Vector(BindableVector vector)
-        {
-            return new Vector(vector.x, vector.y);
-        }
-    }
-
     public enum SelectionState
     {
         Normal,
@@ -87,39 +21,23 @@ namespace CruPhysics
         Select
     }
 
-    public struct Force
+    public class Force : BindableVector
     {
-        private double x;
-        private double y;
+        public Force()
+        {
+
+        }
 
         public Force(double x, double y)
+            : base(x, y)
         {
-            this.x = x;
-            this.y = y;
+
         }
 
-        public double X
+        public Force(Vector vector)
+            : base(vector)
         {
-            get
-            {
-                return x;
-            }
-            set
-            {
-                x = value;
-            }
-        }
 
-        public double Y
-        {
-            get
-            {
-                return y;
-            }
-            set
-            {
-                y = value;
-            }
         }
     }
 
@@ -169,7 +87,7 @@ namespace CruPhysics
             private set
             {
                 scene = value;
-                RaisePropertyChangedEvent("RelatedScene");
+                RaisePropertyChangedEvent(PropertyManager.GetPropertyName(() => RelatedScene));
             }
         }
 
@@ -182,7 +100,7 @@ namespace CruPhysics
             set
             {
                 name = value;
-                RaisePropertyChangedEvent("Name");
+                RaisePropertyChangedEvent(PropertyManager.GetPropertyName(() => Name));
             }
         }
 
@@ -195,7 +113,7 @@ namespace CruPhysics
             set
             {
                 selectionState = value;
-                RaisePropertyChangedEvent("SelectionState");
+                RaisePropertyChangedEvent(PropertyManager.GetPropertyName(() => SelectionState));
             }
         }
 
@@ -285,13 +203,13 @@ namespace CruPhysics
 
         protected virtual void OnAddToScene(Scene scene)
         {
-            this.scene = scene;
+            RelatedScene = scene;
             scene.physicalObjects.Add(this);
         }
 
         protected virtual void OnRemoveFromScene(Scene scene)
         {
-            this.scene = null;
+            RelatedScene = null;
             scene.physicalObjects.Remove(this);
         }
     }
@@ -299,15 +217,15 @@ namespace CruPhysics
 
     public class MovingObject : PhysicalObject
     {
-        private CruCircle shape = new CruCircle();
-        private MotionTrail trail = new MotionTrail();
 
+        private BindablePoint position = new BindablePoint();
         private double radius;
         private BindableVector velocity = new BindableVector();
         private double mass;
         private double charge;
 
         private List<Force> forces = new List<Force>();
+        private MotionTrail trail = new MotionTrail();
 
         public MovingObject()
         {
@@ -318,13 +236,7 @@ namespace CruPhysics
 
         public override int DefaultZIndex => PhysicalObjectZIndex.MovingObject;
 
-        public BindablePoint Position
-        {
-            get
-            {
-                return shape.Center;
-            }
-        }
+        public BindablePoint Position => position;
 
         public double Radius
         {
@@ -337,17 +249,6 @@ namespace CruPhysics
                 radius = value;
                 RaisePropertyChangedEvent("Radius");
             }
-        }
-
-
-        public void AddForce(Force force)
-        {
-            forces.Add(force);
-        }
-
-        public void ClearForce()
-        {
-            forces.Clear();
         }
 
         public BindableVector Velocity => velocity;
@@ -377,6 +278,8 @@ namespace CruPhysics
                 RaisePropertyChangedEvent("Charge");
             }
         }
+
+        public IList<Force> Forces => forces;
 
         public override Window CreatePropertyWindow()
         {
@@ -417,13 +320,14 @@ namespace CruPhysics
             trail.AddPoint((Point)Position);
         }
 
+
         private Point _originalPosition;
         private Vector _originalVelocity;
 
         private void StoreProperty()
         {
-            _originalPosition = (Point)Position;
-            _originalVelocity = (Vector)Velocity;
+            _originalPosition = Position;
+            _originalVelocity = Velocity;
         }
 
         private void RecoverProperty()
@@ -451,36 +355,25 @@ namespace CruPhysics
 
     public abstract class Field : PhysicalObject
     {
-        private CruShape _shape = new CruRectangle(); 
-
         protected Field()
         {
 
         }
-
-        public CruShape Shape
+        
+        public bool IsMovingObjectInside(MovingObject movingObject)
         {
-            get
-            {
-            }
-            set
-            {
-                _shape.Canvas = null;
-                _shape = shape;
-                PrepareShape();
-                RaisePropertyChangedEvent("Shape");
-            }
+
         }
 
         public void Influence(MovingObject movingObject, TimeSpan time)
         {
-            if (Shape.IsPointInside((Point)movingObject.Position))
+            if ()
                 CalculateEffect(movingObject, time);
         }
 
-        public override int DefaultZIndex => PhysicalObjectZIndex.Field;
+        public abstract void CalculateEffect(MovingObject movingObject, TimeSpan time);
 
-        protected abstract void CalculateEffect(MovingObject movingObject, TimeSpan time);
+        public override int DefaultZIndex => PhysicalObjectZIndex.Field;
 
         protected override void OnAddToScene(Scene scene)
         {
@@ -512,11 +405,12 @@ namespace CruPhysics
             }
         }
 
-        protected override void CalculateEffect(MovingObject movingObject, TimeSpan no_use)
+        public override void CalculateEffect(MovingObject movingObject, TimeSpan no_use)
         {
-            movingObject.AddForce(
-                new Force(Intensity.X * movingObject.Charge,
-                    Intensity.Y * movingObject.Charge));
+            movingObject.Forces.Add(new Force(
+                    Intensity.X * movingObject.Charge,
+                    Intensity.Y * movingObject.Charge
+                ));
         }
 
         public override Window CreatePropertyWindow()
@@ -546,14 +440,14 @@ namespace CruPhysics
             set
             {
                 fluxDensity = value;
-                RaisePropertyChangedEvent("FluxDensity");
+                RaisePropertyChangedEvent(PropertyManager.GetPropertyName(() => FluxDensity));
             }
         }
 
-        protected override void CalculateEffect(MovingObject movingObject, TimeSpan time)
+        public override void CalculateEffect(MovingObject movingObject, TimeSpan time)
         {
             //qvB = mvω => ω = qB/m => α = ωt = qBt/m
-            movingObject.Velocity.Set(Common.Rotate((Vector)movingObject.Velocity,
+            movingObject.Velocity.Set(Common.Rotate(movingObject.Velocity,
                 -time.TotalSeconds * movingObject.Charge * FluxDensity / movingObject.Mass));
         }
 

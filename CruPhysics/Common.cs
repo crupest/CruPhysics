@@ -12,96 +12,138 @@ using System.Linq.Expressions;
 
 namespace CruPhysics
 {
-    public class NotifyPropertyChangedObject : INotifyPropertyChanged
+    public class BindableVector : NotifyPropertyChangedObject
     {
-        public NotifyPropertyChangedObject()
+        private double x = 0.0;
+        private double y = 0.0;
+
+        public BindableVector()
         {
-            IsNotifying = true;
+
         }
 
-        private PropertyChangedEventHandler propertyChanged;
-
-        public event PropertyChangedEventHandler PropertyChanged
+        public BindableVector(double x, double y)
         {
-            add
+            this.x = x;
+            this.y = y;
+        }
+
+        public BindableVector(Vector vector)
+        {
+            x = vector.X;
+            y = vector.Y;
+        }
+
+        public double X
+        {
+            get
             {
-                propertyChanged += value;
+                return x;
             }
-            remove
+            set
             {
-                propertyChanged -= value;
+                x = value;
+                RaisePropertyChangedEvent("X");
             }
         }
 
-        public bool IsNotifying { get; set; }
-
-        protected void RaisePropertyChangedEvent(string propertyName)
+        public double Y
         {
-            if (IsNotifying)
-                propertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            get
+            {
+                return y;
+            }
+            set
+            {
+                y = value;
+                RaisePropertyChangedEvent("Y");
+            }
+        }
+
+        public void Set(Vector vector)
+        {
+            X = vector.X;
+            Y = vector.Y;
+        }
+
+        public void Add(Vector vector)
+        {
+            X += vector.X;
+            Y += vector.Y;
+        }
+
+        public static implicit operator Vector(BindableVector vector)
+        {
+            return new Vector(vector.x, vector.y);
         }
     }
 
-    public static class PropertyManager
+    public class BindablePoint : NotifyPropertyChangedObject
     {
-        public static object Object { get; set; }
+        private double x = 0.0;
+        private double y = 0.0;
 
-        public static string GetPropertyName<TProperty>(Expression<Func<TProperty>> property)
+        public BindablePoint()
         {
-            var memberExpression = (MemberExpression)property.Body;
-            return memberExpression.Member.Name;
+
         }
 
-        public static object GetPropertyValue(object target, string propertyName)
+        public BindablePoint(double x, double y)
         {
-            return target.GetType().GetProperty(propertyName).GetValue(target);
+            this.x = x;
+            this.y = y;
         }
 
-        public static void SetPropertyValue(object target, string propertyName, object value)
+        public BindablePoint(Point point)
         {
-            target.GetType().GetProperty(propertyName).SetValue(target, value);
+            x = point.X;
+            y = point.Y;
         }
 
-        public static void OneWayBind(INotifyPropertyChanged source, string sourcePropertyName, object target, string targetPropertyName)
+        public double X
         {
-            source.PropertyChanged += (sender, args) =>
+            get
             {
-                if (args.PropertyName == sourcePropertyName)
-                {
-                    SetPropertyValue(target, targetPropertyName, GetPropertyValue(source, sourcePropertyName));
-                }
-            };
+                return x;
+            }
+            set
+            {
+                x = value;
+                RaisePropertyChangedEvent("X");
+            }
         }
 
-        public static void TwoWayBind(INotifyPropertyChanged source, string sourcePropertyName, INotifyPropertyChanged target, string targetPropertyName)
+        public double Y
         {
-            bool b = true;
-            source.PropertyChanged += (sender, args) =>
+            get
             {
-                if (args.PropertyName == sourcePropertyName && b)
-                {
-                    b = !b;
-                    SetPropertyValue(target, targetPropertyName, GetPropertyValue(source, sourcePropertyName));
-                }
-                else
-                {
-                    b = !b;
-                }
-            };
-            target.PropertyChanged += (sender, args) =>
+                return y;
+            }
+            set
             {
-                if (args.PropertyName == targetPropertyName && b)
-                {
-                    b = !b;
-                    SetPropertyValue(source, sourcePropertyName, GetPropertyValue(target, targetPropertyName));
-                }
-                else
-                {
-                    b = !b;
-                }
-            };
+                y = value;
+                RaisePropertyChangedEvent("Y");
+            }
+        }
+
+        public void Set(Point point)
+        {
+            X = point.X;
+            Y = point.Y;
+        }
+
+        public void Move(Vector vector)
+        {
+            X += vector.X;
+            Y += vector.Y;
+        }
+
+        public static implicit operator Point(BindablePoint point)
+        {
+            return new Point(point.x, point.y);
         }
     }
+
 
     public static class Common
     {
