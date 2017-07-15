@@ -11,6 +11,7 @@ using System.Windows.Threading;
 using CruPhysics.Shapes;
 using CruPhysics.Windows;
 using CruPhysics.Controls;
+using System.Windows.Shapes;
 
 namespace CruPhysics
 {
@@ -69,13 +70,14 @@ namespace CruPhysics
         public static IReadOnlyDictionary<SelectionState, double> StrokeThickness => strokeThickness;
 
 
-        private Scene scene;
+        private Scene scene = null;
         private string name = string.Empty;
         private SelectionState selectionState = SelectionState.Normal;
+        private Color color;
 
         public PhysicalObject()
         {
-
+            Color = Common.GetRamdomColor();
         }
 
         public Scene RelatedScene
@@ -117,37 +119,40 @@ namespace CruPhysics
             }
         }
 
-        public abstract Color Color { get; set; }
+        public Color Color
+        {
+            get
+            {
+                return color;
+            }
+            set
+            {
+                color = value;
+                RaisePropertyChangedEvent(PropertyManager.GetPropertyName(() => Color));
+            }
+        }
+
         public abstract int DefaultZIndex { get; }
         public abstract void Move(Vector vector);
         public abstract Window CreatePropertyWindow();
 
 
-        protected void PrepareShape(CruShape shape)
+        protected void PrepareShape(Shape shape)
         {
-            shape.Canvas = RelatedScene?.RelatedWorldCanvas;
             shape.Cursor = Cursors.Arrow;
             shape.ContextMenu = (ContextMenu)Application.Current.FindResource("PhysicalObjectContextMenu");
 
             SetShowState(shape, SelectionState);
         }
 
-        private void SetShowState(CruShape shape, SelectionState selectionState)
+        private void SetShowState(Shape shape, SelectionState selectionState)
         {
             shape.Stroke = StrokeBrushes[SelectionState];
             shape.StrokeThickness = StrokeThickness[SelectionState];
-            switch (selectionState)
-            {
-                case SelectionState.Normal:
-                    shape.ZIndex = DefaultZIndex;
-                    break;
-                case SelectionState.Hover:
-                    shape.ZIndex = DefaultZIndex;
-                    break;
-                case SelectionState.Select:
-                    shape.ZIndex = PhysicalObjectZIndex.Selected;
-                    break;
-            }
+            if (selectionState == SelectionState.Select)
+                Panel.SetZIndex(shape, PhysicalObjectZIndex.Selected);
+            else
+                Panel.SetZIndex(shape, DefaultZIndex);
         }
 
 
@@ -217,7 +222,6 @@ namespace CruPhysics
 
     public class MovingObject : PhysicalObject
     {
-
         private BindablePoint position = new BindablePoint();
         private double radius;
         private BindableVector velocity = new BindableVector();
@@ -277,6 +281,11 @@ namespace CruPhysics
                 charge = value;
                 RaisePropertyChangedEvent("Charge");
             }
+        }
+
+        public override void Move(Vector vector)
+        {
+            Position.Move(vector);
         }
 
         public IList<Force> Forces => forces;
@@ -355,19 +364,39 @@ namespace CruPhysics
 
     public abstract class Field : PhysicalObject
     {
+        private CruShape shape = new CruRectangle();
+
         protected Field()
         {
 
         }
         
+        public CruShape Shape
+        {
+            get
+            {
+                return shape;
+            }
+            set
+            {
+                shape = value;
+                RaisePropertyChangedEvent(PropertyManager.GetPropertyName(() => Shape));
+            }
+        }
+
+        public override void Move(Vector vector)
+        {
+            Shape.Move(vector);
+        }
+
         public bool IsMovingObjectInside(MovingObject movingObject)
         {
-
+            return Shape.IsPointInside(movingObject.Position);
         }
 
         public void Influence(MovingObject movingObject, TimeSpan time)
         {
-            if ()
+            if (IsMovingObjectInside(movingObject))
                 CalculateEffect(movingObject, time);
         }
 
