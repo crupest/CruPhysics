@@ -14,24 +14,8 @@ namespace CruPhysics
 {
     public class Scene : NotifyPropertyChangedObject
     {
-        private static Scene currentScene;
-
-        public static Scene Current
-        {
-            get
-            {
-                return currentScene;
-            }
-            set
-            {
-                currentScene = value;
-            }
-        }
-
         private const string timeFormat = @"mm\:ss\.ff";
 
-
-        private readonly MainWindow _mainWindow;
 
         internal ObservableCollection<PhysicalObject> physicalObjects = new ObservableCollection<PhysicalObject>();
         internal ObservableCollection<MovingObject> movingObjects = new ObservableCollection<MovingObject>();
@@ -43,13 +27,6 @@ namespace CruPhysics
 
 
         private PhysicalObject selectedObject = null;
-        private SelectionBox selectionBox = null;
-
-        private void CreateSelectionBox()
-        {
-            selectionBox = selectedObject.Shape.CreateSelectionBox();
-            selectionBox.ContextMenu = (ContextMenu)Application.Current.FindResource("PhysicalObjectContextMenu");
-        }
 
         public PhysicalObject SelectedObject
         {
@@ -59,29 +36,12 @@ namespace CruPhysics
             }
             set
             {
-                if (selectedObject == value)
-                    return;
 
-                if (selectedObject != null)
-                {
-                    selectedObject.SetShowState(SelectionState.normal);
-                    selectionBox.Delete();
-                }
-                selectedObject = value;
-                if (value != null)
-                {
-                    value.SetShowState(SelectionState.select);
-                    CreateSelectionBox();
-                }
-
-                RaisePropertyChangedEvent("SelectedObject");
             }
         }
 
-        public Scene(MainWindow mainWindow)
+        public Scene()
         {
-            _mainWindow = mainWindow;
-            Current = this;
             ScanInterval = TimeSpan.FromMilliseconds(15.0);
             timer.Tick += Run;
         }
@@ -94,65 +54,14 @@ namespace CruPhysics
             }
         }
 
-        private void Run(object sender, EventArgs e)
-        {
-            runningTime += ScanInterval;
-            RelatedMainWindow.TimeTextBox.Text = runningTime.ToString(timeFormat);
-
-            var calculationInterval = ScanInterval;
-            foreach (var i in movingObjects)
-            {
-                foreach (var j in fields)
-                    j.Influence(i, calculationInterval);
-                i.Run(calculationInterval);
-                i.ClearForce();
-            }
-
-            foreach (var i in physicalObjects)
-            {
-                i.FinishCalculate(this);
-            }
-        }
-
-        public MainWindow RelatedMainWindow
-        {
-            get
-            {
-                return _mainWindow;
-            }
-        }
-
-        public Canvas RelatedWorldCanvas
-        {
-            get
-            {
-                return RelatedMainWindow.WorldCanvas;
-            }
-        }
-
-        private void PhysicalObjectShapeChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == "Shape" && ((PhysicalObject)sender).IsSelected)
-            {
-                selectionBox.Delete();
-                CreateSelectionBox();
-            }
-        }
-
         public void Add(PhysicalObject physicalObject)
         {
             physicalObject.AddToScene(this);
-
-            if (physicalObject is Field)
-                physicalObject.PropertyChanged += PhysicalObjectShapeChanged;
         }
 
         public void Remove(PhysicalObject physicalObject)
         {
             physicalObject.RemoveFromScene(this);
-
-            if (physicalObject is Field)
-                physicalObject.PropertyChanged -= PhysicalObjectShapeChanged;
         }
 
         public double Bounds
@@ -172,6 +81,7 @@ namespace CruPhysics
             set
             {
                 timer.Interval = value;
+                RaisePropertyChangedEvent(PropertyManager.GetPropertyName(() => ScanInterval));
             }
         }
 
@@ -180,6 +90,11 @@ namespace CruPhysics
             get
             {
                 return timer.IsEnabled;
+            }
+            private set
+            {
+                timer.IsEnabled = value;
+                RaisePropertyChangedEvent(PropertyManager.GetPropertyName(() => IsRunning));
             }
         }
 
@@ -192,6 +107,11 @@ namespace CruPhysics
             {
                 return hasBegun;
             }
+            private set
+            {
+                hasBegun = value;
+                RaisePropertyChangedEvent(PropertyManager.GetPropertyName(() => HasBegun));
+            }
         }
 
         public TimeSpan RunningTime
@@ -200,11 +120,34 @@ namespace CruPhysics
             {
                 return runningTime;
             }
+            private set
+            {
+                runningTime = value;
+                RaisePropertyChangedEvent(PropertyManager.GetPropertyName(() => RunningTime));
+            }
+        }
+
+        private void Run(object sender, EventArgs e)
+        {
+            RunningTime += ScanInterval;
+
+            var calculationInterval = ScanInterval;
+            foreach (var i in movingObjects)
+            {
+                foreach (var j in fields)
+                    j.Influence(i, calculationInterval);
+                i.Run(calculationInterval);
+            }
+
+            foreach (var i in physicalObjects)
+            {
+                i.FinishOneScan(this);
+            }
         }
 
         public void Begin()
         {
-            if (!hasBegun)
+            if (!HasBegun)
             {
                 foreach (var i in physicalObjects)
                 {
@@ -212,31 +155,28 @@ namespace CruPhysics
                 }
                 hasBegun = true;
             }
-            RelatedMainWindow.TimeTextBox.Visibility = Visibility.Visible;
-            timer.Start();
+            IsRunning = true;
         }
 
         public void Stop()
         {
-            timer.Stop();
             foreach (var i in physicalObjects)
             {
                 i.StopRunning(this);
             }
+            IsRunning = false;
         }
 
         public void Restart()
         {
             if (IsRunning)
                 Stop();
-            hasBegun = false;
-            runningTime = TimeSpan.Zero;
+            RunningTime = TimeSpan.Zero;
             foreach (var i in physicalObjects)
             {
                 i.Refresh(this);
             }
-            RelatedMainWindow.TimeTextBox.Visibility = Visibility.Collapsed;
-            RelatedMainWindow.TimeTextBox.Text = runningTime.ToString(timeFormat);
+            HasBegun = false;
         }
     }
 }
