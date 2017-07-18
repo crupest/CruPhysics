@@ -1,16 +1,13 @@
-﻿using System;
+﻿using CruPhysics.Shapes;
+using CruPhysics.Windows;
+using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
+using System.Linq;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Threading;
-
-using CruPhysics.Shapes;
-using CruPhysics.Windows;
-using CruPhysics.Controls;
 using System.Windows.Shapes;
 
 namespace CruPhysics
@@ -42,16 +39,62 @@ namespace CruPhysics
         }
     }
 
-    public static class PhysicalObjectZIndex
+    public class PhysicalObjectMetadata
     {
-        public const int Selected = 100;
-        public const int Controller = 101;
-        public const int MovingObject = 2;
-        public const int Field = 1;
+        public PhysicalObjectMetadata()
+        {
+
+        }
+
+        public int ZIndex { get; set; }
+        public int RunRank { get; set; }
+    }
+
+    public static class PhysicalObjectManager
+    {
+        static PhysicalObjectManager()
+        {
+            var assembly = Assembly.GetAssembly(typeof(PhysicalObjectManager));
+            var types = assembly.GetExportedTypes();
+            var physicalObjectTypes = from type in types
+                                      where typeof(PhysicalObject).IsAssignableFrom(type) && !type.IsAbstract
+                                      select type;
+            foreach (var type in physicalObjectTypes)
+            {
+                Register(type.Name, (PhysicalObjectMetadata)type.GetField("Metadata", BindingFlags.IgnoreCase).GetValue(null));
+            }
+        }
+
+        private static readonly Dictionary<string, PhysicalObjectMetadata> metadatas = new Dictionary<string, PhysicalObjectMetadata>();
+        private static readonly SortedList<int, string> runRankList = new SortedList<int, string>();
+
+        public static void Register(string name, PhysicalObjectMetadata metadata)
+        {
+            metadatas.Add(name, metadata);
+            runRankList.Add(metadata.RunRank, name);
+        }
+
+        public static IList<string> GetOrderedByRunRank()
+        {
+            return runRankList.Values;
+        }
+
+        public static PhysicalObjectMetadata GetMetadata(string name)
+        {
+            return metadatas[name];
+        }
+
+        public static PhysicalObjectMetadata GetMetadata(this PhysicalObject physicalObejct)
+        {
+            return GetMetadata(physicalObejct.GetType().Name);
+        }
     }
 
     public abstract class PhysicalObject : NotifyPropertyChangedObject
     {
+        public const int SelectedZIndex = 1000;
+        public const int ControllerZIndex = 1001;
+
         static PhysicalObject()
         {
             strokeBrushes.Add(SelectionState.Normal, Brushes.Black);
@@ -132,10 +175,9 @@ namespace CruPhysics
             }
         }
 
-        public abstract int DefaultZIndex { get; }
+        public abstract void Run(Scene scene, TimeSpan time);
         public abstract void Move(Vector vector);
         public abstract Window CreatePropertyWindow();
-
 
         protected void PrepareShape(Shape shape)
         {
@@ -150,15 +192,19 @@ namespace CruPhysics
             shape.Stroke = StrokeBrushes[SelectionState];
             shape.StrokeThickness = StrokeThickness[SelectionState];
             if (selectionState == SelectionState.Select)
-                Panel.SetZIndex(shape, PhysicalObjectZIndex.Selected);
+                Panel.SetZIndex(shape, SelectedZIndex);
             else
-                Panel.SetZIndex(shape, DefaultZIndex);
+                Panel.SetZIndex(shape, this.GetMetadata().ZIndex);
         }
 
+        internal void BeginOneScan(Scene scene)
+        {
+            BeforeOneScan(scene);
+        }
 
         internal void FinishOneScan(Scene scene)
         {
-            OnOneScanned(scene);
+            AfterOneScan(scene);
         }
 
         internal void BeginRunning(Scene scene)
@@ -176,7 +222,12 @@ namespace CruPhysics
             OnRefresh(scene);
         }
 
-        protected virtual void OnOneScanned(Scene scene)
+        protected virtual void BeforeOneScan(Scene scene)
+        {
+
+        }
+
+        protected virtual void AfterOneScan(Scene scene)
         {
 
         }
@@ -209,19 +260,23 @@ namespace CruPhysics
         protected virtual void OnAddToScene(Scene scene)
         {
             RelatedScene = scene;
-            scene.physicalObjects.Add(this);
+            scene.PhysicalObjects.Add(this);
+            scene.ClassifiedObjects[GetType().Name].Add(this);
         }
 
         protected virtual void OnRemoveFromScene(Scene scene)
         {
             RelatedScene = null;
-            scene.physicalObjects.Remove(this);
+            scene.PhysicalObjects.Remove(this);
+            scene.ClassifiedObjects[GetType().Name].Remove(this);
         }
     }
 
 
     public class MovingObject : PhysicalObject
     {
+        public static readonly PhysicalObjectMetadata metadata = new PhysicalObjectMetadata() { ZIndex = 100, RunRank = 100 };
+
         private BindablePoint position = new BindablePoint();
         private double radius;
         private BindableVector velocity = new BindableVector();
@@ -237,8 +292,6 @@ namespace CruPhysics
             Radius = 10.0;
             Mass = 1.0;
         }
-
-        public override int DefaultZIndex => PhysicalObjectZIndex.MovingObject;
 
         public BindablePoint Position => position;
 
@@ -298,15 +351,11 @@ namespace CruPhysics
         protected override void OnAddToScene(Scene scene)
         {
             base.OnAddToScene(scene);
-            scene.movingObjects.Add(this);
-            scene.RelatedWorldCanvas.Children.Add(trail.Shape);
         }
 
         protected override void OnRemoveFromScene(Scene scene)
         {
             base.OnRemoveFromScene(scene);
-            scene.movingObjects.Remove(this);
-            scene.RelatedWorldCanvas.Children.Remove(trail.Shape);
         }
 
         protected override void OnBeginRunning(Scene scene)
@@ -323,9 +372,9 @@ namespace CruPhysics
             trail.Clear();
         }
 
-        protected override void OnOneScanned(Scene scene)
+        protected override void AfterOneScan(Scene scene)
         {
-            base.OnOneScanned(scene);
+            base.AfterOneScan(scene);
             trail.AddPoint((Point)Position);
         }
 
@@ -345,7 +394,7 @@ namespace CruPhysics
             Velocity.Set(_originalVelocity);
         }
 
-        public void Run(TimeSpan time)
+        public override void Run(Scene scene, TimeSpan time)
         {
             var t = time.TotalSeconds;
             var force = new Vector();
@@ -402,23 +451,30 @@ namespace CruPhysics
 
         public abstract void CalculateEffect(MovingObject movingObject, TimeSpan time);
 
-        public override int DefaultZIndex => PhysicalObjectZIndex.Field;
+        public override void Run(Scene scene, TimeSpan time)
+        {
+            foreach (MovingObject movingObject in scene.ClassifiedObjects[typeof(MovingObject).Name])
+            {
+                Influence(movingObject, time);
+            }
+        }
 
         protected override void OnAddToScene(Scene scene)
         {
             base.OnAddToScene(scene);
-            scene.fields.Add(this);
         }
 
         protected override void OnRemoveFromScene(Scene scene)
         {
             base.OnRemoveFromScene(scene);
-            scene.fields.Remove(this);
         }
     }
 
     public class ElectricField : Field
     {
+        public static readonly PhysicalObjectMetadata metadata = new PhysicalObjectMetadata() { ZIndex = 50, RunRank = 50 };
+
+
         private BindableVector intensity = new BindableVector();
 
         public ElectricField()
@@ -450,6 +506,9 @@ namespace CruPhysics
 
     public class MagneticField : Field
     {
+        public static readonly PhysicalObjectMetadata metadata = new PhysicalObjectMetadata() { ZIndex = 50, RunRank = 49 };
+
+
         private double fluxDensity;
 
         public MagneticField()

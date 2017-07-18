@@ -1,32 +1,33 @@
-﻿using CruPhysics.Controls;
-using CruPhysics.Windows;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Controls;
 using System.Windows.Threading;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace CruPhysics
 {
     public class Scene : NotifyPropertyChangedObject
     {
-        private const string timeFormat = @"mm\:ss\.ff";
-
-
-        internal ObservableCollection<PhysicalObject> physicalObjects = new ObservableCollection<PhysicalObject>();
-        internal ObservableCollection<MovingObject> movingObjects = new ObservableCollection<MovingObject>();
-        internal ObservableCollection<Field> fields = new ObservableCollection<Field>();
+        private ObservableCollection<PhysicalObject> physicalObjects = new ObservableCollection<PhysicalObject>();
+        private Dictionary<string, ObservableCollection<PhysicalObject>> classifiedObjects = new Dictionary<string, ObservableCollection<PhysicalObject>>();
 
         private DispatcherTimer timer = new DispatcherTimer(DispatcherPriority.Normal);
         private TimeSpan runningTime = TimeSpan.Zero;
         private bool hasBegun = false;
 
-
         private PhysicalObject selectedObject = null;
+
+
+        public Scene()
+        {
+            var list = PhysicalObjectManager.GetOrderedByRunRank();
+            foreach (var k in list)
+            {
+                classifiedObjects.Add(k, new ObservableCollection<PhysicalObject>());
+            }
+
+            ScanInterval = TimeSpan.FromMilliseconds(15.0);
+            timer.Tick += Run;
+        }
 
         public PhysicalObject SelectedObject
         {
@@ -40,17 +41,19 @@ namespace CruPhysics
             }
         }
 
-        public Scene()
-        {
-            ScanInterval = TimeSpan.FromMilliseconds(15.0);
-            timer.Tick += Run;
-        }
-
         public ObservableCollection<PhysicalObject> PhysicalObjects
         {
             get
             {
                 return physicalObjects;
+            }
+        }
+
+        public IDictionary<string, ObservableCollection<PhysicalObject>> ClassifiedObjects
+        {
+            get
+            {
+                return classifiedObjects;
             }
         }
 
@@ -129,17 +132,22 @@ namespace CruPhysics
 
         private void Run(object sender, EventArgs e)
         {
-            RunningTime += ScanInterval;
+            var scanInterval = ScanInterval;
 
-            var calculationInterval = ScanInterval;
-            foreach (var i in movingObjects)
+            RunningTime += scanInterval;
+
+            foreach (var i in PhysicalObjects)
             {
-                foreach (var j in fields)
-                    j.Influence(i, calculationInterval);
-                i.Run(calculationInterval);
+                i.BeginOneScan(this);
             }
 
-            foreach (var i in physicalObjects)
+            foreach (var k in PhysicalObjectManager.GetOrderedByRunRank())
+            {
+                foreach (var o in ClassifiedObjects[k])
+                    o.Run(this, scanInterval);
+            }
+
+            foreach (var i in PhysicalObjects)
             {
                 i.FinishOneScan(this);
             }
