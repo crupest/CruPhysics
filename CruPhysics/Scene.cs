@@ -5,6 +5,18 @@ using System.Windows.Threading;
 
 namespace CruPhysics
 {
+    public class SceneScanEventArgs : EventArgs
+    {
+        public SceneScanEventArgs(TimeSpan scanInterval)
+        {
+            ScanInterval = scanInterval;
+        }
+
+        public TimeSpan ScanInterval { get; private set; }
+    }
+
+    public delegate void SceneScanEventHandler(object sender, SceneScanEventArgs args);
+
     public class Scene : NotifyPropertyChangedObject
     {
         private ObservableCollection<PhysicalObject> physicalObjects = new ObservableCollection<PhysicalObject>();
@@ -133,13 +145,11 @@ namespace CruPhysics
         private void Run(object sender, EventArgs e)
         {
             var scanInterval = ScanInterval;
+            var eventArgs = new SceneScanEventArgs(scanInterval);
 
             RunningTime += scanInterval;
 
-            foreach (var i in PhysicalObjects)
-            {
-                i.BeginOneScan(this);
-            }
+            BeforeOneScanEvent?.Invoke(this, eventArgs);
 
             foreach (var k in PhysicalObjectManager.GetOrderedByRunRank())
             {
@@ -147,20 +157,14 @@ namespace CruPhysics
                     o.Run(this, scanInterval);
             }
 
-            foreach (var i in PhysicalObjects)
-            {
-                i.FinishOneScan(this);
-            }
+            AfterOneScanEvent?.Invoke(this, eventArgs);
         }
 
         public void Begin()
         {
             if (!HasBegun)
             {
-                foreach (var i in physicalObjects)
-                {
-                    i.BeginRunning(this);
-                }
+                BeginRunningEvent?.Invoke(this, EventArgs.Empty);
                 hasBegun = true;
             }
             IsRunning = true;
@@ -168,10 +172,7 @@ namespace CruPhysics
 
         public void Stop()
         {
-            foreach (var i in physicalObjects)
-            {
-                i.StopRunning(this);
-            }
+            StopRunningEvent?.Invoke(this, EventArgs.Empty);
             IsRunning = false;
         }
 
@@ -180,11 +181,14 @@ namespace CruPhysics
             if (IsRunning)
                 Stop();
             RunningTime = TimeSpan.Zero;
-            foreach (var i in physicalObjects)
-            {
-                i.Refresh(this);
-            }
+            RefreshEvent?.Invoke(this, EventArgs.Empty);
             HasBegun = false;
         }
+
+        public event SceneScanEventHandler BeforeOneScanEvent;
+        public event SceneScanEventHandler AfterOneScanEvent;
+        public event EventHandler BeginRunningEvent;
+        public event EventHandler StopRunningEvent;
+        public event EventHandler RefreshEvent;
     }
 }

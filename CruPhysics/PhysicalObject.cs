@@ -197,56 +197,6 @@ namespace CruPhysics
                 Panel.SetZIndex(shape, this.GetMetadata().ZIndex);
         }
 
-        internal void BeginOneScan(Scene scene)
-        {
-            BeforeOneScan(scene);
-        }
-
-        internal void FinishOneScan(Scene scene)
-        {
-            AfterOneScan(scene);
-        }
-
-        internal void BeginRunning(Scene scene)
-        {
-            OnBeginRunning(scene);
-        }
-
-        internal void StopRunning(Scene scene)
-        {
-            OnStopRunning(scene);
-        }
-
-        internal void Refresh(Scene scene)
-        {
-            OnRefresh(scene);
-        }
-
-        protected virtual void BeforeOneScan(Scene scene)
-        {
-
-        }
-
-        protected virtual void AfterOneScan(Scene scene)
-        {
-
-        }
-
-        protected virtual void OnBeginRunning(Scene scene)
-        {
-
-        }
-
-        protected virtual void OnStopRunning(Scene scene)
-        {
-
-        }
-
-        protected virtual void OnRefresh(Scene scene)
-        {
-
-        }
-
         internal void AddToScene(Scene scene)
         {
             OnAddToScene(scene);
@@ -351,31 +301,34 @@ namespace CruPhysics
         protected override void OnAddToScene(Scene scene)
         {
             base.OnAddToScene(scene);
+            scene.BeginRunningEvent += OnBeginRunning;
+            scene.RefreshEvent += OnRefresh;
+            scene.AfterOneScanEvent += AfterOneScan;
         }
 
         protected override void OnRemoveFromScene(Scene scene)
         {
             base.OnRemoveFromScene(scene);
+            scene.BeginRunningEvent -= OnBeginRunning;
+            scene.RefreshEvent -= OnRefresh;
+            scene.AfterOneScanEvent -= AfterOneScan;
         }
 
-        protected override void OnBeginRunning(Scene scene)
+        private void OnBeginRunning(object sender, EventArgs args)
         {
-            base.OnBeginRunning(scene);
             StoreProperty();
-            trail.AddPoint((Point)Position);
+            trail.AddPoint(Position);
         }
 
-        protected override void OnRefresh(Scene scene)
+        private void OnRefresh(object sender, EventArgs args)
         {
-            base.OnRefresh(scene);
             RecoverProperty();
             trail.Clear();
         }
 
-        protected override void AfterOneScan(Scene scene)
+        private void AfterOneScan(object sender, SceneScanEventArgs args)
         {
-            base.AfterOneScan(scene);
-            trail.AddPoint((Point)Position);
+            trail.AddPoint(Position);
         }
 
 
