@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using CruPhysics.ViewModels;
 
 namespace CruPhysics.Windows
 {
@@ -24,44 +25,37 @@ namespace CruPhysics.Windows
         public static RoutedUICommand Restart           = new RoutedUICommand("重新(_R)",     "restart",          typeof(MainWindow));
         public static RoutedUICommand ResetView         = new RoutedUICommand("重置视图(_R)",  "reset_view",       typeof(MainWindow));
 
-        private MainViewModel viewModel;
         private CoordinateSystem coordinateSystem;
 
         public MainWindow()
         {
             InitializeComponent();
 
-            viewModel = new MainViewModel(this);
+            ViewModel = new MainViewModel();
 
             coordinateSystem = new CoordinateSystem(this);
 
             ObjectList.Focus();
         }
 
-        public MainViewModel ViewModel
-        {
-            get
-            {
-                return viewModel;
-            }
-        }
+        public MainViewModel ViewModel { get; }
 
         private void NewMovingObject_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            MovingObject moving_object = new MovingObject();
-            viewModel.Scene.Add(moving_object);
+            var movingObject = new MovingObject();
+            ViewModel.Scene.Add(movingObject);
         }
 
         private void NewElectricField_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             var electric_field = new ElectricField();
-            viewModel.Scene.Add(electric_field);
+            ViewModel.Scene.Add(electric_field);
         }
 
         private void NewMagneticField_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             var magnetic_field = new MagneticField();
-            viewModel.Scene.Add(magnetic_field);
+            ViewModel.Scene.Add(magnetic_field);
         }
 
         private void Property_Executed(object sender, ExecutedRoutedEventArgs e)
@@ -74,7 +68,7 @@ namespace CruPhysics.Windows
 
         private void Delete_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            viewModel.Scene.Remove(ViewModel.Scene.SelectedObject);
+            ViewModel.Scene.Remove(ViewModel.Scene.SelectedObject);
         }
 
         private void CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -84,32 +78,32 @@ namespace CruPhysics.Windows
 
         private void Begin_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            viewModel.Scene.Begin();
+            ViewModel.Scene.Begin();
         }
 
         private void Begin_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = !viewModel.Scene.IsRunning;
+            e.CanExecute = !ViewModel.Scene.IsRunning;
         }
 
         private void Stop_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            viewModel.Scene.Stop();
+            ViewModel.Scene.Stop();
         }
 
         private void Stop_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = viewModel.Scene.IsRunning;
+            e.CanExecute = ViewModel.Scene.IsRunning;
         }
 
         private void Restart_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            viewModel.Scene.Restart();
+            ViewModel.Scene.Restart();
         }
 
         private void Restart_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = viewModel.Scene.HasBegun; 
+            e.CanExecute = ViewModel.Scene.HasBegun; 
         }
 
         private void MainCanvas_SizeChanged(object sender, SizeChangedEventArgs e)

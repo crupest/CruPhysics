@@ -3,9 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:CruPhysics.Controls"
-             xmlns:cru="clr-namespace:CruPhysics"
              xmlns:shapes="clr-namespace:CruPhysics.Shapes"
+             xmlns:viewModels="clr-namespace:CruPhysics.ViewModels"
              mc:Ignorable="d"
              MinWidth="200">
 
@@ -47,7 +46,7 @@
                     <TextBox.Text>
                         <Binding Path="Left" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" NotifyOnValidationError="True">
                             <Binding.ValidationRules>
-                                <cru:NumberValidationRule/>
+                                <viewModels:NumberValidationRule/>
                             </Binding.ValidationRules>
                         </Binding>
                     </TextBox.Text>
@@ -56,7 +55,7 @@
                     <TextBox.Text>
                         <Binding Path="Top" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" NotifyOnValidationError="True">
                             <Binding.ValidationRules>
-                                <cru:NumberValidationRule/>
+                                <viewModels:NumberValidationRule/>
                             </Binding.ValidationRules>
                         </Binding>
                     </TextBox.Text>
@@ -65,7 +64,7 @@
                     <TextBox.Text>
                         <Binding Path="Width" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" NotifyOnValidationError="True">
                             <Binding.ValidationRules>
-                                <cru:PositiveOrZeroValidationRule Info="宽度不能小于0！"/>
+                                <viewModels:PositiveOrZeroValidationRule Info="宽度不能小于0！"/>
                             </Binding.ValidationRules>
                         </Binding>
                     </TextBox.Text>
@@ -74,7 +73,7 @@
                     <TextBox.Text>
                         <Binding Path="Height" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" NotifyOnValidationError="True">
                             <Binding.ValidationRules>
-                                <cru:PositiveOrZeroValidationRule Info="高度不能小于0！"/>
+                                <viewModels:PositiveOrZeroValidationRule Info="高度不能小于0！"/>
                             </Binding.ValidationRules>
                         </Binding>
                     </TextBox.Text>
@@ -119,7 +118,7 @@
                     <TextBox.Text>
                         <Binding Path="Center.X" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" NotifyOnValidationError="True">
                             <Binding.ValidationRules>
-                                <cru:NumberValidationRule/>
+                                <viewModels:NumberValidationRule/>
                             </Binding.ValidationRules>
                         </Binding>
                     </TextBox.Text>
@@ -128,7 +127,7 @@
                     <TextBox.Text>
                         <Binding Path="Center.Y" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" NotifyOnValidationError="True">
                             <Binding.ValidationRules>
-                                <cru:NumberValidationRule/>
+                                <viewModels:NumberValidationRule/>
                             </Binding.ValidationRules>
                         </Binding>
                     </TextBox.Text>
@@ -137,7 +136,7 @@
                     <TextBox.Text>
                         <Binding Path="Radius" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" NotifyOnValidationError="True">
                             <Binding.ValidationRules>
-                                <cru:PositiveOrZeroValidationRule Info="半径不能小于0！"/>
+                                <viewModels:PositiveOrZeroValidationRule Info="半径不能小于0！"/>
                             </Binding.ValidationRules>
                         </Binding>
                     </TextBox.Text>

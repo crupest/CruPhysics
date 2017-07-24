@@ -1,16 +1,11 @@
-﻿using System;
+﻿using CruPhysics.Shapes;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
-
-using CruPhysics.Shapes;
-using System.Windows.Controls.Primitives;
 
 namespace CruPhysics.Controls
 {
@@ -19,21 +14,12 @@ namespace CruPhysics.Controls
 
         public class ControllerDraggedEventArgs : EventArgs
         {
-            private Point position;
-
-            internal ControllerDraggedEventArgs(Point position)
-                : base()
+            public ControllerDraggedEventArgs(Point position)
             {
-                this.position = position;
+                Position = position;
             }
 
-            public Point Position
-            {
-                get
-                {
-                    return position;
-                }
-            }
+            public Point Position { get; }
         }
 
         public class Controller
@@ -42,72 +28,25 @@ namespace CruPhysics.Controls
 
             private CruCircle shape;
 
-            public Controller(Canvas canvas)
+            public Controller()
             {
                 shape = new CruCircle()
                 {
-                    Radius = radius,
-                    Stroke = Brushes.Black,
-                    Fill = Brushes.White,
-                    Canvas = canvas,
-                    ZIndex = PhysicalObjectZIndex.Controller
+                    Radius = radius
                 };
-
-                shape.MouseDown += OnMouseDown;
-                shape.MouseUp += OnMouseUp;
-                shape.MouseMove += OnMouseMove;
-                shape.MouseRightButtonUp += OnMouseRightButtonUp;
             }
 
-            private bool mouseRightButtonUp = false;
-
-            private void OnMouseRightButtonUp(object sender, ShapeMouseEventArgs e)
-            {
-                mouseRightButtonUp = true;
-            }
-
-            public Controller(Canvas canvas, Cursor cursor)
-                : this(canvas)
+            public Controller(Cursor cursor)
+                : this()
             {
                 Cursor = cursor;
             }
 
-            public Point Position
-            {
-                get
-                {
-                    return (Point)shape.Center;
-                }
-                set
-                {
-                    shape.Center.Set(value);
-                }
-            }
+            public Point Position => shape.Center;
 
-            public Cursor Cursor
-            {
-                get
-                {
-                    return shape.Cursor;
-                }
+            public Cursor Cursor { get; set; }
 
-                set
-                {
-                    shape.Cursor = value;
-                }
-            }
-
-            public ContextMenu ContextMenu
-            {
-                get
-                {
-                    return shape.ContextMenu;
-                }
-                set
-                {
-                    shape.ContextMenu = value;
-                }
-            }
+            public ContextMenu ContextMenu { get; set; }
 
             public delegate void ControllerDraggedHandler(object sender, ControllerDraggedEventArgs e);
 

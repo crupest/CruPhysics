@@ -102,6 +102,8 @@
     <Compile Include="ViewModels\BoolToVisibilityConverter.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\NumberValidationRule.cs" />
+    <Compile Include="ViewModels\PositiveOrZeroValidationRule.cs" />
+    <Compile Include="ViewModels\PositiveValidationRule.cs" />
     <Compile Include="Windows\ElectricFieldPropertyDialog.xaml.cs">
       <DependentUpon>ElectricFieldPropertyDialog.xaml</DependentUpon>
     </Compile>

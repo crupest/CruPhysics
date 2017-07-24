@@ -4,9 +4,6 @@ using System.Windows.Controls;
 
 namespace CruPhysics.Controls
 {
-    /// <summary>
-    /// Interaction logic for PhysicalObjectCommonPropertyControl.xaml
-    /// </summary>
     public partial class PhysicalObjectCommonPropertyControl : UserControl
     {
         public static readonly DependencyProperty ObjectProperty = DependencyProperty.Register("Object", typeof(PhysicalObject), typeof(PhysicalObjectCommonPropertyControl), new FrameworkPropertyMetadata(null));
@@ -18,14 +15,8 @@ namespace CruPhysics.Controls
 
         public PhysicalObject Object
         {
-            get
-            {
-                return (PhysicalObject)GetValue(ObjectProperty);
-            }
-            set
-            {
-                SetValue(ObjectProperty, value);
-            }
+            get => (PhysicalObject)GetValue(ObjectProperty);
+            set => SetValue(ObjectProperty, value);
         }
     }
 }

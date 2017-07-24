@@ -4,8 +4,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CruPhysics.Windows"
-        xmlns:cru="clr-namespace:CruPhysics"
         xmlns:controls="clr-namespace:CruPhysics.Controls"
+        xmlns:viewModels="clr-namespace:CruPhysics.ViewModels"
+        xmlns:physicalObjects="clr-namespace:CruPhysics.PhysicalObjects"
         mc:Ignorable="d"
         Title="CruPhysics"
         Focusable="False"
@@ -17,9 +18,9 @@
             <EventSetter Event="GotFocus" Handler="ListViewItem_GotFocus"/>
         </Style>
 
-        <local:ObjectListItemTemplateSelector x:Key="objectListItemTemplateSelector"/>
-        <DataTemplate x:Key="movingObjectDataTemplate"
-                      DataType="{x:Type cru:MovingObject}">
+        <local:ObjectListItemTemplateSelector x:Key="ObjectListItemTemplateSelector"/>
+        <DataTemplate x:Key="MovingObjectDataTemplate"
+                      DataType="{x:Type physicalObjects:MovingObject}">
             <StackPanel>
                 <DockPanel>
                     <controls:PhysicalObjectThumbnail Object="{Binding}" Width="50" Height="50"/>
@@ -31,14 +32,14 @@
                 <controls:ObjectPropertyBox PropertyName="速度y" Value="{Binding Path=Velocity.Y, Mode=TwoWay}" Unit="m/s"/>
                 <controls:ObjectPropertyBox PropertyName="质量" Value="{Binding Path=Mass, Mode=TwoWay}" Unit="kg">
                     <controls:ObjectPropertyBox.ValidationRule>
-                        <cru:PositiveValidationRule Info="质量必须大于0！"/>
+                        <viewModels:PositiveValidationRule Info="质量必须大于0！"/>
                     </controls:ObjectPropertyBox.ValidationRule>
                 </controls:ObjectPropertyBox>
                 <controls:ObjectPropertyBox PropertyName="电荷量" Value="{Binding Path=Charge, Mode=TwoWay}" Unit="C"/>
             </StackPanel>
         </DataTemplate>
-        <DataTemplate x:Key="electricFieldDataTemplate"
-                      DataType="{x:Type cru:ElectricField}">
+        <DataTemplate x:Key="ElectricFieldDataTemplate"
+                      DataType="{x:Type physicalObjects:ElectricField}">
             <StackPanel>
                 <DockPanel>
                     <controls:PhysicalObjectThumbnail Object="{Binding}" Width="50" Height="50"/>
@@ -48,8 +49,8 @@
                 <controls:ObjectPropertyBox PropertyName="场强y" Value="{Binding Path=Intensity.Y, Mode=TwoWay}" Unit="V/m"/>
             </StackPanel>
         </DataTemplate>
-        <DataTemplate x:Key="magneticFieldDataTemplate"
-                      DataType="{x:Type cru:MagneticField}">
+        <DataTemplate x:Key="MagneticFieldDataTemplate"
+                      DataType="{x:Type physicalObjects:MagneticField}">
             <StackPanel>
                 <DockPanel>
                     <controls:PhysicalObjectThumbnail Object="{Binding}" Width="50" Height="50"/>
@@ -96,7 +97,7 @@
                 <MenuItem Command="local:MainWindow.ResetView"/>
             </MenuItem>
             <MenuItem Header="运行(_R)">
-                <MenuItem Name="beginMenuItem"
+                <MenuItem Name="BeginMenuItem"
                           Command="local:MainWindow.Begin"/>
                 <MenuItem Command="local:MainWindow.Stop"/>
                 <MenuItem Command="local:MainWindow.Restart"/>
@@ -110,7 +111,7 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <Canvas Grid.Column="0"
-                    Name="MainCanvas" ClipToBounds="True" Background="Transparent" Cursor="../Cursors/HandRock.cur"
+                    Name="MainCanvas" ClipToBounds="True" Background="Transparent" Cursor="../Resources/Cursors/HandRock.cur"
                     SizeChanged="MainCanvas_SizeChanged" MouseDown="MainCanvas_MouseDown" MouseMove="MainCanvas_MouseMove" MouseUp="MainCanvas_MouseUp">
                 <Canvas.ContextMenu>
                     <ContextMenu>
@@ -129,7 +130,7 @@
             <ListView Grid.Column="2"
                       Name="ObjectList"  BorderThickness="0" MouseDown="ObjectList_MouseDown"
                       ItemsSource="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Path=ViewModel.Scene.PhysicalObjects}"
-                      ItemTemplateSelector="{StaticResource ResourceKey=objectListItemTemplateSelector}"
+                      ItemTemplateSelector="{StaticResource ResourceKey=ObjectListItemTemplateSelector}"
                       SelectedItem="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Path=ViewModel.Scene.SelectedObject, Mode=TwoWay}">
                 <ListView.Resources>
                     <Style TargetType="controls:ObjectPropertyBox">

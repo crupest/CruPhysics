@@ -2,12 +2,10 @@
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
+using CruPhysics.ViewModels;
 
 namespace CruPhysics.Controls
 {
-    /// <summary>
-    /// Interaction logic for ObjectPropertyBox.xaml
-    /// </summary>
     public partial class ObjectPropertyBox : UserControl
     {
         public static readonly DependencyProperty PropertyNameProperty;
@@ -41,6 +39,7 @@ namespace CruPhysics.Controls
                 NotifyOnValidationError = true
             };
             binding.ValidationRules.Add(args.NewValue as ValidationRule);
+            // ReSharper disable once PossibleNullReferenceException
             control.ValueTextBox.SetBinding(TextBox.TextProperty, binding);
         }
 
@@ -51,62 +50,32 @@ namespace CruPhysics.Controls
 
         public string PropertyName
         {
-            get
-            {
-                 return (string)GetValue(PropertyNameProperty);
-            }
-            set
-            {
-                SetValue(PropertyNameProperty, value);
-            }
+            get => (string)GetValue(PropertyNameProperty);
+            set => SetValue(PropertyNameProperty, value);
         }
 
         public double Value
         {
-            get
-            {
-                return (double)GetValue(ValueProperty);
-            }
-            set
-            {
-                SetValue(ValueProperty, value);
-            }
+            get => (double)GetValue(ValueProperty);
+            set => SetValue(ValueProperty, value);
         }
 
         public string Unit
         {
-            get
-            {
-                return (string)GetValue(UnitProperty);
-            }
-            set
-            {
-                SetValue(UnitProperty, value);
-            }
+            get => (string)GetValue(UnitProperty);
+            set => SetValue(UnitProperty, value);
         }
 
         public UIElement LoseFocusTarget
         {
-            get
-            {
-                return (UIElement)GetValue(LoseFocusTargetProperty);
-            }
-            set
-            {
-                SetValue(LoseFocusTargetProperty, value);
-            }
+            get => (UIElement)GetValue(LoseFocusTargetProperty);
+            set => SetValue(LoseFocusTargetProperty, value);
         }
 
         public NumberValidationRule ValidationRule
         {
-            get
-            {
-                return (NumberValidationRule)GetValue(ValidationRuleProperty);
-            }
-            set
-            {
-                SetValue(ValidationRuleProperty, value);
-            }
+            get => (NumberValidationRule)GetValue(ValidationRuleProperty);
+            set => SetValue(ValidationRuleProperty, value);
         }
 
         private void ValueTextBox_KeyDown(object sender, KeyEventArgs e)
@@ -116,7 +85,8 @@ namespace CruPhysics.Controls
                 var target = LoseFocusTarget;
                 if (target == null)
                 {
-                    target = (UIElement)Common.FindAncestor(ValueTextBox, (element) => element is UIElement && ((UIElement)element).Focusable);
+                    target = (UIElement) Common.FindAncestor(ValueTextBox,
+                        (element) => element is UIElement && ((UIElement) element).Focusable);
                 }
                 if (target != null)
                     target.Focus();

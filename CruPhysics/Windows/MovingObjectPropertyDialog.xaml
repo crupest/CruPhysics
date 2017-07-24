@@ -3,8 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:CruPhysics"
         xmlns:controls="clr-namespace:CruPhysics.Controls"
+        xmlns:viewModels="clr-namespace:CruPhysics.ViewModels"
         mc:Ignorable="d"
         Title="MovingObjectProperty" SizeToContent="WidthAndHeight" MinWidth="250" ShowInTaskbar="False"
         DataContext="{Binding RelativeSource={RelativeSource Self}, Path=RelatedMovingObject}">
@@ -57,7 +57,7 @@
                 <TextBox.Text>
                     <Binding Path="Position.X" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" NotifyOnValidationError="True">
                         <Binding.ValidationRules>
-                            <local:NumberValidationRule/>
+                            <viewModels:NumberValidationRule/>
                         </Binding.ValidationRules>
                     </Binding>
                 </TextBox.Text>
@@ -66,7 +66,7 @@
                 <TextBox.Text>
                     <Binding Path="Position.Y" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" NotifyOnValidationError="True">
                         <Binding.ValidationRules>
-                            <local:NumberValidationRule/>
+                            <viewModels:NumberValidationRule/>
                         </Binding.ValidationRules>
                     </Binding>
                 </TextBox.Text>
@@ -75,7 +75,7 @@
                 <TextBox.Text>
                     <Binding Path="Radius" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" NotifyOnValidationError="True">
                         <Binding.ValidationRules>
-                            <local:PositiveOrZeroValidationRule Info="半径不能小于0！"/>
+                            <viewModels:PositiveOrZeroValidationRule Info="半径不能小于0！"/>
                         </Binding.ValidationRules>
                     </Binding>
                 </TextBox.Text>
@@ -84,7 +84,7 @@
                 <TextBox.Text>
                     <Binding Path="Velocity.X" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" NotifyOnValidationError="True">
                         <Binding.ValidationRules>
-                            <local:NumberValidationRule/>
+                            <viewModels:NumberValidationRule/>
                         </Binding.ValidationRules>
                     </Binding>
                 </TextBox.Text>
@@ -93,7 +93,7 @@
                 <TextBox.Text>
                     <Binding Path="Velocity.Y" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" NotifyOnValidationError="True">
                         <Binding.ValidationRules>
-                            <local:NumberValidationRule/>
+                            <viewModels:NumberValidationRule/>
                         </Binding.ValidationRules>
                     </Binding>
                 </TextBox.Text>
@@ -102,7 +102,7 @@
                 <TextBox.Text>
                     <Binding Path="Mass" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" NotifyOnValidationError="True">
                         <Binding.ValidationRules>
-                            <local:PositiveValidationRule Info="质量必须大于0！"/>
+                            <viewModels:PositiveValidationRule Info="质量必须大于0！"/>
                         </Binding.ValidationRules>
                     </Binding>
                 </TextBox.Text>
@@ -111,7 +111,7 @@
                 <TextBox.Text>
                     <Binding Path="Charge" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" NotifyOnValidationError="True">
                         <Binding.ValidationRules>
-                            <local:NumberValidationRule/>
+                            <viewModels:NumberValidationRule/>
                         </Binding.ValidationRules>
                     </Binding>
                 </TextBox.Text>
