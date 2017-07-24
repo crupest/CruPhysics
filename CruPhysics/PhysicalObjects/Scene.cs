@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Threading;
 
-namespace CruPhysics
+namespace CruPhysics.PhysicalObjects
 {
     public class SceneScanEventArgs : EventArgs
     {

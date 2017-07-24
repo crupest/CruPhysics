@@ -83,20 +83,35 @@
     <Compile Include="Controls\PhysicalObjectThumbnail.xaml.cs">
       <DependentUpon>PhysicalObjectThumbnail.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MotionTrail.cs" />
-    <Compile Include="Scene.cs" />
+    <Compile Include="PhysicalObjects\MotionTrail.cs" />
+    <Compile Include="PhysicalObjects\ElectricField.cs" />
+    <Compile Include="PhysicalObjects\Field.cs" />
+    <Compile Include="PhysicalObjects\Force.cs" />
+    <Compile Include="PhysicalObjects\MagneticField.cs" />
+    <Compile Include="PhysicalObjects\MovingObject.cs" />
+    <Compile Include="PhysicalObjects\PhysicalObject.cs" />
+    <Compile Include="PhysicalObjects\PhysicalObjectManager.cs" />
+    <Compile Include="PhysicalObjects\PhysicalObjectUIResources.cs" />
+    <Compile Include="PhysicalObjects\SelectionState.cs" />
+    <Compile Include="PropertyManager.cs" />
+    <Compile Include="PhysicalObjects\Scene.cs" />
+    <Compile Include="Shapes\CruCircle.cs" />
+    <Compile Include="Shapes\CruLine.cs" />
+    <Compile Include="Shapes\CruRectangle.cs" />
+    <Compile Include="Shapes\CruShape.cs" />
+    <Compile Include="ViewModels\BoolToVisibilityConverter.cs" />
+    <Compile Include="ViewModels\MainViewModel.cs" />
+    <Compile Include="ViewModels\NumberValidationRule.cs" />
     <Compile Include="Windows\ElectricFieldPropertyDialog.xaml.cs">
       <DependentUpon>ElectricFieldPropertyDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\MagneticFieldPropertyDialog.xaml.cs">
       <DependentUpon>MagneticFieldPropertyDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ViewModel.cs" />
     <Compile Include="Windows\MovingObjectPropertyDialog.xaml.cs">
       <DependentUpon>MovingObjectPropertyDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\SelectionBox.cs" />
-    <Compile Include="Shapes.cs" />
     <Compile Include="Controls\ShapePropertyControl.xaml.cs">
       <DependentUpon>ShapePropertyControl.xaml</DependentUpon>
     </Compile>
@@ -111,10 +126,6 @@
     <Page Include="Controls\PhysicalObjectThumbnail.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Themes\Generic.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
     </Page>
     <Page Include="Windows\ElectricFieldPropertyDialog.xaml">
       <SubType>Designer</SubType>
@@ -146,7 +157,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="PhysicalObject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -178,7 +188,7 @@
     <Resource Include="TODO.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Cursors\HandRock.cur" />
+    <Resource Include="Resources\Cursors\HandRock.cur" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

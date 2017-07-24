@@ -15,14 +15,8 @@ namespace CruPhysics
 
         public event PropertyChangedEventHandler PropertyChanged
         {
-            add
-            {
-                propertyChanged += value;
-            }
-            remove
-            {
-                propertyChanged -= value;
-            }
+            add => propertyChanged += value;
+            remove => propertyChanged -= value;
         }
 
         public bool IsNotifying { get; set; }
@@ -46,11 +40,13 @@ namespace CruPhysics
 
         public static object GetPropertyValue(object target, string propertyName)
         {
+            // ReSharper disable once PossibleNullReferenceException
             return target.GetType().GetProperty(propertyName).GetValue(target);
         }
 
         public static void SetPropertyValue(object target, string propertyName, object value)
         {
+            // ReSharper disable once PossibleNullReferenceException
             target.GetType().GetProperty(propertyName).SetValue(target, value);
         }
 
@@ -67,7 +63,7 @@ namespace CruPhysics
 
         public static void TwoWayBind(INotifyPropertyChanged source, string sourcePropertyName, INotifyPropertyChanged target, string targetPropertyName)
         {
-            bool b = true;
+            var b = true;
             source.PropertyChanged += (sender, args) =>
             {
                 if (args.PropertyName == sourcePropertyName && b)

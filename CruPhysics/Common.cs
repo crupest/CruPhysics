@@ -1,21 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Media;
-using System.Windows.Input;
-using System.ComponentModel;
-using System.Linq.Expressions;
 
 namespace CruPhysics
 {
     public class BindableVector : NotifyPropertyChangedObject
     {
-        private double x = 0.0;
-        private double y = 0.0;
+        private double x;
+        private double y;
 
         public BindableVector()
         {
@@ -36,10 +28,7 @@ namespace CruPhysics
 
         public double X
         {
-            get
-            {
-                return x;
-            }
+            get => x;
             set
             {
                 x = value;
@@ -49,10 +38,7 @@ namespace CruPhysics
 
         public double Y
         {
-            get
-            {
-                return y;
-            }
+            get => y;
             set
             {
                 y = value;
@@ -80,8 +66,8 @@ namespace CruPhysics
 
     public class BindablePoint : NotifyPropertyChangedObject
     {
-        private double x = 0.0;
-        private double y = 0.0;
+        private double x;
+        private double y;
 
         public BindablePoint()
         {
@@ -102,10 +88,7 @@ namespace CruPhysics
 
         public double X
         {
-            get
-            {
-                return x;
-            }
+            get => x;
             set
             {
                 x = value;
@@ -115,10 +98,7 @@ namespace CruPhysics
 
         public double Y
         {
-            get
-            {
-                return y;
-            }
+            get => y;
             set
             {
                 y = value;
@@ -206,20 +186,20 @@ namespace CruPhysics
 
         public static DependencyObject FindAncestor(DependencyObject element, Func<DependencyObject, bool> predicate, bool includeSelf = false)
         {
-            Func<DependencyObject, DependencyObject> getParent = (e) =>
+            DependencyObject GetParent(DependencyObject e)
             {
                 if (e is Visual)
                     return VisualTreeHelper.GetParent(e);
                 else
                     return LogicalTreeHelper.GetParent(e);
-            };
+            }
 
-            var parent = includeSelf ? element : getParent(element);
+            var parent = includeSelf ? element : GetParent(element);
             while (true)
             {
                 if (parent == null || predicate(parent))
                     return parent;
-                parent = getParent(parent);
+                parent = GetParent(parent);
             }
         }
 
@@ -228,7 +208,7 @@ namespace CruPhysics
             return Math.Sqrt(Math.Pow(point1.X - point2.X, 2) + Math.Pow(point1.Y - point2.Y, 2));
         }
 
-        private static Random random = new Random();
+        private static readonly Random random = new Random();
 
         public static Color GetRamdomColor()
         {
