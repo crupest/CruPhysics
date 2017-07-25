@@ -74,7 +74,6 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Common.cs" />
-    <Compile Include="Controls\CircleSelectionBox.cs" />
     <Compile Include="Controls\ObjectPropertyBox.xaml.cs">
       <DependentUpon>ObjectPropertyBox.xaml</DependentUpon>
     </Compile>
@@ -84,7 +83,6 @@
     <Compile Include="Controls\PhysicalObjectThumbnail.xaml.cs">
       <DependentUpon>PhysicalObjectThumbnail.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\RectangleSelectionBox.cs" />
     <Compile Include="Controls\WorldCanvas.cs" />
     <Compile Include="PhysicalObjects\MotionTrail.cs" />
     <Compile Include="PhysicalObjects\ElectricField.cs" />
@@ -98,12 +96,15 @@
     <Compile Include="PhysicalObjects\SelectionState.cs" />
     <Compile Include="PropertyManager.cs" />
     <Compile Include="PhysicalObjects\Scene.cs" />
+    <Compile Include="Shapes\CircleSelectionBox.cs" />
     <Compile Include="Shapes\CruCircle.cs" />
     <Compile Include="Shapes\CruRectangle.cs" />
     <Compile Include="Shapes\CruShape.cs" />
     <Compile Include="Shapes\ICircle.cs" />
     <Compile Include="Shapes\IRectangle.cs" />
     <Compile Include="Shapes\IShape.cs" />
+    <Compile Include="Shapes\RectangleSelectionBox.cs" />
+    <Compile Include="Shapes\SelectionBox.cs" />
     <Compile Include="ViewModels\BoolToVisibilityConverter.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\NumberValidationRule.cs" />
@@ -118,7 +119,6 @@
     <Compile Include="Windows\MovingObjectPropertyDialog.xaml.cs">
       <DependentUpon>MovingObjectPropertyDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\SelectionBox.cs" />
     <Compile Include="Controls\ShapePropertyControl.xaml.cs">
       <DependentUpon>ShapePropertyControl.xaml</DependentUpon>
     </Compile>
