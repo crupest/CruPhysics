@@ -1,58 +1,38 @@
 ﻿using System.Windows;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Shapes;
 
 namespace CruPhysics.PhysicalObjects
 {
-    class MotionTrail : NotifyPropertyChangedObject
+    public class MotionTrail : NotifyPropertyChangedObject
     {
-        private PathFigure pathFigure = null;
-        private PathGeometry geometry = new PathGeometry();
-        private Path shape = new Path();
-        private SelectionState selectionState = SelectionState.Normal;
-        private SolidColorBrush brush = new SolidColorBrush(Common.GetRamdomColor());
+        private PathFigure pathFigure;
+        private readonly PathGeometry geometry = new PathGeometry();
+        private Color color = Common.GetRamdomColor();
+        private double strokeThickness = 1.0;
 
         public MotionTrail()
         {
-            shape.Data = geometry;
-            shape.Stroke = brush;
-            shape.StrokeThickness = 1.0;
-            shape.Cursor = Cursors.Arrow;
-            shape.MouseEnter += (sender, args) =>
+
+        }
+
+        public Color Color
+        {
+            get => color;
+            set
             {
-                if (SelectionState == SelectionState.Select)
-                    return;
-                SelectionState = SelectionState.Hover;
-            };
-            shape.MouseLeave += (sender, args) =>
+                color = value;
+                RaisePropertyChangedEvent(nameof(Color));
+            }
+        }
+
+        public double StrokeThickness
+        {
+            get => strokeThickness;
+            set
             {
-                if (SelectionState == SelectionState.Select)
-                    return;
-                SelectionState = SelectionState.Normal;
-            };
-            shape.MouseDown += (sender, args) =>
-            {
-                SelectionState = SelectionState.Select;
-            };
-            PropertyChanged += (sender, args) =>
-            {
-                if (args.PropertyName == "SelectionState")
-                {
-                    switch (SelectionState)
-                    {
-                        case SelectionState.Normal:
-                            shape.StrokeThickness = 1.0;
-                            break;
-                        case SelectionState.Hover:
-                            shape.StrokeThickness = 2.0;
-                            break;
-                        case SelectionState.Select:
-                            shape.StrokeThickness = 2.0;
-                            break;
-                    }
-                }
-            };
+                strokeThickness = value;
+                RaisePropertyChangedEvent(nameof(StrokeThickness));
+            }
         }
 
         public void AddPoint(Point point)
@@ -83,17 +63,5 @@ namespace CruPhysics.PhysicalObjects
         }
 
         public Geometry Geometry => geometry;
-
-        public Path Shape => shape;
-
-        public SelectionState SelectionState
-        {
-            get => selectionState;
-            set
-            {
-                selectionState = value;
-                RaisePropertyChangedEvent("SelectionState");
-            }
-        }
     }
 }

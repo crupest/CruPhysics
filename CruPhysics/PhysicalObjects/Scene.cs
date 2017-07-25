@@ -12,21 +12,22 @@ namespace CruPhysics.PhysicalObjects
             ScanInterval = scanInterval;
         }
 
-        public TimeSpan ScanInterval { get; private set; }
+        public TimeSpan ScanInterval { get; }
     }
 
     public delegate void SceneScanEventHandler(object sender, SceneScanEventArgs args);
 
     public class Scene : NotifyPropertyChangedObject
     {
-        private ObservableCollection<PhysicalObject> physicalObjects = new ObservableCollection<PhysicalObject>();
-        private Dictionary<string, ObservableCollection<PhysicalObject>> classifiedObjects = new Dictionary<string, ObservableCollection<PhysicalObject>>();
+        private double bounds = 1000.0;
 
-        private DispatcherTimer timer = new DispatcherTimer(DispatcherPriority.Normal);
+        private readonly Dictionary<string, ObservableCollection<PhysicalObject>> classifiedObjects = new Dictionary<string, ObservableCollection<PhysicalObject>>();
+
+        private readonly DispatcherTimer timer = new DispatcherTimer(DispatcherPriority.Normal);
         private TimeSpan runningTime = TimeSpan.Zero;
-        private bool hasBegun = false;
+        private bool hasBegun;
 
-        private PhysicalObject selectedObject = null;
+        private PhysicalObject selectedObject;
 
 
         public Scene()
@@ -43,17 +44,17 @@ namespace CruPhysics.PhysicalObjects
 
         public PhysicalObject SelectedObject
         {
-            get
-            {
-                return selectedObject;
-            }
+            get => selectedObject;
             set
             {
-
+                selectedObject?.SetIsSelected(false);
+                selectedObject = value;
+                value?.SetIsSelected(true);
+                RaisePropertyChangedEvent(nameof(SelectedObject));
             }
         }
 
-        public ObservableCollection<PhysicalObject> PhysicalObjects => physicalObjects;
+        public ObservableCollection<PhysicalObject> PhysicalObjects { get; } = new ObservableCollection<PhysicalObject>();
 
         public IDictionary<string, ObservableCollection<PhysicalObject>> ClassifiedObjects => classifiedObjects;
 
@@ -67,7 +68,15 @@ namespace CruPhysics.PhysicalObjects
             physicalObject.RemoveFromScene(this);
         }
 
-        public double Bounds => 1000.0;
+        public double Bounds
+        {
+            get => bounds;
+            set
+            {
+                bounds = value;
+                RaisePropertyChangedEvent(nameof(Bounds));
+            }
+        }
 
         public TimeSpan ScanInterval
         {

@@ -93,7 +93,6 @@
     <Compile Include="PhysicalObjects\PhysicalObject.cs" />
     <Compile Include="PhysicalObjects\PhysicalObjectManager.cs" />
     <Compile Include="PhysicalObjects\PhysicalObjectUIResources.cs" />
-    <Compile Include="PhysicalObjects\SelectionState.cs" />
     <Compile Include="PropertyManager.cs" />
     <Compile Include="PhysicalObjects\Scene.cs" />
     <Compile Include="Shapes\CircleSelectionBox.cs" />

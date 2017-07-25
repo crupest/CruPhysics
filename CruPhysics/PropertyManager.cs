@@ -33,8 +33,6 @@ namespace CruPhysics
 
     public static class PropertyManager
     {
-        public static object Object { get; set; }
-
         public static object GetPropertyValue(object target, string propertyName)
         {
             // ReSharper disable once PossibleNullReferenceException
