@@ -2,9 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Input;
-using CruPhysics.Shapes;
 
-namespace CruPhysics.Controls
+namespace CruPhysics.Shapes
 {
     public sealed class RectangleSelectionBox : SelectionBox
     {
@@ -52,6 +51,13 @@ namespace CruPhysics.Controls
             SelectedShape.Width = width;
             SelectedShape.Height = height;
         }
+
+        public double Left => SelectedShape.Left;
+        public double CenterX => SelectedShape.Left + SelectedShape.Width / 2.0;
+        public double Right => SelectedShape.GetRight();
+        public double Top => SelectedShape.Top;
+        public double CenterY => SelectedShape.Top - SelectedShape.Height / 2.0;
+        public double Bottom => SelectedShape.GetBottom();
 
         private void TopController_Dragged(object sender, ControllerDraggedEventArgs e)
         {

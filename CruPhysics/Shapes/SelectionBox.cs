@@ -4,9 +4,9 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace CruPhysics.Controls
+namespace CruPhysics.Shapes
 {
-    public abstract class SelectionBox
+    public abstract class SelectionBox : NotifyPropertyChangedObject
     {
         public class ControllerDraggedEventArgs : EventArgs
         {

@@ -6,7 +6,5 @@ namespace CruPhysics.Shapes
     {
         public abstract void Move(Vector vector);
         public abstract bool IsPointInside(Point point);
-
-        public abstract bool HasSelectionBox { get; set; }
     }
 }

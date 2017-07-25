@@ -1,9 +1,8 @@
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Input;
-using CruPhysics.Shapes;
 
-namespace CruPhysics.Controls
+namespace CruPhysics.Shapes
 {
     public sealed class CircleSelectionBox : SelectionBox
     {
