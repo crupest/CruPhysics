@@ -18,14 +18,8 @@ namespace CruPhysics.Controls
 
         public PhysicalObject Object
         {
-            get
-            {
-                return (PhysicalObject)GetValue(ObjectProperty);
-            }
-            set
-            {
-                SetValue(ObjectProperty, value);
-            }
+            get => (PhysicalObject)GetValue(ObjectProperty);
+            set => SetValue(ObjectProperty, value);
         }
     }
 }

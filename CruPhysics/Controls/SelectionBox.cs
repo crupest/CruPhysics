@@ -3,15 +3,12 @@ using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
 using System.Windows.Input;
-using System.Windows.Media;
 
 namespace CruPhysics.Controls
 {
     public abstract class SelectionBox
     {
-
         public class ControllerDraggedEventArgs : EventArgs
         {
             public ControllerDraggedEventArgs(Point position)
@@ -22,31 +19,48 @@ namespace CruPhysics.Controls
             public Point Position { get; }
         }
 
-        public class Controller
+
+        public class Controller : NotifyPropertyChangedObject
         {
             private const double radius = 4.0;
 
-            private CruCircle shape;
+
+            private Cursor cursor;
+            private ContextMenu contextMenu;
 
             public Controller()
             {
-                shape = new CruCircle()
-                {
-                    Radius = radius
-                };
+                Cursor = Cursors.SizeAll;
             }
 
             public Controller(Cursor cursor)
-                : this()
             {
                 Cursor = cursor;
             }
 
-            public Point Position => shape.Center;
+            public BindablePoint Position { get; } = new BindablePoint();
 
-            public Cursor Cursor { get; set; }
+            public double Radius => radius;
 
-            public ContextMenu ContextMenu { get; set; }
+            public Cursor Cursor
+            {
+                get => cursor;
+                set
+                {
+                    cursor = value;
+                    RaisePropertyChangedEvent(nameof(Cursor));
+                }
+            }
+
+            public ContextMenu ContextMenu
+            {
+                get => contextMenu;
+                set
+                {
+                    contextMenu = value;
+                    RaisePropertyChangedEvent(nameof(ContextMenu));
+                }
+            }
 
             public delegate void ControllerDraggedHandler(object sender, ControllerDraggedEventArgs e);
 
@@ -54,80 +68,20 @@ namespace CruPhysics.Controls
 
             public event ControllerDraggedHandler Dragged
             {
-                add
-                {
-                    dragged += value;
-                }
-
-                remove
-                {
-                    dragged -= value;
-                }
-            }
-
-            public void Delete()
-            {
-                shape.Delete();
-            }
-
-
-            private static Vector cursorDelta;
-
-            private void OnMouseDown(object sender, ShapeMouseEventArgs args)
-            {
-                Mouse.Capture(shape.Raw);
-                cursorDelta = args.Position - Position;
-                args.Raw.Handled = true;
-            }
-
-            private void OnMouseUp(object sender, ShapeMouseEventArgs args)
-            {
-                Mouse.Capture(null);
-                args.Raw.Handled = true;
-                if (mouseRightButtonUp && ContextMenu != null)
-                {
-                    ContextMenu.PlacementTarget = shape.Raw;
-                    ContextMenu.Placement = PlacementMode.MousePoint;
-                    ContextMenu.IsOpen = true;
-                }
-                mouseRightButtonUp = false;
-            }
-
-            private void OnMouseMove(object sender, ShapeMouseEventArgs args)
-            {
-                if (shape.Raw.IsMouseCaptured)
-                {
-                    dragged(this, new ControllerDraggedEventArgs(args.Position - cursorDelta));
-                }
+                add => dragged += value;
+                remove => dragged -= value;
             }
         }
 
 
 
-        private CruShape selectedShape;
         private ContextMenu contextMenu;
-
-        public SelectionBox(CruShape shape)
-        {
-            selectedShape = shape;
-        }
-
-        public CruShape SelectedShape
-        {
-            get
-            {
-                return selectedShape;
-            }
-        }
 
         public abstract IEnumerable<Controller> Controllers { get; }
 
         public ContextMenu ContextMenu
         {
-            get
-            {
-                return contextMenu;
-            }
+            get => contextMenu;
             set
             {
                 contextMenu = value;
@@ -135,8 +89,6 @@ namespace CruPhysics.Controls
                     controller.ContextMenu = value;
             }
         }
-
-        public abstract void Delete();
     }
 
 
@@ -144,20 +96,16 @@ namespace CruPhysics.Controls
     {
         private Controller centerController;
         private Controller radiusController;
-        private Controller[] controllers = new Controller[2];
 
         private double radiusControllerAngle;
 
         private EventHandler updateEventHandler;
 
         public CircleSelectionBox(CruCircle circle)
-            : base(circle)
         {
-            centerController = new Controller(circle.Canvas, Cursors.SizeAll);
-            radiusController = new Controller(circle.Canvas, Cursors.SizeAll);
-
-            controllers[0] = centerController;
-            controllers[1] = radiusController;
+            SelectedShape = circle;
+            centerController = new Controller(Cursors.SizeAll);
+            radiusController = new Controller(Cursors.SizeAll);
 
             UpdateControllerPosition();
 
@@ -169,13 +117,7 @@ namespace CruPhysics.Controls
             circle.Updated += updateEventHandler;
         }
 
-        public new CruCircle SelectedShape
-        {
-            get
-            {
-                return (CruCircle)base.SelectedShape;
-            }
-        }
+        public CruCircle SelectedShape { get; }
 
         private void UpdateControllerPosition()
         {
@@ -348,13 +290,7 @@ namespace CruPhysics.Controls
             controllers[8].Position = rectangle.Rightbottom;
         }
 
-        public new CruRectangle SelectedShape
-        {
-            get
-            {
-                return (CruRectangle)base.SelectedShape;
-            }
-        }
+        public new CruRectangle SelectedShape => (CruRectangle)base.SelectedShape;
 
         public override IEnumerable<Controller> Controllers => controllers;
 

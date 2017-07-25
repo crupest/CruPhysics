@@ -15,14 +15,11 @@ namespace CruPhysics.PhysicalObjects
 
         public CruShape Shape
         {
-            get
-            {
-                return shape;
-            }
+            get => shape;
             set
             {
                 shape = value;
-                RaisePropertyChangedEvent(PropertyManager.GetPropertyName(() => Shape));
+                RaisePropertyChangedEvent(nameof(Shape));
             }
         }
 

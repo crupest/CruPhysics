@@ -32,14 +32,8 @@ namespace CruPhysics.Controls
 
         public CruShape Shape
         {
-            get
-            {
-                return (CruShape)GetValue(ShapeProperty);
-            }
-            set
-            {
-                SetValue(ShapeProperty, value);
-            }
+            get => (CruShape)GetValue(ShapeProperty);
+            set => SetValue(ShapeProperty, value);
         }
 
         private void RectangleRadioButton_Checked(object sender, RoutedEventArgs e)

@@ -16,13 +16,7 @@ namespace CruPhysics.PhysicalObjects
             Name = "电场";
         }
 
-        public BindableVector Intensity
-        {
-            get
-            {
-                return intensity;
-            }
-        }
+        public BindableVector Intensity => intensity;
 
         public override void CalculateEffect(MovingObject movingObject, TimeSpan no_use)
         {

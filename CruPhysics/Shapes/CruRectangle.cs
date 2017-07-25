@@ -15,44 +15,36 @@ namespace CruPhysics.Shapes
         {
             PropertyChanged += (sender, args) =>
             {
-                if (args.PropertyName == "Left")
+                switch (args.PropertyName)
                 {
-                    RaisePropertyChangedEvent("Right");
-                    RaisePropertyChangedEvent("LeftTop");
-                    RaisePropertyChangedEvent("LeftBottom");
-                    RaisePropertyChangedEvent("RightTop");
-                    RaisePropertyChangedEvent("RightBottom");
-                    RaisePropertyChangedEvent("Center");
-                    return;
-                }
-
-                if (args.PropertyName == "Top")
-                {
-                    RaisePropertyChangedEvent("Bottom");
-                    RaisePropertyChangedEvent("LeftTop");
-                    RaisePropertyChangedEvent("LeftBottom");
-                    RaisePropertyChangedEvent("RightTop");
-                    RaisePropertyChangedEvent("RightBottom");
-                    RaisePropertyChangedEvent("Center");
-                    return;
-                }
-
-                if (args.PropertyName == "Width")
-                {
-                    RaisePropertyChangedEvent("Right");
-                    RaisePropertyChangedEvent("RightTop");
-                    RaisePropertyChangedEvent("RightBottom");
-                    RaisePropertyChangedEvent("Center");
-                    return;
-                }
-
-                if (args.PropertyName == "Height")
-                {
-                    RaisePropertyChangedEvent("Bottom");
-                    RaisePropertyChangedEvent("LeftBottom");
-                    RaisePropertyChangedEvent("RightBottom");
-                    RaisePropertyChangedEvent("Center");
-                    return;
+                    case nameof(Left):
+                        RaisePropertyChangedEvent(nameof(Right));
+                        RaisePropertyChangedEvent(nameof(Lefttop));
+                        RaisePropertyChangedEvent(nameof(Leftbottom));
+                        RaisePropertyChangedEvent(nameof(Righttop));
+                        RaisePropertyChangedEvent(nameof(Rightbottom));
+                        RaisePropertyChangedEvent(nameof(Center));
+                        return;
+                    case nameof(Top):
+                        RaisePropertyChangedEvent(nameof(Bottom));
+                        RaisePropertyChangedEvent(nameof(Lefttop));
+                        RaisePropertyChangedEvent(nameof(Leftbottom));
+                        RaisePropertyChangedEvent(nameof(Righttop));
+                        RaisePropertyChangedEvent(nameof(Rightbottom));
+                        RaisePropertyChangedEvent(nameof(Center));
+                        return;
+                    case nameof(Width):
+                        RaisePropertyChangedEvent(nameof(Right));
+                        RaisePropertyChangedEvent(nameof(Righttop));
+                        RaisePropertyChangedEvent(nameof(Rightbottom));
+                        RaisePropertyChangedEvent(nameof(Center));
+                        return;
+                    case nameof(Height):
+                        RaisePropertyChangedEvent(nameof(Bottom));
+                        RaisePropertyChangedEvent(nameof(Leftbottom));
+                        RaisePropertyChangedEvent(nameof(Rightbottom));
+                        RaisePropertyChangedEvent(nameof(Center));
+                        return;
                 }
             };
         }
@@ -64,116 +56,62 @@ namespace CruPhysics.Shapes
 
         public double Width
         {
-            get
-            {
-                return width;
-            }
+            get => width;
             set
             {
                 if (value < 0.0)
-                    throw new ArgumentOutOfRangeException("value", value, "Width can't below 0.");
+                    throw new ArgumentOutOfRangeException(nameof(value), value, "Width can't below 0.");
                 width = value;
-                RaisePropertyChangedEvent(PropertyManager.GetPropertyName(() => Width));
+                RaisePropertyChangedEvent(nameof(Width));
             }
         }
 
         public double Height
         {
-            get
-            {
-                return height;
-            }
+            get => height;
             set
             {
                 if (value < 0.0)
-                    throw new ArgumentOutOfRangeException("value", value, "Height can't below 0.");
+                    throw new ArgumentOutOfRangeException(nameof(value), value, "Height can't below 0.");
                 height = value;
-                RaisePropertyChangedEvent(PropertyManager.GetPropertyName(() => Height));
+                RaisePropertyChangedEvent(nameof(Height));
             }
         }
 
         public double Left
         {
-            get
-            {
-                return left;
-            }
+            get => left;
             set
             {
                 left = value;
-                RaisePropertyChangedEvent(PropertyManager.GetPropertyName(() => Left));
+                RaisePropertyChangedEvent(nameof(Left));
             }
         }
 
         public double Top
         {
-            get
-            {
-                return top;
-            }
+            get => top;
             set
             {
                 top = value;
-                RaisePropertyChangedEvent(PropertyManager.GetPropertyName(() => Top));
+                RaisePropertyChangedEvent(nameof(Top));
             }
         }
 
-        public double Right
-        {
-            get
-            {
-                return Left + Width;
-            }
-        }
+        public double Right => Left + Width;
 
-        public double Bottom
-        {
-            get
-            {
-                return Top - Height;
-            }
-        }
+        public double Bottom => Top - Height;
 
-        public Point Center
-        {
-            get
-            {
-                return new Point(Left + Width / 2.0, Top - Height / 2.0);
-            }
-        }
+        public Point Center => new Point(Left + Width / 2.0, Top - Height / 2.0);
 
 
-        public Point Lefttop
-        {
-            get
-            {
-                return new Point(Left, Top);
-            }
-        }
+        public Point Lefttop => new Point(Left, Top);
 
-        public Point Righttop
-        {
-            get
-            {
-                return new Point(Right, Top);
-            }
-        }
+        public Point Righttop => new Point(Right, Top);
 
-        public Point Leftbottom
-        {
-            get
-            {
-                return new Point(Left, Bottom);
-            }
-        }
+        public Point Leftbottom => new Point(Left, Bottom);
 
-        public Point Rightbottom
-        {
-            get
-            {
-                return new Point(Right, Bottom);
-            }
-        }
+        public Point Rightbottom => new Point(Right, Bottom);
 
         public override void Move(Vector vector)
         {

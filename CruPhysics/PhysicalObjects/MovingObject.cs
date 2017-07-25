@@ -28,10 +28,7 @@ namespace CruPhysics.PhysicalObjects
 
         public double Radius
         {
-            get
-            {
-                return radius;
-            }
+            get => radius;
             set
             {
                 radius = value;
@@ -43,10 +40,7 @@ namespace CruPhysics.PhysicalObjects
 
         public double Mass
         {
-            get
-            {
-                return mass;
-            }
+            get => mass;
             set
             {
                 mass = value;
@@ -56,10 +50,7 @@ namespace CruPhysics.PhysicalObjects
 
         public double Charge
         {
-            get
-            {
-                return charge;
-            }
+            get => charge;
             set
             {
                 charge = value;

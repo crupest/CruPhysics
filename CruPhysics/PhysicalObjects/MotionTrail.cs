@@ -88,10 +88,7 @@ namespace CruPhysics.PhysicalObjects
 
         public SelectionState SelectionState
         {
-            get
-            {
-                return selectionState;
-            }
+            get => selectionState;
             set
             {
                 selectionState = value;

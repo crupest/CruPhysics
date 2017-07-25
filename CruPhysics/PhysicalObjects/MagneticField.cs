@@ -21,14 +21,11 @@ namespace CruPhysics.PhysicalObjects
         /// </summary>
         public double FluxDensity
         {
-            get
-            {
-                return fluxDensity;
-            }
+            get => fluxDensity;
             set
             {
                 fluxDensity = value;
-                RaisePropertyChangedEvent(PropertyManager.GetPropertyName(() => FluxDensity));
+                RaisePropertyChangedEvent(nameof(FluxDensity));
             }
         }
 

@@ -1,6 +1,4 @@
-﻿using System;
-using System.ComponentModel;
-using System.Linq.Expressions;
+﻿using System.ComponentModel;
 
 namespace CruPhysics
 {
@@ -31,12 +29,6 @@ namespace CruPhysics
     public static class PropertyManager
     {
         public static object Object { get; set; }
-
-        public static string GetPropertyName<TProperty>(Expression<Func<TProperty>> property)
-        {
-            var memberExpression = (MemberExpression)property.Body;
-            return memberExpression.Member.Name;
-        }
 
         public static object GetPropertyValue(object target, string propertyName)
         {

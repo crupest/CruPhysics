@@ -63,13 +63,6 @@ namespace UnitTest
         }
 
         [TestMethod]
-        public void GetPropertyNameTest()
-        {
-            Assert.AreEqual("Property", PropertyManager.GetPropertyName(() => Property));
-            Assert.AreEqual("A", PropertyManager.GetPropertyName(() => ((ClassA)PropertyManager.Object).A));
-        }
-
-        [TestMethod]
         public void TwoWayBindTest()
         {
             var a = new ClassA();

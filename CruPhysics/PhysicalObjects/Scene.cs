@@ -53,21 +53,9 @@ namespace CruPhysics.PhysicalObjects
             }
         }
 
-        public ObservableCollection<PhysicalObject> PhysicalObjects
-        {
-            get
-            {
-                return physicalObjects;
-            }
-        }
+        public ObservableCollection<PhysicalObject> PhysicalObjects => physicalObjects;
 
-        public IDictionary<string, ObservableCollection<PhysicalObject>> ClassifiedObjects
-        {
-            get
-            {
-                return classifiedObjects;
-            }
-        }
+        public IDictionary<string, ObservableCollection<PhysicalObject>> ClassifiedObjects => classifiedObjects;
 
         public void Add(PhysicalObject physicalObject)
         {
@@ -79,37 +67,25 @@ namespace CruPhysics.PhysicalObjects
             physicalObject.RemoveFromScene(this);
         }
 
-        public double Bounds
-        {
-            get
-            {
-                return 1000.0;
-            }
-        }
+        public double Bounds => 1000.0;
 
         public TimeSpan ScanInterval
         {
-            get
-            {
-                return timer.Interval;
-            }
+            get => timer.Interval;
             set
             {
                 timer.Interval = value;
-                RaisePropertyChangedEvent(PropertyManager.GetPropertyName(() => ScanInterval));
+                RaisePropertyChangedEvent(nameof(ScanInterval));
             }
         }
 
         public bool IsRunning
         {
-            get
-            {
-                return timer.IsEnabled;
-            }
+            get => timer.IsEnabled;
             private set
             {
                 timer.IsEnabled = value;
-                RaisePropertyChangedEvent(PropertyManager.GetPropertyName(() => IsRunning));
+                RaisePropertyChangedEvent(nameof(IsRunning));
             }
         }
 
@@ -118,27 +94,21 @@ namespace CruPhysics.PhysicalObjects
         /// </summary>
         public bool HasBegun
         {
-            get
-            {
-                return hasBegun;
-            }
+            get => hasBegun;
             private set
             {
                 hasBegun = value;
-                RaisePropertyChangedEvent(PropertyManager.GetPropertyName(() => HasBegun));
+                RaisePropertyChangedEvent(nameof(HasBegun));
             }
         }
 
         public TimeSpan RunningTime
         {
-            get
-            {
-                return runningTime;
-            }
+            get => runningTime;
             private set
             {
                 runningTime = value;
-                RaisePropertyChangedEvent(PropertyManager.GetPropertyName(() => RunningTime));
+                RaisePropertyChangedEvent(nameof(RunningTime));
             }
         }
 

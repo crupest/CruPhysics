@@ -14,21 +14,9 @@ namespace CruPhysics.Shapes
 
         }
 
-        public BindablePoint Point1
-        {
-            get
-            {
-                return point1;
-            }
-        }
+        public BindablePoint Point1 => point1;
 
-        public BindablePoint Point2
-        {
-            get
-            {
-                return point2;
-            }
-        }
+        public BindablePoint Point2 => point2;
 
         public override SelectionBox CreateSelectionBox()
         {

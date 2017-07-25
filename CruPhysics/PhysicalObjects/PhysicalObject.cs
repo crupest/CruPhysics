@@ -22,53 +22,41 @@ namespace CruPhysics.PhysicalObjects
 
         public Scene RelatedScene
         {
-            get
-            {
-                return scene;
-            }
+            get => scene;
             private set
             {
                 scene = value;
-                RaisePropertyChangedEvent(PropertyManager.GetPropertyName(() => RelatedScene));
+                RaisePropertyChangedEvent(nameof(RelatedScene));
             }
         }
 
         public string Name
         {
-            get
-            {
-                return name;
-            }
+            get => name;
             set
             {
                 name = value;
-                RaisePropertyChangedEvent(PropertyManager.GetPropertyName(() => Name));
+                RaisePropertyChangedEvent(nameof(Name));
             }
         }
 
         public SelectionState SelectionState
         {
-            get
-            {
-                return selectionState;
-            }
+            get => selectionState;
             set
             {
                 selectionState = value;
-                RaisePropertyChangedEvent(PropertyManager.GetPropertyName(() => SelectionState));
+                RaisePropertyChangedEvent(nameof(SelectionState));
             }
         }
 
         public Color Color
         {
-            get
-            {
-                return color;
-            }
+            get => color;
             set
             {
                 color = value;
-                RaisePropertyChangedEvent(PropertyManager.GetPropertyName(() => Color));
+                RaisePropertyChangedEvent(nameof(Color));
             }
         }
 

@@ -19,20 +19,11 @@ namespace CruPhysics.Shapes
             return new CircleSelectionBox(this);
         }
 
-        public BindablePoint Center
-        {
-            get
-            {
-                return center;
-            }
-        }
+        public BindablePoint Center => center;
 
         public double Radius
         {
-            get
-            {
-                return radius;
-            }
+            get => radius;
             set
             {
                 if (value < 0.0)
@@ -40,7 +31,7 @@ namespace CruPhysics.Shapes
                         ("Radius", value, "Radius can't be smaller than 0.");
 
                 radius = value;
-                RaisePropertyChangedEvent(PropertyManager.GetPropertyName(() => Radius));
+                RaisePropertyChangedEvent(nameof(Radius));
             }
         }
 
