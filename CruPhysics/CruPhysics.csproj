@@ -74,6 +74,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Common.cs" />
+    <Compile Include="Controls\CircleSelectionBox.cs" />
     <Compile Include="Controls\ObjectPropertyBox.xaml.cs">
       <DependentUpon>ObjectPropertyBox.xaml</DependentUpon>
     </Compile>
@@ -83,6 +84,8 @@
     <Compile Include="Controls\PhysicalObjectThumbnail.xaml.cs">
       <DependentUpon>PhysicalObjectThumbnail.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\RectangleSelectionBox.cs" />
+    <Compile Include="Controls\WorldCanvas.cs" />
     <Compile Include="PhysicalObjects\MotionTrail.cs" />
     <Compile Include="PhysicalObjects\ElectricField.cs" />
     <Compile Include="PhysicalObjects\Field.cs" />
