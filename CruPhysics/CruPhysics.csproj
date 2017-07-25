@@ -96,7 +96,6 @@
     <Compile Include="PropertyManager.cs" />
     <Compile Include="PhysicalObjects\Scene.cs" />
     <Compile Include="Shapes\CruCircle.cs" />
-    <Compile Include="Shapes\CruLine.cs" />
     <Compile Include="Shapes\CruRectangle.cs" />
     <Compile Include="Shapes\CruShape.cs" />
     <Compile Include="Shapes\ICircle.cs" />
