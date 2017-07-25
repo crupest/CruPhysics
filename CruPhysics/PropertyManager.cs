@@ -2,7 +2,12 @@
 
 namespace CruPhysics
 {
-    public class NotifyPropertyChangedObject : INotifyPropertyChanged
+    public interface INotifyPropertyChangedEx : INotifyPropertyChanged
+    {
+        bool IsNotifying { get; set; }
+    }
+
+    public class NotifyPropertyChangedObject : INotifyPropertyChangedEx
     {
         public NotifyPropertyChangedObject()
         {

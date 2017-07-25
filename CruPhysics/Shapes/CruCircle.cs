@@ -4,22 +4,11 @@ using System.Windows;
 
 namespace CruPhysics.Shapes
 {
-    public sealed class CruCircle : CruShape
+    public sealed class CruCircle : CruShape, ICircle
     {
-        private BindablePoint center = new BindablePoint();
         private double radius = 10.0;
 
-        public CruCircle()
-        {
-
-        }
-
-        public override SelectionBox CreateSelectionBox()
-        {
-            return new CircleSelectionBox(this);
-        }
-
-        public BindablePoint Center => center;
+        public BindablePoint Center { get; } = new BindablePoint();
 
         public double Radius
         {
@@ -28,7 +17,7 @@ namespace CruPhysics.Shapes
             {
                 if (value < 0.0)
                     throw new ArgumentOutOfRangeException
-                        ("Radius", value, "Radius can't be smaller than 0.");
+                        (nameof(value), value, "Radius can't be smaller than 0.");
 
                 radius = value;
                 RaisePropertyChangedEvent(nameof(Radius));

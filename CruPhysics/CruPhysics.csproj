@@ -99,6 +99,9 @@
     <Compile Include="Shapes\CruLine.cs" />
     <Compile Include="Shapes\CruRectangle.cs" />
     <Compile Include="Shapes\CruShape.cs" />
+    <Compile Include="Shapes\ICircle.cs" />
+    <Compile Include="Shapes\IRectangle.cs" />
+    <Compile Include="Shapes\IShape.cs" />
     <Compile Include="ViewModels\BoolToVisibilityConverter.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\NumberValidationRule.cs" />

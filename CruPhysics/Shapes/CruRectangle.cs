@@ -4,7 +4,7 @@ using System.Windows;
 
 namespace CruPhysics.Shapes
 {
-    public sealed class CruRectangle : CruShape
+    public sealed class CruRectangle : CruShape, IRectangle
     {
         private double left = -50.0;
         private double top = 50.0;
@@ -47,11 +47,6 @@ namespace CruPhysics.Shapes
                         return;
                 }
             };
-        }
-
-        public override SelectionBox CreateSelectionBox()
-        {
-            return new RectangleSelectionBox(this);
         }
 
         public double Width
@@ -98,20 +93,13 @@ namespace CruPhysics.Shapes
             }
         }
 
-        public double Right => Left + Width;
-
-        public double Bottom => Top - Height;
-
-        public Point Center => new Point(Left + Width / 2.0, Top - Height / 2.0);
-
-
-        public Point Lefttop => new Point(Left, Top);
-
-        public Point Righttop => new Point(Right, Top);
-
-        public Point Leftbottom => new Point(Left, Bottom);
-
-        public Point Rightbottom => new Point(Right, Bottom);
+        public double Right => this.GetRight();
+        public double Bottom => this.GetBottom();
+        public Point Center => this.GetCenter();
+        public Point Lefttop => this.GetLefttop();
+        public Point Righttop => this.GetRighttop();
+        public Point Leftbottom => this.GetLeftbottom();
+        public Point Rightbottom => this.GetRightbottom();
 
         public override void Move(Vector vector)
         {
