@@ -2,29 +2,27 @@
 using System;
 using System.Collections.Generic;
 using System.Windows;
+
 namespace CruPhysics.PhysicalObjects
 {
     public class MovingObject : PhysicalObject
     {
+        // ReSharper disable once InconsistentNaming
         public static readonly PhysicalObjectMetadata metadata = new PhysicalObjectMetadata() { ZIndex = 100, RunRank = 100 };
 
-        private BindablePoint position = new BindablePoint();
-        private double radius;
-        private BindableVector velocity = new BindableVector();
-        private double mass;
+        private double radius = 10.0;
+        private double mass = 1.0;
         private double charge;
 
-        private List<Force> forces = new List<Force>();
-        private MotionTrail trail = new MotionTrail();
+        private readonly List<Force> forces = new List<Force>();
+        private readonly MotionTrail trail = new MotionTrail();
 
         public MovingObject()
         {
             Name = "运动对象";
-            Radius = 10.0;
-            Mass = 1.0;
         }
 
-        public BindablePoint Position => position;
+        public BindablePoint Position { get; } = new BindablePoint();
 
         public double Radius
         {
@@ -32,11 +30,11 @@ namespace CruPhysics.PhysicalObjects
             set
             {
                 radius = value;
-                RaisePropertyChangedEvent("Radius");
+                RaisePropertyChangedEvent(nameof(Radius));
             }
         }
 
-        public BindableVector Velocity => velocity;
+        public BindableVector Velocity { get; } = new BindableVector();
 
         public double Mass
         {
@@ -44,7 +42,7 @@ namespace CruPhysics.PhysicalObjects
             set
             {
                 mass = value;
-                RaisePropertyChangedEvent("Mass");
+                RaisePropertyChangedEvent(nameof(Mass));
             }
         }
 
@@ -54,7 +52,7 @@ namespace CruPhysics.PhysicalObjects
             set
             {
                 charge = value;
-                RaisePropertyChangedEvent("Charge");
+                RaisePropertyChangedEvent(nameof(Charge));
             }
         }
 
@@ -62,6 +60,7 @@ namespace CruPhysics.PhysicalObjects
         {
             Position.Move(vector);
         }
+
 
         public IList<Force> Forces => forces;
 
@@ -104,19 +103,19 @@ namespace CruPhysics.PhysicalObjects
         }
 
 
-        private Point _originalPosition;
-        private Vector _originalVelocity;
+        private Point originalPosition;
+        private Vector originalVelocity;
 
         private void StoreProperty()
         {
-            _originalPosition = Position;
-            _originalVelocity = Velocity;
+            originalPosition = Position;
+            originalVelocity = Velocity;
         }
 
         private void RecoverProperty()
         {
-            Position.Set(_originalPosition);
-            Velocity.Set(_originalVelocity);
+            Position.Set(originalPosition);
+            Velocity.Set(originalVelocity);
         }
 
         public override void Run(Scene scene, TimeSpan time)

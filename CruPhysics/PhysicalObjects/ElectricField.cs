@@ -6,19 +6,18 @@ namespace CruPhysics.PhysicalObjects
 {
     public class ElectricField : Field
     {
+        // ReSharper disable once InconsistentNaming
         public static readonly PhysicalObjectMetadata metadata = new PhysicalObjectMetadata() { ZIndex = 50, RunRank = 50 };
 
-
-        private BindableVector intensity = new BindableVector();
 
         public ElectricField()
         {
             Name = "电场";
         }
 
-        public BindableVector Intensity => intensity;
+        public BindableVector Intensity { get; } = new BindableVector();
 
-        public override void CalculateEffect(MovingObject movingObject, TimeSpan no_use)
+        public override void CalculateEffect(MovingObject movingObject, TimeSpan noUse)
         {
             movingObject.Forces.Add(new Force(
                     Intensity.X * movingObject.Charge,

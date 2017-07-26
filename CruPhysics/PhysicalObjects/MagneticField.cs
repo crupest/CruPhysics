@@ -6,6 +6,7 @@ namespace CruPhysics.PhysicalObjects
 {
     public class MagneticField : Field
     {
+        // ReSharper disable once InconsistentNaming
         public static readonly PhysicalObjectMetadata metadata = new PhysicalObjectMetadata() { ZIndex = 50, RunRank = 49 };
 
 
