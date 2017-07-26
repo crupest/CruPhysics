@@ -10,9 +10,11 @@
         mc:Ignorable="d"
         Title="CruPhysics"
         Focusable="False"
-        PreviewMouseDown="Window_PreviewMouseDown">
+        PreviewMouseDown="Window_PreviewMouseDown"
+        DataContext="{StaticResource ResourceKey=ViewModel}">
 
     <Window.Resources>
+        <viewModels:MainViewModel x:Key="ViewModel"/>
 
         <Style TargetType="ListViewItem">
             <EventSetter Event="GotFocus" Handler="ListViewItem_GotFocus"/>
@@ -38,6 +40,7 @@
                 <controls:ObjectPropertyBox PropertyName="电荷量" Value="{Binding Path=Charge, Mode=TwoWay}" Unit="C"/>
             </StackPanel>
         </DataTemplate>
+        
         <DataTemplate x:Key="ElectricFieldDataTemplate"
                       DataType="{x:Type physicalObjects:ElectricField}">
             <StackPanel>
@@ -49,6 +52,7 @@
                 <controls:ObjectPropertyBox PropertyName="场强y" Value="{Binding Path=Intensity.Y, Mode=TwoWay}" Unit="V/m"/>
             </StackPanel>
         </DataTemplate>
+        
         <DataTemplate x:Key="MagneticFieldDataTemplate"
                       DataType="{x:Type physicalObjects:MagneticField}">
             <StackPanel>
@@ -79,7 +83,7 @@
 
     <DockPanel LastChildFill="True">
         <Menu DockPanel.Dock="Top"
-              Background="Gray">
+              Background="PaleGreen">
             <MenuItem Header="文件(_F)">
                 <MenuItem Command="ApplicationCommands.New"/>
             </MenuItem>
@@ -108,11 +112,11 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="2*"/>
                 <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition/>
+                <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Canvas Grid.Column="0"
-                    Name="MainCanvas" ClipToBounds="True" Background="Transparent" Cursor="../Resources/Cursors/HandRock.cur"
-                    SizeChanged="MainCanvas_SizeChanged" MouseDown="MainCanvas_MouseDown" MouseMove="MainCanvas_MouseMove" MouseUp="MainCanvas_MouseUp">
+                    Name="MainCanvas" ClipToBounds="True" Background="Transparent"
+                    Cursor="../Resources/Cursors/HandRock.cur">
                 <Canvas.ContextMenu>
                     <ContextMenu>
                         <MenuItem Header="添加(_A)">
@@ -122,13 +126,16 @@
                         </MenuItem>
                     </ContextMenu>
                 </Canvas.ContextMenu>
-                <Canvas Name="WorldCanvas"/>
-                <TextBlock Name="TimeTextBox" Canvas.Right="20" Canvas.Top="10" Visibility="Collapsed">00:00.00</TextBlock>
+                <controls:WorldCanvas x:Name="WorldCanvas"
+                                      Width="{Binding ActualWidth, ElementName=MainCanvas}"
+                                      Height="{Binding ActualHeight, ElementName=MainCanvas}"/>
+                <TextBlock Name="TimeTextBox" Canvas.Right="20" Canvas.Top="10"
+                           Visibility="Collapsed">00:00.00</TextBlock>
             </Canvas>
             <GridSplitter Grid.Column="1"
                           Width="3" HorizontalAlignment="Center" VerticalAlignment="Stretch" Background="#FF008B13"/>
             <ListView Grid.Column="2"
-                      Name="ObjectList"  BorderThickness="0" MouseDown="ObjectList_MouseDown"
+                      Name="ObjectList"  BorderThickness="0"
                       ItemsSource="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Path=ViewModel.Scene.PhysicalObjects}"
                       ItemTemplateSelector="{StaticResource ResourceKey=ObjectListItemTemplateSelector}"
                       SelectedItem="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Path=ViewModel.Scene.SelectedObject, Mode=TwoWay}">

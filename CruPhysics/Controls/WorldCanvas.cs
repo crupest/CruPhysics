@@ -93,7 +93,7 @@ namespace CruPhysics.Controls
             {
                 child.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
             }
-            return availableSize;
+            return new Size();
         }
 
         protected override Size ArrangeOverride(Size finalSize)

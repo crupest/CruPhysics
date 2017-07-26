@@ -1,5 +1,4 @@
 ﻿using CruPhysics.PhysicalObjects;
-using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
@@ -10,9 +9,6 @@ using CruPhysics.ViewModels;
 
 namespace CruPhysics.Windows
 {
-    /// <summary>
-    /// MainWindow.xaml 的交互逻辑
-    /// </summary>
     public partial class MainWindow : Window
     {
         public static RoutedUICommand NewMovingObject   = new RoutedUICommand("运动对象(_0)",  "moving_object",    typeof(MainWindow));
@@ -25,15 +21,12 @@ namespace CruPhysics.Windows
         public static RoutedUICommand Restart           = new RoutedUICommand("重新(_R)",     "restart",          typeof(MainWindow));
         public static RoutedUICommand ResetView         = new RoutedUICommand("重置视图(_R)",  "reset_view",       typeof(MainWindow));
 
-        private CoordinateSystem coordinateSystem;
 
         public MainWindow()
         {
             InitializeComponent();
 
-            ViewModel = new MainViewModel();
-
-            coordinateSystem = new CoordinateSystem(this);
+            ViewModel = (MainViewModel)FindResource("ViewModel");
 
             ObjectList.Focus();
         }
@@ -42,20 +35,17 @@ namespace CruPhysics.Windows
 
         private void NewMovingObject_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            var movingObject = new MovingObject();
-            ViewModel.Scene.Add(movingObject);
+            ViewModel.Scene.Add(new MovingObject());
         }
 
         private void NewElectricField_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            var electric_field = new ElectricField();
-            ViewModel.Scene.Add(electric_field);
+            ViewModel.Scene.Add(new ElectricField());
         }
 
         private void NewMagneticField_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            var magnetic_field = new MagneticField();
-            ViewModel.Scene.Add(magnetic_field);
+            ViewModel.Scene.Add(new MagneticField());
         }
 
         private void Property_Executed(object sender, ExecutedRoutedEventArgs e)
@@ -106,53 +96,6 @@ namespace CruPhysics.Windows
             e.CanExecute = ViewModel.Scene.HasBegun; 
         }
 
-        private void MainCanvas_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            var matrix = WorldCanvas.RenderTransform.Value;
-            matrix.Translate(-(e.PreviousSize.Width / 2.0), -(e.PreviousSize.Height / 2.0));
-            matrix.Translate(e.NewSize.Width / 2.0, e.NewSize.Height / 2.0);
-            WorldCanvas.RenderTransform = new MatrixTransform(matrix);
-        }
-
-        private Point mainCanvasMousePosition;
-
-        private void MainCanvas_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            ViewModel.Scene.SelectedObject = null;
-
-            mainCanvasMousePosition = e.GetPosition(MainCanvas);
-            MainCanvas.CaptureMouse();
-        }
-
-        private void MainCanvas_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (MainCanvas.IsMouseCaptured)
-            {
-                Func<Point, Point> TransformPoint = (point) => WorldCanvas.RenderTransform.Transform(point);
-                var displacement = TransformPoint(e.GetPosition(MainCanvas)) - TransformPoint(mainCanvasMousePosition);
-                var matrix = WorldCanvas.RenderTransform.Value;
-                matrix.Translate(displacement.X, displacement.Y);
-                WorldCanvas.RenderTransform = new MatrixTransform(matrix);
-                mainCanvasMousePosition = e.GetPosition(MainCanvas);
-            }
-        }
-
-        private void MainCanvas_MouseUp(object sender, MouseButtonEventArgs e)
-        {
-            MainCanvas.ReleaseMouseCapture();
-        }
-
-        private void ObjectList_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            var hitTestResult = VisualTreeHelper.HitTest(ObjectList, e.GetPosition(ObjectList));
-            var listViewItem  = Common.FindAncestor(hitTestResult.VisualHit, (element) => element is ListViewItem);
-            if (listViewItem == null)
-            {
-                ObjectList.UnselectAll();
-                ObjectList.Focus();
-            }
-        }
-
         private void ListViewItem_GotFocus(object sender, RoutedEventArgs e)
         {
             ((ListViewItem)sender).IsSelected = true;
@@ -173,7 +116,7 @@ namespace CruPhysics.Windows
 
         private void ResetView_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            WorldCanvas.RenderTransform = new TranslateTransform(MainCanvas.ActualWidth / 2.0, MainCanvas.ActualHeight / 2.0);
+            WorldCanvas.RenderTransform = Transform.Identity;
         }
     }
 
@@ -182,8 +125,9 @@ namespace CruPhysics.Windows
     {
         public CoordinateSystem(MainWindow window)
         {
+            const double graduation = 50.0;
+
             var bounds = window.ViewModel.Scene.Bounds;
-            var graduation = 50.0;
             var geometry = new GeometryGroup();
 
             for (var i = -graduation; i > -bounds; i -= graduation)
@@ -191,8 +135,8 @@ namespace CruPhysics.Windows
                 geometry.Children.Add(new LineGeometry(new Point(i, bounds), new Point(i, -bounds)));
                 geometry.Children.Add(new LineGeometry(new Point(-bounds, i), new Point(bounds, i)));
 
-                _axisXScale.Add(CreateGraduationX(i));
-                _axisYScale.Add(CreateGraduationY(i));
+                axisXScale.Add(CreateGraduationX(i));
+                axisYScale.Add(CreateGraduationY(i));
             }
 
             for (var i = graduation; i < bounds; i += graduation)
@@ -200,40 +144,40 @@ namespace CruPhysics.Windows
                 geometry.Children.Add(new LineGeometry(new Point(i, bounds), new Point(i, -bounds)));
                 geometry.Children.Add(new LineGeometry(new Point(-bounds, i), new Point(bounds, i)));
 
-                _axisXScale.Add(CreateGraduationX(i));
-                _axisYScale.Add(CreateGraduationY(i));
+                axisXScale.Add(CreateGraduationX(i));
+                axisYScale.Add(CreateGraduationY(i));
             }
 
-            _path.Data = geometry;
-            _path.Stroke = Brushes.Gray;
+            path.Data = geometry;
+            path.Stroke = Brushes.Gray;
 
-            _zeroScale = CreateGraduation(0.0, new Point());
+            zeroScale = CreateGraduation(0.0, new Point());
 
-            _axisX.X1 = -bounds;
-            _axisX.Y1 = 0;
-            _axisX.X2 = bounds;
-            _axisX.Y2 = 0;
+            axisX.X1 = -bounds;
+            axisX.Y1 = 0;
+            axisX.X2 = bounds;
+            axisX.Y2 = 0;
 
-            _axisY.X1 = 0;
-            _axisY.Y1 = -bounds;
-            _axisY.X2 = 0;
-            _axisY.Y2 = bounds;
+            axisY.X1 = 0;
+            axisY.Y1 = -bounds;
+            axisY.X2 = 0;
+            axisY.Y2 = bounds;
 
-            _axisX.Stroke = Brushes.Black;
-            _axisY.Stroke = Brushes.Black;
-            _axisX.StrokeThickness = 2.0;
-            _axisY.StrokeThickness = 2.0;
+            axisX.Stroke = Brushes.Black;
+            axisY.Stroke = Brushes.Black;
+            axisX.StrokeThickness = 2.0;
+            axisY.StrokeThickness = 2.0;
 
-            window.WorldCanvas.Children.Add(_path);
-            window.WorldCanvas.Children.Add(_axisX);
-            window.WorldCanvas.Children.Add(_axisY);
+            window.WorldCanvas.Children.Add(path);
+            window.WorldCanvas.Children.Add(axisX);
+            window.WorldCanvas.Children.Add(axisY);
 
-            window.WorldCanvas.Children.Add(_zeroScale);
+            window.WorldCanvas.Children.Add(zeroScale);
 
-            foreach (var i in _axisXScale)
+            foreach (var i in axisXScale)
                 window.WorldCanvas.Children.Add(i);
 
-            foreach (var i in _axisYScale)
+            foreach (var i in axisYScale)
                 window.WorldCanvas.Children.Add(i);
         }
 
@@ -259,31 +203,32 @@ namespace CruPhysics.Windows
             return CreateGraduation(value, new Point(0.0, -value));
         }
 
-        private Path _path = new Path();
-        private Line _axisX = new Line();
-        private Line _axisY = new Line();
-        private TextBlock _zeroScale;
-        private List<TextBlock> _axisXScale = new List<TextBlock>();
-        private List<TextBlock> _axisYScale = new List<TextBlock>();
+        private readonly Path path = new Path();
+        private readonly Line axisX = new Line();
+        private readonly Line axisY = new Line();
+        private readonly TextBlock zeroScale;
+        private readonly List<TextBlock> axisXScale = new List<TextBlock>();
+        private readonly List<TextBlock> axisYScale = new List<TextBlock>();
     }
 
     public class ObjectListItemTemplateSelector : DataTemplateSelector
     {
         public override DataTemplate SelectTemplate(object item, DependencyObject container)
         {
-            Func<string, DataTemplate> findResource = (key) => (container as FrameworkElement).FindResource(key) as DataTemplate;
+            // ReSharper disable once PossibleNullReferenceException
+            DataTemplate FindResource(string key) => (container as FrameworkElement).FindResource(key) as DataTemplate;
 
             if (item is MovingObject)
             {
-                return findResource("movingObjectDataTemplate");
+                return FindResource("MovingObjectDataTemplate");
             }
-            else if (item is ElectricField)
+            if (item is ElectricField)
             {
-                return findResource("electricFieldDataTemplate");
+                return FindResource("ElectricFieldDataTemplate");
             }
-            else if (item is MagneticField)
+            if (item is MagneticField)
             {
-                return findResource("magneticFieldDataTemplate");
+                return FindResource("MagneticFieldDataTemplate");
             }
 
             return base.SelectTemplate(item, container);
