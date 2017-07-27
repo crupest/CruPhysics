@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
@@ -16,20 +15,9 @@ namespace CruPhysics
             base.OnStartup(e);
 
 
-            var assembly = Assembly.GetAssembly(typeof(PhysicalObjectManager));
-            var types = assembly.GetExportedTypes();
-            var physicalObjectTypes = from type in types
-                where typeof(PhysicalObject).IsAssignableFrom(type) && !type.IsAbstract
-                select type;
-            foreach (var type in physicalObjectTypes)
-            {
-                var field = type.GetField("metadata", BindingFlags.IgnoreCase | BindingFlags.Static | BindingFlags.Public);
-                if (field == null)
-                    throw new Exception("Can't find the metadata of " + type.FullName);
-                var metadata = field.GetValue(null) as PhysicalObjectMetadata;
-                PhysicalObjectManager.Register(type.Name, metadata);
-            }
+            PhysicalObjectManager.ScanPhysicalObjectType(Assembly.GetAssembly(typeof(PhysicalObjectManager)));
         }
+
 
         /// <summary>
         /// Find the <see cref="TextBox"/> being validated from <paramref name="errorTextBlock"/>.
