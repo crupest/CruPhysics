@@ -5,6 +5,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using CruPhysics.Controls;
 using CruPhysics.ViewModels;
 
 namespace CruPhysics.Windows
@@ -22,11 +23,16 @@ namespace CruPhysics.Windows
         public static RoutedUICommand ResetView         = new RoutedUICommand("重置视图(_R)",  "reset_view",       typeof(MainWindow));
 
 
+        // ReSharper disable once NotAccessedField.Local
+        private CoordinateSystem coordinateSystem;
+
         public MainWindow()
         {
             InitializeComponent();
 
             ViewModel = (MainViewModel)FindResource("ViewModel");
+            
+            coordinateSystem = new CoordinateSystem(this);
 
             ObjectList.Focus();
         }
@@ -123,92 +129,96 @@ namespace CruPhysics.Windows
 
     public class CoordinateSystem
     {
+        private const double graduation = 50.0;
+
+        private readonly Brush axisBrush = Brushes.Black;
+        private readonly Brush nonAxisLineBrush = Brushes.Gray;
+
+        // ReSharper disable CollectionNeverQueried.Local
+        private readonly IList<Line> horizentalLines = new List<Line>();
+        private readonly IList<Line> verticalLines = new List<Line>();
+        // ReSharper disable PrivateFieldCanBeConvertedToLocalVariable
+        private readonly Line axisX;
+        private readonly Line axisY;
+        private readonly TextBlock zeroScale;
+        // ReSharper restore PrivateFieldCanBeConvertedToLocalVariable
+        private readonly IList<TextBlock> xScales = new List<TextBlock>();
+        private readonly IList<TextBlock> yScales = new List<TextBlock>();
+        // ReSharper restore CollectionNeverQueried.Local
+
+
         public CoordinateSystem(MainWindow window)
         {
-            const double graduation = 50.0;
-
             var bounds = window.ViewModel.Scene.Bounds;
-            var geometry = new GeometryGroup();
+            var children = window.WorldCanvas.Children;
+
+
+            TextBlock CreateGraduation(double value, Point position)
+            {
+                var textBlock = new TextBlock
+                {
+                    Text = value.ToString(),
+                    Padding = new Thickness(2.0)
+                };
+                WorldCanvas.SetLeft(textBlock, position.X);
+                WorldCanvas.SetTop(textBlock, position.Y);
+                return textBlock;
+            }
+
+            Line CreateHorizontalLine(double y, Brush stroke, double thickness = 1.0)
+            {
+                return new Line {X1 = -bounds, X2 = bounds, Y1 = -y, Y2 = -y, Stroke = stroke, StrokeThickness = thickness};
+            }
+
+            void CreateHorizontalLineAndScale(double y)
+            {
+                var line = CreateHorizontalLine(y, nonAxisLineBrush);
+                horizentalLines.Add(line);
+                children.Add(line);
+
+                var scale = CreateGraduation(y, new Point(0.0, y));
+                yScales.Add(scale);
+                children.Add(scale);
+            }
+
+            Line CreateVerticalLine(double x, Brush stroke, double thickness = 1.0)
+            {
+                return new Line {X1 = x, X2 = x, Y1 = bounds, Y2 = -bounds, Stroke = stroke, StrokeThickness = thickness};
+            }
+
+            void CreateVerticalLineAndScale(double x)
+            {
+                var line = CreateVerticalLine(x, nonAxisLineBrush);
+                verticalLines.Add(line);
+                children.Add(line);
+
+                var scale = CreateGraduation(x, new Point(x, 0.0));
+                xScales.Add(scale);
+                children.Add(scale);
+            }
 
             for (var i = -graduation; i > -bounds; i -= graduation)
             {
-                geometry.Children.Add(new LineGeometry(new Point(i, bounds), new Point(i, -bounds)));
-                geometry.Children.Add(new LineGeometry(new Point(-bounds, i), new Point(bounds, i)));
-
-                axisXScale.Add(CreateGraduationX(i));
-                axisYScale.Add(CreateGraduationY(i));
+                CreateHorizontalLineAndScale(i);
+                CreateVerticalLineAndScale(i);
             }
 
             for (var i = graduation; i < bounds; i += graduation)
             {
-                geometry.Children.Add(new LineGeometry(new Point(i, bounds), new Point(i, -bounds)));
-                geometry.Children.Add(new LineGeometry(new Point(-bounds, i), new Point(bounds, i)));
-
-                axisXScale.Add(CreateGraduationX(i));
-                axisYScale.Add(CreateGraduationY(i));
+                CreateHorizontalLineAndScale(i);
+                CreateVerticalLineAndScale(i);
             }
 
-            path.Data = geometry;
-            path.Stroke = Brushes.Gray;
+
+            axisX = CreateHorizontalLine(0.0, axisBrush, 2.0);
+            children.Add(axisX);
+
+            axisY = CreateVerticalLine(0.0, axisBrush, 2.0);
+            children.Add(axisY);
 
             zeroScale = CreateGraduation(0.0, new Point());
-
-            axisX.X1 = -bounds;
-            axisX.Y1 = 0;
-            axisX.X2 = bounds;
-            axisX.Y2 = 0;
-
-            axisY.X1 = 0;
-            axisY.Y1 = -bounds;
-            axisY.X2 = 0;
-            axisY.Y2 = bounds;
-
-            axisX.Stroke = Brushes.Black;
-            axisY.Stroke = Brushes.Black;
-            axisX.StrokeThickness = 2.0;
-            axisY.StrokeThickness = 2.0;
-
-            window.WorldCanvas.Children.Add(path);
-            window.WorldCanvas.Children.Add(axisX);
-            window.WorldCanvas.Children.Add(axisY);
-
-            window.WorldCanvas.Children.Add(zeroScale);
-
-            foreach (var i in axisXScale)
-                window.WorldCanvas.Children.Add(i);
-
-            foreach (var i in axisYScale)
-                window.WorldCanvas.Children.Add(i);
+            children.Add(zeroScale);
         }
-
-        private static TextBlock CreateGraduation(double value, Point position)
-        {
-            var textBlock = new TextBlock()
-            {
-                Text = value.ToString(),
-                Padding = new Thickness(2.0)
-            };
-            Canvas.SetLeft(textBlock, position.X);
-            Canvas.SetTop(textBlock, position.Y);
-            return textBlock;
-        }
-
-        private static TextBlock CreateGraduationX(double value)
-        {
-            return CreateGraduation(value, new Point(value, 0.0));
-        }
-
-        private static TextBlock CreateGraduationY(double value)
-        {
-            return CreateGraduation(value, new Point(0.0, -value));
-        }
-
-        private readonly Path path = new Path();
-        private readonly Line axisX = new Line();
-        private readonly Line axisY = new Line();
-        private readonly TextBlock zeroScale;
-        private readonly List<TextBlock> axisXScale = new List<TextBlock>();
-        private readonly List<TextBlock> axisYScale = new List<TextBlock>();
     }
 
     public class ObjectListItemTemplateSelector : DataTemplateSelector

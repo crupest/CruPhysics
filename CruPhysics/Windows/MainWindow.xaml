@@ -10,8 +10,7 @@
         mc:Ignorable="d"
         Title="CruPhysics"
         Focusable="False"
-        PreviewMouseDown="Window_PreviewMouseDown"
-        DataContext="{StaticResource ResourceKey=ViewModel}">
+        PreviewMouseDown="Window_PreviewMouseDown">
 
     <Window.Resources>
         <viewModels:MainViewModel x:Key="ViewModel"/>
