@@ -1,5 +1,7 @@
-﻿using CruPhysics.PhysicalObjects;
+﻿using System;
+using CruPhysics.PhysicalObjects;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -26,6 +28,8 @@ namespace CruPhysics.Windows
         // ReSharper disable once NotAccessedField.Local
         private CoordinateSystem coordinateSystem;
 
+        private readonly IDictionary<PhysicalObject, UIElement> physicalObjectViewMap = new Dictionary<PhysicalObject, UIElement>();
+
         public MainWindow()
         {
             InitializeComponent();
@@ -34,7 +38,51 @@ namespace CruPhysics.Windows
             
             coordinateSystem = new CoordinateSystem(this);
 
+            ViewModel.Scene.PhysicalObjects.CollectionChanged += PhysicalObjects_CollectionChanged;
+
             ObjectList.Focus();
+        }
+
+        private void PhysicalObjects_CollectionChanged(object sender, NotifyCollectionChangedEventArgs args)
+        {
+            if (args.OldItems != null)
+            {
+                foreach (PhysicalObject i in args.OldItems)
+                {
+                    var uiElement = physicalObjectViewMap[i];
+                    if (uiElement != null)
+                        WorldCanvas.Children.Remove(uiElement);
+
+                    physicalObjectViewMap.Remove(i);
+                }
+            }
+
+            if (args.NewItems != null)
+            {
+                foreach (PhysicalObject i in args.NewItems)
+                {
+                    var viewType = PhysicalObjectManager.GetMetadata(i.GetType().Name).ViewType;
+                    FrameworkElement uiElement = null;
+
+                    if (viewType != null)
+                    {
+                        try
+                        {
+                            uiElement = (FrameworkElement) Activator.CreateInstance(viewType);
+                            uiElement.DataContext = i;
+                        }
+                        catch (Exception e)
+                        {
+                            throw new Exception("Can't create view instance for " + i.GetType().Name + ".", e);
+                        }
+                    }
+
+                    if (uiElement != null)
+                        WorldCanvas.Children.Add(uiElement);
+
+                    physicalObjectViewMap.Add(i, uiElement);
+                }
+            }
         }
 
         public MainViewModel ViewModel { get; }

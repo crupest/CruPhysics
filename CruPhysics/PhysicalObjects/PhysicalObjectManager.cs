@@ -9,6 +9,7 @@ namespace CruPhysics.PhysicalObjects
     {
         public int ZIndex { get; set; }
         public int RunRank { get; set; }
+        public Type ViewType { get; set; }
     }
 
     public static class PhysicalObjectManager

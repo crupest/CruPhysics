@@ -2,13 +2,18 @@
 using System;
 using System.Collections.Generic;
 using System.Windows;
+using CruPhysics.PhysicalObjects.Views;
 
 namespace CruPhysics.PhysicalObjects
 {
     public class MovingObject : PhysicalObject
     {
-        // ReSharper disable once InconsistentNaming
-        public static readonly PhysicalObjectMetadata metadata = new PhysicalObjectMetadata() { ZIndex = 100, RunRank = 100 };
+        public static readonly PhysicalObjectMetadata Metadata = new PhysicalObjectMetadata
+        {
+            ZIndex = 100,
+            RunRank = 100,
+            ViewType = typeof(MovingObjectView)
+        };
 
         private double radius = 10.0;
         private double mass = 1.0;
@@ -31,8 +36,11 @@ namespace CruPhysics.PhysicalObjects
             {
                 radius = value;
                 RaisePropertyChangedEvent(nameof(Radius));
+                RaisePropertyChangedEvent(nameof(Diameter));
             }
         }
+
+        public double Diameter => Radius * 2.0;
 
         public BindableVector Velocity { get; } = new BindableVector();
 

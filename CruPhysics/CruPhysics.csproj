@@ -93,6 +93,9 @@
     <Compile Include="PhysicalObjects\PhysicalObject.cs" />
     <Compile Include="PhysicalObjects\PhysicalObjectManager.cs" />
     <Compile Include="PhysicalObjects\PhysicalObjectUIResources.cs" />
+    <Compile Include="PhysicalObjects\Views\MovingObjectView.xaml.cs">
+      <DependentUpon>MovingObjectView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="PropertyManager.cs" />
     <Compile Include="PhysicalObjects\Scene.cs" />
     <Compile Include="Shapes\CircleSelectionBox.cs" />
@@ -130,6 +133,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\PhysicalObjectThumbnail.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PhysicalObjects\Views\MovingObjectView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -196,6 +203,7 @@
   <ItemGroup>
     <Resource Include="Resources\Cursors\HandRock.cur" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
