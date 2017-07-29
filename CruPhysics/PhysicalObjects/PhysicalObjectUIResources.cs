@@ -8,7 +8,7 @@ namespace CruPhysics.PhysicalObjects
         public const int SelectedZIndex = 1000;
         public const int ControllerZIndex = 1001;
 
-        public static Brush NormalStrokeBrushe => Brushes.Black;
+        public static Brush NormalStrokeBrush => Brushes.Black;
         public static Brush HoverStrokeBrush => Brushes.Red;
         public static Brush SelectStrokeBrush => Brushes.Blue;
 
