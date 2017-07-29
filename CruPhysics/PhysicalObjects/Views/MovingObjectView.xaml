@@ -6,13 +6,13 @@
              xmlns:physicalObjects="clr-namespace:CruPhysics.PhysicalObjects"
              xmlns:controls="clr-namespace:CruPhysics.Controls"
              mc:Ignorable="d"
-             d:DesignHeight="300" d:DesignWidth="300"
              d:DataContext="{d:DesignInstance physicalObjects:MovingObject}"
              controls:WorldCanvas.PlaceMode="ByCenter"
              controls:WorldCanvas.CenterX="{Binding Path=Position.X}"
              controls:WorldCanvas.CenterY="{Binding Path=Position.Y}"
-             Width="{Binding Path=Diameter}" Height="{Binding Path=Diameter}">
-    <Ellipse Stretch="Fill">
+             Panel.ZIndex="{Binding Path=ZIndex}">
+    <Ellipse Width="{Binding Path=Diameter}" Height="{Binding Path=Diameter}"
+             Stroke="{Binding Path=StrokeBrush}" StrokeThickness="{Binding Path=StrokeThickness}">
         <Ellipse.Fill>
             <SolidColorBrush Color="{Binding Path=Color}"/>
         </Ellipse.Fill>
