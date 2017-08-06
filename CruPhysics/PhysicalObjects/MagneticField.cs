@@ -1,13 +1,15 @@
 ﻿using CruPhysics.Windows;
 using System;
 using System.Windows;
+using CruPhysics.PhysicalObjects.Views;
 
 namespace CruPhysics.PhysicalObjects
 {
     public class MagneticField : Field
     {
         // ReSharper disable once InconsistentNaming
-        public static readonly PhysicalObjectMetadata metadata = new PhysicalObjectMetadata() { ZIndex = 50, RunRank = 49 };
+        public static readonly PhysicalObjectMetadata metadata =
+            new PhysicalObjectMetadata() {ZIndex = 50, RunRank = 49, ViewType = typeof(FieldView)};
 
 
         private double fluxDensity;

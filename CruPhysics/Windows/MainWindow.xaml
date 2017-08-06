@@ -13,6 +13,7 @@
         PreviewMouseDown="Window_PreviewMouseDown">
 
     <Window.Resources>
+        <!-- ReSharper disable once Xaml.RedundantResource -->
         <viewModels:MainViewModel x:Key="ViewModel"/>
 
         <Style TargetType="ListViewItem">
@@ -125,6 +126,7 @@
                         </MenuItem>
                     </ContextMenu>
                 </Canvas.ContextMenu>
+
                 <controls:WorldCanvas x:Name="WorldCanvas"
                                       Width="{Binding ActualWidth, ElementName=MainCanvas}"
                                       Height="{Binding ActualHeight, ElementName=MainCanvas}"/>

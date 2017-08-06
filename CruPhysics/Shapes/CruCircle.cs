@@ -21,8 +21,11 @@ namespace CruPhysics.Shapes
 
                 radius = value;
                 RaisePropertyChangedEvent(nameof(Radius));
+                RaisePropertyChangedEvent(nameof(Diameter));
             }
         }
+
+        public double Diameter => Radius * 2.0;
 
         public override void Move(Vector vector)
         {

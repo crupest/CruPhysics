@@ -1,0 +1,38 @@
+﻿<UserControl x:Class="CruPhysics.PhysicalObjects.Views.FieldView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:physicalObjects="clr-namespace:CruPhysics.PhysicalObjects"
+             xmlns:shapes="clr-namespace:CruPhysics.Shapes"
+             xmlns:views="clr-namespace:CruPhysics.PhysicalObjects.Views"
+             d:DataContext="{d:DesignInstance physicalObjects:ElectricField}"
+             mc:Ignorable="d"
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
+        <DataTemplate x:Key="FieldCruRectangleTemplate" DataType="shapes:CruRectangle">
+            <Rectangle Width="{Binding Width}" Height="{Binding Height}"
+                       Stroke="{Binding Tag.StrokeBrush}" StrokeThickness="{Binding Tag.StrokeThickness}">
+                <Rectangle.Fill>
+                    <SolidColorBrush Color="{Binding Tag.Color}" Opacity="0.5" />
+                </Rectangle.Fill>
+            </Rectangle>
+        </DataTemplate>
+
+        <DataTemplate x:Key="FieldCruCircleTemplate" DataType="shapes:CruCircle">
+            <Ellipse Width="{Binding Diameter}" Height="{Binding Diameter}"
+                     Stroke="{Binding Tag.StrokeBrush}" StrokeThickness="{Binding Tag.StrokeThickness}">
+                <Ellipse.Fill>
+                    <SolidColorBrush Color="{Binding Tag.Color}" Opacity="0.5" />
+                </Ellipse.Fill>
+            </Ellipse>
+        </DataTemplate>
+
+        <views:FieldShapeTemplateSelector x:Key="FieldShapeTemplateSelector" />
+        <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
+    </UserControl.Resources>
+
+    <ContentControl Name="ContentControl" Content="{Binding Shape}"
+                    ContentTemplateSelector="{StaticResource FieldShapeTemplateSelector}" />
+</UserControl>

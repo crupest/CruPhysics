@@ -6,11 +6,11 @@ namespace CruPhysics.PhysicalObjects
 {
     public abstract class Field : PhysicalObject
     {
-        private CruShape shape = new CruRectangle();
+        private CruShape shape;
 
         protected Field()
         {
-
+            shape = new CruRectangle {Tag = this};
         }
 
         public CruShape Shape
@@ -18,7 +18,9 @@ namespace CruPhysics.PhysicalObjects
             get => shape;
             set
             {
+                shape.Tag = null;
                 shape = value;
+                shape.Tag = this;
                 RaisePropertyChangedEvent(nameof(Shape));
             }
         }
@@ -43,20 +45,11 @@ namespace CruPhysics.PhysicalObjects
 
         public override void Run(Scene scene, TimeSpan time)
         {
-            foreach (MovingObject movingObject in scene.ClassifiedObjects[typeof(MovingObject).Name])
+            foreach (var o in scene.ClassifiedObjects[typeof(MovingObject).Name])
             {
+                var movingObject = (MovingObject) o;
                 Influence(movingObject, time);
             }
-        }
-
-        protected override void OnAddToScene(Scene scene)
-        {
-            base.OnAddToScene(scene);
-        }
-
-        protected override void OnRemoveFromScene(Scene scene)
-        {
-            base.OnRemoveFromScene(scene);
         }
     }
 }
