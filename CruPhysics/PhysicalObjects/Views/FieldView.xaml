@@ -9,10 +9,11 @@
              d:DataContext="{d:DesignInstance physicalObjects:ElectricField}"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
+
     <UserControl.Resources>
         <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
         <DataTemplate x:Key="FieldCruRectangleTemplate" DataType="shapes:CruRectangle">
-            <Rectangle Width="{Binding Width}" Height="{Binding Height}"
+            <Rectangle Name="Shape" Width="{Binding Width}" Height="{Binding Height}"
                        Stroke="{Binding Tag.StrokeBrush}" StrokeThickness="{Binding Tag.StrokeThickness}">
                 <Rectangle.Fill>
                     <SolidColorBrush Color="{Binding Tag.Color}" Opacity="0.5" />
@@ -21,7 +22,7 @@
         </DataTemplate>
 
         <DataTemplate x:Key="FieldCruCircleTemplate" DataType="shapes:CruCircle">
-            <Ellipse Width="{Binding Diameter}" Height="{Binding Diameter}"
+            <Ellipse Name="Shape" Width="{Binding Diameter}" Height="{Binding Diameter}"
                      Stroke="{Binding Tag.StrokeBrush}" StrokeThickness="{Binding Tag.StrokeThickness}">
                 <Ellipse.Fill>
                     <SolidColorBrush Color="{Binding Tag.Color}" Opacity="0.5" />
