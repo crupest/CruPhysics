@@ -25,6 +25,9 @@ namespace CruPhysics.Windows
         public static RoutedUICommand ResetView         = new RoutedUICommand("重置视图(_R)",  "reset_view",       typeof(MainWindow));
 
 
+        public static MainWindow Current { get; private set; }
+
+
         // ReSharper disable once NotAccessedField.Local
         private CoordinateSystem coordinateSystem;
 
@@ -33,6 +36,8 @@ namespace CruPhysics.Windows
         public MainWindow()
         {
             InitializeComponent();
+
+            Current = this;
 
             ViewModel = (MainViewModel)FindResource("ViewModel");
             
@@ -176,6 +181,11 @@ namespace CruPhysics.Windows
         private void MainCanvas_OnMouseDown(object sender, MouseButtonEventArgs e)
         {
             ViewModel.Scene.OnMouseDown();
+        }
+
+        public UIElement GetPhysicalObjectView(PhysicalObject o)
+        {
+            return physicalObjectViewMap[o];
         }
     }
 

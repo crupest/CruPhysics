@@ -1,12 +1,9 @@
-﻿using System;
+﻿using CruPhysics.Controls;
+using CruPhysics.Shapes;
 using System.ComponentModel;
-using System.Diagnostics;
-using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
-using CruPhysics.Controls;
-using CruPhysics.Shapes;
 
 namespace CruPhysics.PhysicalObjects.Views
 {

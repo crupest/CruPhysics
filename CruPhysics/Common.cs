@@ -189,18 +189,29 @@ namespace CruPhysics
             DependencyObject GetParent(DependencyObject e)
             {
                 if (e is Visual)
-                    return VisualTreeHelper.GetParent(e);
-                else
-                    return LogicalTreeHelper.GetParent(e);
+                {
+                    var p = VisualTreeHelper.GetParent(e);
+                    if (p != null)
+                        return p;
+                }
+                return LogicalTreeHelper.GetParent(e);
             }
 
             var parent = includeSelf ? element : GetParent(element);
             while (true)
             {
                 if (parent == null || predicate(parent))
+                {
                     return parent;
+                }
                 parent = GetParent(parent);
             }
+        }
+
+        public static TResult FindAncestor<TResult>(DependencyObject element, Func<DependencyObject, bool> predicate,
+            bool includeSelf = false) where TResult : DependencyObject
+        {
+            return FindAncestor(element, predicate, includeSelf) as TResult;
         }
 
         public static double GetDistance(Point point1, Point point2)
