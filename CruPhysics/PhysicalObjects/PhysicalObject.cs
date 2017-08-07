@@ -173,6 +173,8 @@ namespace CruPhysics.PhysicalObjects
             RaisePropertyChangedEvent(nameof(IsSelected));
         }
 
+        #region event handlers
+
         internal virtual void OnMouseEnter()
         {
             IsMouseHover = true;
@@ -182,5 +184,12 @@ namespace CruPhysics.PhysicalObjects
         {
             IsMouseHover = false;
         }
+
+        internal virtual void OnMouseDown()
+        {
+            IsSelected = true;
+        }
+
+        #endregion
     }
 }

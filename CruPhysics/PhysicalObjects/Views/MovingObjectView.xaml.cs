@@ -21,5 +21,11 @@ namespace CruPhysics.PhysicalObjects.Views
         {
             ViewModel.OnMouseLeave();
         }
+
+        private void Shape_OnMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            ViewModel.OnMouseDown();
+            e.Handled = true;
+        }
     }
 }

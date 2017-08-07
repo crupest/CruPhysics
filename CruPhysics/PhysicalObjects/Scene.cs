@@ -169,5 +169,10 @@ namespace CruPhysics.PhysicalObjects
         public event EventHandler BeginRunningEvent;
         public event EventHandler StopRunningEvent;
         public event EventHandler RefreshEvent;
+
+        internal void OnMouseDown()
+        {
+            SelectedObject = null;
+        }
     }
 }

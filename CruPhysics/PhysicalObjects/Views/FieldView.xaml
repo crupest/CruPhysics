@@ -13,8 +13,9 @@
     <UserControl.Resources>
         <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
         <DataTemplate x:Key="FieldCruRectangleTemplate" DataType="shapes:CruRectangle">
-            <Rectangle Name="Shape" Width="{Binding Width}" Height="{Binding Height}"
-                       Stroke="{Binding Tag.StrokeBrush}" StrokeThickness="{Binding Tag.StrokeThickness}">
+            <Rectangle Width="{Binding Width}" Height="{Binding Height}"
+                       Stroke="{Binding Tag.StrokeBrush}" StrokeThickness="{Binding Tag.StrokeThickness}"
+                       MouseEnter="Shape_OnMouseEnter" MouseLeave="Shape_OnMouseLeave" MouseDown="Shape_OnMouseDown">
                 <Rectangle.Fill>
                     <SolidColorBrush Color="{Binding Tag.Color}" Opacity="0.5" />
                 </Rectangle.Fill>
@@ -22,8 +23,9 @@
         </DataTemplate>
 
         <DataTemplate x:Key="FieldCruCircleTemplate" DataType="shapes:CruCircle">
-            <Ellipse Name="Shape" Width="{Binding Diameter}" Height="{Binding Diameter}"
-                     Stroke="{Binding Tag.StrokeBrush}" StrokeThickness="{Binding Tag.StrokeThickness}">
+            <Ellipse Width="{Binding Diameter}" Height="{Binding Diameter}"
+                     Stroke="{Binding Tag.StrokeBrush}" StrokeThickness="{Binding Tag.StrokeThickness}"
+                    MouseEnter="Shape_OnMouseEnter" MouseLeave="Shape_OnMouseLeave" MouseDown="Shape_OnMouseDown">
                 <Ellipse.Fill>
                     <SolidColorBrush Color="{Binding Tag.Color}" Opacity="0.5" />
                 </Ellipse.Fill>
@@ -34,6 +36,6 @@
         <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
     </UserControl.Resources>
 
-    <ContentControl Name="ContentControl" Content="{Binding Shape}"
+    <ContentControl Name="ContentControl" Content="{Binding Shape}" Focusable="False"
                     ContentTemplateSelector="{StaticResource FieldShapeTemplateSelector}" />
 </UserControl>

@@ -13,7 +13,7 @@
              Panel.ZIndex="{Binding Path=ZIndex}">
     <Ellipse Name="Shape" Width="{Binding Path=Diameter}" Height="{Binding Path=Diameter}"
              Stroke="{Binding Path=StrokeBrush}" StrokeThickness="{Binding Path=StrokeThickness}"
-             MouseEnter="Shape_OnMouseEnter" MouseLeave="Shape_OnMouseLeave">
+             MouseEnter="Shape_OnMouseEnter" MouseLeave="Shape_OnMouseLeave" MouseDown="Shape_OnMouseDown">
         <Ellipse.Fill>
             <SolidColorBrush Color="{Binding Path=Color}"/>
         </Ellipse.Fill>

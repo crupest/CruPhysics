@@ -172,6 +172,11 @@ namespace CruPhysics.Windows
         {
             WorldCanvas.RenderTransform = Transform.Identity;
         }
+
+        private void MainCanvas_OnMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            ViewModel.Scene.OnMouseDown();
+        }
     }
 
 

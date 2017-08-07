@@ -1,6 +1,10 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Input;
 using CruPhysics.Controls;
 using CruPhysics.Shapes;
 
@@ -17,6 +21,8 @@ namespace CruPhysics.PhysicalObjects.Views
             var descriptor = DependencyPropertyDescriptor.FromProperty(ContentProperty, typeof(ContentControl));
             descriptor.AddValueChanged(ContentControl, (sender, args) => UpdateBinding());
         }
+
+        public Field ViewModel => (Field) DataContext;
 
         private void UpdateBinding()
         {
@@ -44,6 +50,22 @@ namespace CruPhysics.PhysicalObjects.Views
                 SetBinding(WorldCanvas.CenterXProperty, new Binding("Shape.Center.X"));
                 SetBinding(WorldCanvas.CenterYProperty, new Binding("Shape.Center.Y"));
             }
+        }
+
+        private void Shape_OnMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            ViewModel.OnMouseDown();
+            e.Handled = true;
+        }
+
+        private void Shape_OnMouseEnter(object sender, MouseEventArgs e)
+        {
+            ViewModel.OnMouseEnter();
+        }
+
+        private void Shape_OnMouseLeave(object sender, MouseEventArgs e)
+        {
+            ViewModel.OnMouseLeave();
         }
     }
 }
