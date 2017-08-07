@@ -94,7 +94,9 @@
     <Compile Include="PhysicalObjects\PhysicalObjectManager.cs" />
     <Compile Include="PhysicalObjects\PhysicalObjectUIResources.cs" />
     <Compile Include="PhysicalObjects\Views\FieldShapeTemplateSelector.cs" />
-    <Compile Include="PhysicalObjects\Views\FieldView.xaml.cs" />
+    <Compile Include="PhysicalObjects\Views\FieldView.xaml.cs">
+        <DependentUpon>FieldView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="PhysicalObjects\Views\MovingObjectView.xaml.cs">
       <DependentUpon>MovingObjectView.xaml</DependentUpon>
     </Compile>
@@ -139,7 +141,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="PhysicalObjects\Views\FieldView.xaml" />
+    <Page Include="PhysicalObjects\Views\FieldView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="PhysicalObjects\Views\MovingObjectView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
