@@ -13,23 +13,23 @@ namespace CruPhysics.Controls
 
         public static readonly DependencyProperty PlaceModeProperty =
             DependencyProperty.RegisterAttached("PlaceMode", typeof(PlaceMode), typeof(WorldCanvas),
-            new FrameworkPropertyMetadata(PlaceMode.ByLefttop) {AffectsArrange = true});
+                new FrameworkPropertyMetadata(PlaceMode.ByLefttop) {AffectsParentArrange = true});
 
         public static readonly DependencyProperty LeftProperty =
             DependencyProperty.RegisterAttached("Left", typeof(double), typeof(WorldCanvas),
-                new FrameworkPropertyMetadata(0.0) {AffectsArrange = true});
+                new FrameworkPropertyMetadata(0.0) {AffectsParentArrange = true});
 
         public static readonly DependencyProperty TopProperty =
             DependencyProperty.RegisterAttached("Top", typeof(double), typeof(WorldCanvas),
-                new FrameworkPropertyMetadata(0.0) {AffectsArrange = true});
+                new FrameworkPropertyMetadata(0.0) {AffectsParentArrange = true});
 
         public static readonly DependencyProperty CenterXProperty =
             DependencyProperty.RegisterAttached("CenterX", typeof(double), typeof(WorldCanvas),
-                new FrameworkPropertyMetadata(0.0) {AffectsArrange = true});
+                new FrameworkPropertyMetadata(0.0) {AffectsParentArrange = true});
 
         public static readonly DependencyProperty CenterYProperty =
             DependencyProperty.RegisterAttached("CenterY", typeof(double), typeof(WorldCanvas),
-                new FrameworkPropertyMetadata(0.0) {AffectsArrange = true});
+                new FrameworkPropertyMetadata(0.0) {AffectsParentArrange = true});
 
         [AttachedPropertyBrowsableForChildren]
         public static PlaceMode GetPlaceMode(UIElement element)
