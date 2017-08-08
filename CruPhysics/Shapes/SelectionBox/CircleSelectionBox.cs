@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
 
@@ -11,36 +12,48 @@ namespace CruPhysics.Shapes.SelectionBox
 
         private double radiusControllerAngle;
 
-        public CircleSelectionBox(CruCircle circle)
+        public CircleSelectionBox(ICircle circle)
         {
-            SelectedShape = circle;
+            Shape = circle;
             centerController = new Controller(Cursors.SizeAll);
             radiusController = new Controller(Cursors.SizeAll);
 
-            UpdateControllerPosition();
 
             centerController.Dragged += CenterController_Dragged;
             radiusController.Dragged += RadiusController_Dragged;
+
+            UpdateControllerPosition();
+
+            Shape.PropertyChanged += ShapeOnPropertyChanged;
         }
 
-        public CruCircle SelectedShape { get; }
-
-        private void UpdateControllerPosition()
+        private void ShapeOnPropertyChanged(object sender, PropertyChangedEventArgs args)
         {
-            centerController.Position.Set(SelectedShape.Center);
-            radiusController.Position.Set((Point)SelectedShape.Center +
-                                          Common.Rotate(new Vector(SelectedShape.Radius, 0.0), radiusControllerAngle));
+            if (args.PropertyName == nameof(ICircle.Center) ||
+                args.PropertyName == nameof(ICircle.Radius))
+                UpdateControllerPosition();
+        }
+
+        public override IShape SelectedShape => Shape;
+
+        public ICircle Shape { get; }
+
+        public override void UpdateControllerPosition()
+        {
+            centerController.Position.Set(Shape.Center);
+            radiusController.Position.Set((Point)Shape.Center +
+                                          Common.Rotate(new Vector(Shape.Radius, 0.0), radiusControllerAngle));
         }
 
         private void CenterController_Dragged(object sender, ControllerDraggedEventArgs e)
         {
-            SelectedShape.Center.Set(e.Position);
+            Shape.Center.Set(e.Position);
         }
 
         private void RadiusController_Dragged(object sender, ControllerDraggedEventArgs e)
         {
-            var vector = e.Position - SelectedShape.Center;
-            SelectedShape.Radius = vector.Length;
+            var vector = e.Position - Shape.Center;
+            Shape.Radius = vector.Length;
             radiusControllerAngle = Common.GetAngleBetweenXAxis(vector);
         }
 
@@ -51,6 +64,11 @@ namespace CruPhysics.Shapes.SelectionBox
                 yield return centerController;
                 yield return radiusController;
             }
+        }
+
+        public override void Dispose()
+        {
+            Shape.PropertyChanged -= ShapeOnPropertyChanged;
         }
     }
 }
