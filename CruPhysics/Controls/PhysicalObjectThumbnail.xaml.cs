@@ -1,8 +1,7 @@
-﻿using System;
+﻿using System.Diagnostics;
 using CruPhysics.PhysicalObjects;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
 using CruPhysics.Windows;
 
 namespace CruPhysics.Controls
@@ -18,7 +17,9 @@ namespace CruPhysics.Controls
 
         private static void OnObjectChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            ((PhysicalObjectThumbnail) d).Brush.Visual = MainWindow.Current.GetPhysicalObjectView((PhysicalObject)e.NewValue);
+            var window = Window.GetWindow(d) as MainWindow;
+            Debug.Assert(window != null);
+            ((PhysicalObjectThumbnail) d).Brush.Visual = window.GetPhysicalObjectView((PhysicalObject)e.NewValue);
         }
 
         public PhysicalObjectThumbnail()
