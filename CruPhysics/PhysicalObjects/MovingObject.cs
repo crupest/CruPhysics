@@ -132,6 +132,7 @@ namespace CruPhysics.PhysicalObjects
             var acceleration = force / Mass;
             Move((Vector)Velocity * t + acceleration * Math.Pow(t, 2) / 2.0);
             Velocity.Add(acceleration * t);
+            forces.Clear();
         }
     }
 }
