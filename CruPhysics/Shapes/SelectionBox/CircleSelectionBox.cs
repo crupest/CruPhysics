@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Input;
 
-namespace CruPhysics.Shapes
+namespace CruPhysics.Shapes.SelectionBox
 {
     public sealed class CircleSelectionBox : SelectionBox
     {

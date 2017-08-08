@@ -35,6 +35,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="JetBrains.Annotations, Version=11.0.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.Annotations.11.0.0\lib\net20\JetBrains.Annotations.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -94,6 +97,9 @@
     <Compile Include="PhysicalObjects\PhysicalObjectManager.cs" />
     <Compile Include="PhysicalObjects\PhysicalObjectMetadataAttribute.cs" />
     <Compile Include="PhysicalObjects\PhysicalObjectUIResources.cs" />
+    <Compile Include="PhysicalObjects\Views\ControllerView.xaml.cs">
+      <DependentUpon>ControllerView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="PhysicalObjects\Views\FieldShapeTemplateSelector.cs" />
     <Compile Include="PhysicalObjects\Views\FieldView.xaml.cs">
       <DependentUpon>FieldView.xaml</DependentUpon>
@@ -103,20 +109,22 @@
     </Compile>
     <Compile Include="PropertyManager.cs" />
     <Compile Include="PhysicalObjects\Scene.cs" />
-    <Compile Include="Shapes\CircleSelectionBox.cs" />
     <Compile Include="Shapes\CruCircle.cs" />
     <Compile Include="Shapes\CruRectangle.cs" />
     <Compile Include="Shapes\CruShape.cs" />
     <Compile Include="Shapes\ICircle.cs" />
     <Compile Include="Shapes\IRectangle.cs" />
     <Compile Include="Shapes\IShape.cs" />
-    <Compile Include="Shapes\RectangleSelectionBox.cs" />
-    <Compile Include="Shapes\SelectionBox.cs" />
+    <Compile Include="Shapes\SelectionBox\CircleSelectionBox.cs" />
+    <Compile Include="Shapes\SelectionBox\Controller.cs" />
+    <Compile Include="Shapes\SelectionBox\RectangleSelectionBox.cs" />
+    <Compile Include="Shapes\SelectionBox\SelectionBox.cs" />
     <Compile Include="ViewModels\BoolToVisibilityConverter.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\NumberValidationRule.cs" />
     <Compile Include="ViewModels\PositiveOrZeroValidationRule.cs" />
     <Compile Include="ViewModels\PositiveValidationRule.cs" />
+    <Compile Include="ViewModels\RadiusToDiameterConverter.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="Windows\ElectricFieldPropertyDialog.xaml.cs">
       <DependentUpon>ElectricFieldPropertyDialog.xaml</DependentUpon>
@@ -139,6 +147,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\PhysicalObjectThumbnail.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PhysicalObjects\Views\ControllerView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -213,6 +225,7 @@
   <ItemGroup>
     <Resource Include="Resources\Cursors\HandRock.cur" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

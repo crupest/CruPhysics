@@ -1,0 +1,17 @@
+﻿<UserControl x:Class="CruPhysics.PhysicalObjects.Views.ControllerView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:selectionBox="clr-namespace:CruPhysics.Shapes.SelectionBox"
+             xmlns:controls="clr-namespace:CruPhysics.Controls"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance selectionBox:Controller}"
+             controls:WorldCanvas.PlaceMode="ByCenter"
+             controls:WorldCanvas.CenterX="{Binding Position.X}"
+             controls:WorldCanvas.CenterY="{Binding Position.Y}">
+    <Ellipse Width="{Binding Radius, Converter={StaticResource RadiusToDiameterConverter}}"
+             Height="{Binding Radius, Converter={StaticResource RadiusToDiameterConverter}}"
+             Fill="White" Stroke="Black" StrokeThickness="1"
+             MouseDown="Shape_OnMouseDown" MouseUp="Shape_OnMouseUp" MouseMove="Shape_OnMouseMove"/>
+</UserControl>
