@@ -86,6 +86,21 @@ namespace CruPhysics.Controls
             element.SetValue(CenterYProperty, value);
         }
 
+        /// <summary>
+        /// From raw position to coordinate.
+        /// </summary>
+        public Point TransformPoint(Point point)
+        {
+            return new Point(point.X - ActualWidth / 2.0, -(point.Y - ActualHeight / 2.0));
+        }
+
+        /// <summary>
+        /// From coordinate to raw position.
+        /// </summary>
+        public Point TransformPointBack(Point point)
+        {
+            return new Point(point.X + ActualWidth / 2.0, -point.Y + ActualHeight / 2.0);
+        }
 
         protected override Size MeasureOverride(Size availableSize)
         {

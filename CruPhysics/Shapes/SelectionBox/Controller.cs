@@ -54,6 +54,12 @@ namespace CruPhysics.Shapes.SelectionBox
             }
         }
 
+        internal void OnMove(Point newPosition)
+        {
+            dragged?.Invoke(this, new ControllerDraggedEventArgs(newPosition));
+        }
+
+
         private ControllerDraggedHandler dragged;
 
         public event ControllerDraggedHandler Dragged
