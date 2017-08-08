@@ -7,9 +7,9 @@ namespace CruPhysics.PhysicalObjects
 {
     public class PhysicalObjectMetadata
     {
-        public int ZIndex { get; set; }
-        public int RunRank { get; set; }
-        public Type ViewType { get; set; }
+        public int ZIndex { get; internal set; }
+        public int RunRank { get; internal set; }
+        public Type ViewType { get; internal set; }
     }
 
     public static class PhysicalObjectManager
@@ -25,16 +25,36 @@ namespace CruPhysics.PhysicalObjects
                 select type;
             foreach (var type in physicalObjectTypes)
             {
-                var field = type.GetField("metadata", BindingFlags.IgnoreCase | BindingFlags.Static | BindingFlags.Public);
-                if (field == null)
-                    throw new Exception("Can't find the metadata of " + type.FullName);
-                var metadata = field.GetValue(null) as PhysicalObjectMetadata;
-                Register(type.Name, metadata);
+                Register(type);
             }
         }
 
-        public static void Register(string name, PhysicalObjectMetadata metadata)
+        private static PhysicalObjectMetadata AttributeToMetadata(PhysicalObjectMetadataAttribute attribute)
         {
+            return new PhysicalObjectMetadata
+            {
+                ZIndex = attribute.ZIndex,
+                RunRank = attribute.RunRank,
+                ViewType = attribute.ViewType
+            };
+        }
+
+        public static void Register(Type type)
+        {
+            var name = type.Name;
+            PhysicalObjectMetadataAttribute attribute;
+            try
+            {
+                attribute =
+                    Attribute.GetCustomAttribute(type, typeof(PhysicalObjectMetadataAttribute)) as
+                        PhysicalObjectMetadataAttribute;
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Can't get PhysicalObjectMetadataAttribute for " + type.FullName, e);
+            }
+            var metadata = AttributeToMetadata(attribute);
+
             metadatas.Add(name, metadata);
             runRankList.Add(metadata.RunRank, name);
         }

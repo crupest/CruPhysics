@@ -5,13 +5,9 @@ using CruPhysics.PhysicalObjects.Views;
 
 namespace CruPhysics.PhysicalObjects
 {
+    [PhysicalObjectMetadata(ZIndex = 50, RunRank = 49, ViewType = typeof(FieldView))]
     public class MagneticField : Field
     {
-        // ReSharper disable once InconsistentNaming
-        public static readonly PhysicalObjectMetadata metadata =
-            new PhysicalObjectMetadata() {ZIndex = 50, RunRank = 49, ViewType = typeof(FieldView)};
-
-
         private double fluxDensity;
 
         public MagneticField()

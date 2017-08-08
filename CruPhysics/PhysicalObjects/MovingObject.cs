@@ -6,15 +6,9 @@ using CruPhysics.PhysicalObjects.Views;
 
 namespace CruPhysics.PhysicalObjects
 {
+    [PhysicalObjectMetadata(ZIndex = 100, RunRank = 100, ViewType = typeof(MovingObjectView))]
     public class MovingObject : PhysicalObject
     {
-        public static readonly PhysicalObjectMetadata Metadata = new PhysicalObjectMetadata
-        {
-            ZIndex = 100,
-            RunRank = 100,
-            ViewType = typeof(MovingObjectView)
-        };
-
         private double radius = 10.0;
         private double mass = 1.0;
         private double charge;

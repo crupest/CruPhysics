@@ -92,10 +92,11 @@
     <Compile Include="PhysicalObjects\MovingObject.cs" />
     <Compile Include="PhysicalObjects\PhysicalObject.cs" />
     <Compile Include="PhysicalObjects\PhysicalObjectManager.cs" />
+    <Compile Include="PhysicalObjects\PhysicalObjectMetadataAttribute.cs" />
     <Compile Include="PhysicalObjects\PhysicalObjectUIResources.cs" />
     <Compile Include="PhysicalObjects\Views\FieldShapeTemplateSelector.cs" />
     <Compile Include="PhysicalObjects\Views\FieldView.xaml.cs">
-        <DependentUpon>FieldView.xaml</DependentUpon>
+      <DependentUpon>FieldView.xaml</DependentUpon>
     </Compile>
     <Compile Include="PhysicalObjects\Views\MovingObjectView.xaml.cs">
       <DependentUpon>MovingObjectView.xaml</DependentUpon>

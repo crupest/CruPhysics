@@ -5,13 +5,9 @@ using CruPhysics.PhysicalObjects.Views;
 
 namespace CruPhysics.PhysicalObjects
 {
+    [PhysicalObjectMetadata(ZIndex = 50, RunRank = 50, ViewType = typeof(FieldView))]
     public class ElectricField : Field
     {
-        // ReSharper disable once InconsistentNaming
-        public static readonly PhysicalObjectMetadata metadata =
-            new PhysicalObjectMetadata() {ZIndex = 50, RunRank = 50, ViewType = typeof(FieldView)};
-
-
         public ElectricField()
         {
             Name = "电场";
