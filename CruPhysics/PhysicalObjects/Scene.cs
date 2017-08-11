@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Threading;
+using CruPhysics.Shapes.SelectionBox;
 
 namespace CruPhysics.PhysicalObjects
 {
@@ -28,7 +29,7 @@ namespace CruPhysics.PhysicalObjects
         private bool hasBegun;
 
         private PhysicalObject selectedObject;
-
+        private SelectionBox selectionBox;
 
         public Scene()
         {
@@ -51,6 +52,24 @@ namespace CruPhysics.PhysicalObjects
                 selectedObject = value;
                 value?.SetIsSelected(true);
                 RaisePropertyChangedEvent(nameof(SelectedObject));
+            }
+        }
+
+        public SelectionBox SelectionBox
+        {
+            get => selectionBox;
+            set
+            {
+                if (selectionBox == value)
+                    return;
+
+                if (selectionBox != null)
+                {
+                    selectionBox.Dispose();
+                }
+
+                selectionBox = value;
+                RaisePropertyChangedEvent(nameof(SelectionBox));
             }
         }
 

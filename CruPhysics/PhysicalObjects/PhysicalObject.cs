@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Media;
+using CruPhysics.Shapes.SelectionBox;
 using static CruPhysics.PhysicalObjects.PhysicalObjectUIResources;
 
 namespace CruPhysics.PhysicalObjects
@@ -139,6 +140,7 @@ namespace CruPhysics.PhysicalObjects
         public abstract void Run(Scene scene, TimeSpan time);
         public abstract void Move(Vector vector);
         public abstract Window CreatePropertyWindow();
+        public abstract SelectionBox CreateSelectionBox();
 
         internal void AddToScene(Scene scene)
         {

@@ -46,5 +46,14 @@ namespace CruPhysics.Shapes
         {
             return new Point(rectangle.Left + rectangle.Width / 2.0, rectangle.Top - rectangle.Height / 2.0);
         }
+
+        public static bool IsPointInside(this IRectangle rectangle, Point point)
+        {
+            return
+                point.X > rectangle.Left &&
+                point.X < rectangle.GetRight() &&
+                point.Y > rectangle.GetBottom() &&
+                point.Y < rectangle.Top;
+        }
     }
 }

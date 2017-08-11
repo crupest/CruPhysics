@@ -1,5 +1,4 @@
-﻿using CruPhysics.Controls;
-using System;
+﻿using System;
 using System.Windows;
 
 namespace CruPhysics.Shapes
@@ -109,11 +108,7 @@ namespace CruPhysics.Shapes
 
         public override bool IsPointInside(Point point)
         {
-            return
-                point.X > Left &&
-                point.X < Right &&
-                point.Y > Bottom &&
-                point.Y < Top;
+            return RectangleExtension.IsPointInside(this, point);
         }
     }
 }

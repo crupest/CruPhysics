@@ -3,11 +3,13 @@ using System;
 using System.Collections.Generic;
 using System.Windows;
 using CruPhysics.PhysicalObjects.Views;
+using CruPhysics.Shapes;
+using CruPhysics.Shapes.SelectionBox;
 
 namespace CruPhysics.PhysicalObjects
 {
     [PhysicalObjectMetadata(ZIndex = 100, RunRank = 100, ViewType = typeof(MovingObjectView))]
-    public class MovingObject : PhysicalObject
+    public class MovingObject : PhysicalObject, ICircle
     {
         private double radius = 10.0;
         private double mass = 1.0;
@@ -22,6 +24,8 @@ namespace CruPhysics.PhysicalObjects
         }
 
         public BindablePoint Position { get; } = new BindablePoint();
+
+        public BindablePoint Center => Position;
 
         public double Radius
         {
@@ -133,6 +137,11 @@ namespace CruPhysics.PhysicalObjects
             Move((Vector)Velocity * t + acceleration * Math.Pow(t, 2) / 2.0);
             Velocity.Add(acceleration * t);
             forces.Clear();
+        }
+
+        public override SelectionBox CreateSelectionBox()
+        {
+            return new CircleSelectionBox(this);
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using CruPhysics.Controls;
-using System;
+﻿using System;
 using System.Windows;
 
 namespace CruPhysics.Shapes
@@ -34,8 +33,7 @@ namespace CruPhysics.Shapes
 
         public override bool IsPointInside(Point point)
         {
-            return Math.Pow(point.X - Center.X, 2) +
-                Math.Pow(point.Y - Center.Y, 2) <= Math.Pow(Radius, 2);
+            return CircleExtension.IsPointInside(this, point);
         }
     }
 }

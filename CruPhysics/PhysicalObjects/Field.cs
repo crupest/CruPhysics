@@ -1,6 +1,7 @@
 ﻿using CruPhysics.Shapes;
 using System;
 using System.Windows;
+using CruPhysics.Shapes.SelectionBox;
 
 namespace CruPhysics.PhysicalObjects
 {
@@ -50,6 +51,15 @@ namespace CruPhysics.PhysicalObjects
                 var movingObject = (MovingObject) o;
                 Influence(movingObject, time);
             }
+        }
+
+        public override SelectionBox CreateSelectionBox()
+        {
+            if (Shape is IRectangle rectangle)
+                return new RectangleSelectionBox(rectangle);
+            if (Shape is ICircle circle)
+                return new CircleSelectionBox(circle);
+            return null;
         }
     }
 }
