@@ -67,6 +67,7 @@ namespace CruPhysics.PhysicalObjects
             Position.Move(vector);
         }
 
+        public MotionTrail MotionTrail => trail;
 
         public IList<Force> Forces => forces;
 

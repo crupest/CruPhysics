@@ -16,15 +16,15 @@ namespace CruPhysics.Windows
 {
     public partial class MainWindow : Window
     {
-        public static RoutedUICommand NewMovingObject   = new RoutedUICommand("运动对象(_0)",  "moving_object",    typeof(MainWindow));
-        public static RoutedUICommand NewElectricField  = new RoutedUICommand("电场(_E)",     "electric_field",   typeof(MainWindow));
-        public static RoutedUICommand NewMagneticField  = new RoutedUICommand("磁场(_M)",     "magnetic_field",   typeof(MainWindow));
-        public static RoutedUICommand Property          = new RoutedUICommand("属性(_P)",     "property",         typeof(MainWindow));
-        public static RoutedUICommand Delete            = new RoutedUICommand("删除(_D)",     "delete",           typeof(MainWindow));
-        public static RoutedUICommand Begin             = new RoutedUICommand("开始(_B)",     "begin",            typeof(MainWindow));
-        public static RoutedUICommand Stop              = new RoutedUICommand("停止(_S)",     "stop",             typeof(MainWindow));
-        public static RoutedUICommand Restart           = new RoutedUICommand("重新(_R)",     "restart",          typeof(MainWindow));
-        public static RoutedUICommand ResetView         = new RoutedUICommand("重置视图(_R)",  "reset_view",       typeof(MainWindow));
+        public static readonly RoutedUICommand NewMovingObject   = new RoutedUICommand("运动对象(_0)",  "moving_object",    typeof(MainWindow));
+        public static readonly RoutedUICommand NewElectricField  = new RoutedUICommand("电场(_E)",     "electric_field",   typeof(MainWindow));
+        public static readonly RoutedUICommand NewMagneticField  = new RoutedUICommand("磁场(_M)",     "magnetic_field",   typeof(MainWindow));
+        public static readonly RoutedUICommand Property          = new RoutedUICommand("属性(_P)",     "property",         typeof(MainWindow));
+        public static readonly RoutedUICommand Delete            = new RoutedUICommand("删除(_D)",     "delete",           typeof(MainWindow));
+        public static readonly RoutedUICommand Begin             = new RoutedUICommand("开始(_B)",     "begin",            typeof(MainWindow));
+        public static readonly RoutedUICommand Stop              = new RoutedUICommand("停止(_S)",     "stop",             typeof(MainWindow));
+        public static readonly RoutedUICommand Restart           = new RoutedUICommand("重新(_R)",     "restart",          typeof(MainWindow));
+        public static readonly RoutedUICommand ResetView         = new RoutedUICommand("重置视图(_R)",  "reset_view",       typeof(MainWindow));
 
 
 
@@ -32,6 +32,7 @@ namespace CruPhysics.Windows
         private CoordinateSystem coordinateSystem;
 
         private readonly IDictionary<PhysicalObject, UIElement> physicalObjectViewMap = new Dictionary<PhysicalObject, UIElement>();
+        private readonly IDictionary<MovingObject, MotionTrailView> motionTrailViewMap = new Dictionary<MovingObject, MotionTrailView>();
 
         private IEnumerable<ControllerView> controllerViews;
 
@@ -45,8 +46,30 @@ namespace CruPhysics.Windows
 
             ViewModel.Scene.PropertyChanged += SceneOnPropertyChanged;
             ViewModel.Scene.PhysicalObjects.CollectionChanged += PhysicalObjects_CollectionChanged;
-
+            ViewModel.Scene.ClassifiedObjects[typeof(MovingObject).Name].CollectionChanged += MovingObjectOnCollectionChanged;
             ObjectList.Focus();
+        }
+
+        private void MovingObjectOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs args)
+        {
+            if (args.OldItems != null)
+            {
+                foreach (MovingObject movingObject in args.OldItems)
+                {
+                    WorldCanvas.Children.Remove(motionTrailViewMap[movingObject]);
+                    motionTrailViewMap.Remove(movingObject);
+                }
+            }
+
+            if (args.NewItems != null)
+            {
+                foreach (MovingObject movingObject in args.NewItems)
+                {
+                    var motionTrailView = new MotionTrailView() {DataContext = movingObject.MotionTrail};
+                    WorldCanvas.Children.Add(motionTrailView);
+                    motionTrailViewMap.Add(movingObject, motionTrailView);
+                }
+            }
         }
 
         private void SceneOnPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)

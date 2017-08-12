@@ -104,6 +104,9 @@
     <Compile Include="PhysicalObjects\Views\FieldView.xaml.cs">
       <DependentUpon>FieldView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="PhysicalObjects\Views\MotionTrailView.xaml.cs">
+      <DependentUpon>MotionTrailView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="PhysicalObjects\Views\MovingObjectView.xaml.cs">
       <DependentUpon>MovingObjectView.xaml</DependentUpon>
     </Compile>
@@ -155,6 +158,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="PhysicalObjects\Views\FieldView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PhysicalObjects\Views\MotionTrailView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

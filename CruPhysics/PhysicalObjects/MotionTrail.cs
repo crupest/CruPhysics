@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Media;
 
 namespace CruPhysics.PhysicalObjects
@@ -10,10 +11,7 @@ namespace CruPhysics.PhysicalObjects
         private Color color = Common.GetRamdomColor();
         private double strokeThickness = 1.0;
 
-        public MotionTrail()
-        {
-
-        }
+        public Func<Point, Point> PointTransformer { get; set; } = Common.TransformPoint;
 
         public Color Color
         {
@@ -37,7 +35,10 @@ namespace CruPhysics.PhysicalObjects
 
         public void AddPoint(Point point)
         {
-            point = Common.TransformPoint(point);
+            if (PointTransformer != null)
+            {
+                point = PointTransformer(point);
+            }
             if (pathFigure == null)
             {
                 pathFigure = new PathFigure()
