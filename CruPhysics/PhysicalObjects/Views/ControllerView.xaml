@@ -5,11 +5,13 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:selectionBox="clr-namespace:CruPhysics.Shapes.SelectionBox"
              xmlns:controls="clr-namespace:CruPhysics.Controls"
+             xmlns:physicalObjects="clr-namespace:CruPhysics.PhysicalObjects"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance selectionBox:Controller}"
              controls:WorldCanvas.PlaceMode="ByCenter"
              controls:WorldCanvas.CenterX="{Binding Position.X}"
-             controls:WorldCanvas.CenterY="{Binding Position.Y}">
+             controls:WorldCanvas.CenterY="{Binding Position.Y}"
+             Panel.ZIndex="{x:Static physicalObjects:PhysicalObjectUIResources.ControllerZIndex}">
     <Ellipse Width="{Binding Radius, Converter={StaticResource RadiusToDiameterConverter}}"
              Height="{Binding Radius, Converter={StaticResource RadiusToDiameterConverter}}"
              ContextMenu="{Binding ContextMenu}" Cursor="{Binding Cursor}"

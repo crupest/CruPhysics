@@ -50,7 +50,15 @@ namespace CruPhysics.PhysicalObjects
             {
                 selectedObject?.SetIsSelected(false);
                 selectedObject = value;
-                value?.SetIsSelected(true);
+                if (value != null)
+                {
+                    value.SetIsSelected(true);
+                    SelectionBox = value.CreateSelectionBox();
+                }
+                else
+                {
+                    SelectionBox = null;
+                }
                 RaisePropertyChangedEvent(nameof(SelectedObject));
             }
         }

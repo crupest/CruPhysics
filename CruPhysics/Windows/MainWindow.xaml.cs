@@ -2,12 +2,14 @@
 using CruPhysics.PhysicalObjects;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using CruPhysics.Controls;
+using CruPhysics.PhysicalObjects.Views;
 using CruPhysics.ViewModels;
 
 namespace CruPhysics.Windows
@@ -25,27 +27,54 @@ namespace CruPhysics.Windows
         public static RoutedUICommand ResetView         = new RoutedUICommand("重置视图(_R)",  "reset_view",       typeof(MainWindow));
 
 
-        public static MainWindow Current { get; private set; }
-
 
         // ReSharper disable once NotAccessedField.Local
         private CoordinateSystem coordinateSystem;
 
         private readonly IDictionary<PhysicalObject, UIElement> physicalObjectViewMap = new Dictionary<PhysicalObject, UIElement>();
 
+        private IEnumerable<ControllerView> controllerViews;
+
         public MainWindow()
         {
             InitializeComponent();
 
-            Current = this;
-
             ViewModel = (MainViewModel)FindResource("ViewModel");
-            
+
             coordinateSystem = new CoordinateSystem(this);
 
+            ViewModel.Scene.PropertyChanged += SceneOnPropertyChanged;
             ViewModel.Scene.PhysicalObjects.CollectionChanged += PhysicalObjects_CollectionChanged;
 
             ObjectList.Focus();
+        }
+
+        private void SceneOnPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
+        {
+            var scene = (Scene) sender;
+            if (propertyChangedEventArgs.PropertyName == nameof(Scene.SelectionBox))
+            {
+                if (controllerViews != null)
+                {
+                    foreach (var controllerView in controllerViews)
+                    {
+                        WorldCanvas.Children.Remove(controllerView);
+                    }
+                    controllerViews = null;
+                }
+
+                if (scene.SelectionBox != null)
+                {
+                    var controllerViewList = new List<ControllerView>();
+                    foreach (var controller in scene.SelectionBox.Controllers)
+                    {
+                        var controllerView = new ControllerView() {DataContext = controller};
+                        controllerViewList.Add(controllerView);
+                        WorldCanvas.Children.Add(controllerView);
+                    }
+                    controllerViews = controllerViewList;
+                }
+            }
         }
 
         private void PhysicalObjects_CollectionChanged(object sender, NotifyCollectionChangedEventArgs args)

@@ -25,12 +25,19 @@ namespace CruPhysics.Shapes.SelectionBox
             UpdateControllerPosition();
 
             Shape.PropertyChanged += ShapeOnPropertyChanged;
+            Shape.Center.PropertyChanged += ShapeCenterOnPropertyChanged;
+        }
+
+        private void ShapeCenterOnPropertyChanged(object sender, PropertyChangedEventArgs args)
+        {
+            if (args.PropertyName == nameof(BindablePoint.X) ||
+                args.PropertyName == nameof(BindablePoint.Y))
+                UpdateControllerPosition();
         }
 
         private void ShapeOnPropertyChanged(object sender, PropertyChangedEventArgs args)
         {
-            if (args.PropertyName == nameof(ICircle.Center) ||
-                args.PropertyName == nameof(ICircle.Radius))
+            if (args.PropertyName == nameof(ICircle.Radius))
                 UpdateControllerPosition();
         }
 
@@ -69,6 +76,7 @@ namespace CruPhysics.Shapes.SelectionBox
         protected override void DoDispose()
         {
             Shape.PropertyChanged -= ShapeOnPropertyChanged;
+            Shape.Center.PropertyChanged -= ShapeCenterOnPropertyChanged;
         }
     }
 }

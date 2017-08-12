@@ -19,7 +19,7 @@ namespace CruPhysics.PhysicalObjects.Views
 
         private Vector delta;
 
-        private Point GetMousePosition(MouseButtonEventArgs args)
+        private Point GetMousePosition(MouseEventArgs args)
         {
             return Canvas.TransformPoint(args.GetPosition(Canvas));
         }
@@ -27,18 +27,21 @@ namespace CruPhysics.PhysicalObjects.Views
         private void Shape_OnMouseDown(object sender, MouseButtonEventArgs e)
         {
             delta = GetMousePosition(e) - ViewModel.Position;
-            CaptureMouse();
+            ((IInputElement) sender).CaptureMouse();
+            e.Handled = true;
         }
 
         private void Shape_OnMouseUp(object sender, MouseButtonEventArgs e)
         {
-            if (IsMouseCaptured)
-                ViewModel.OnMove(GetMousePosition(e) - delta);
+            ((IInputElement) sender).ReleaseMouseCapture();
+            e.Handled = true;
         }
 
         private void Shape_OnMouseMove(object sender, MouseEventArgs e)
         {
-            ReleaseMouseCapture();
+            if (((IInputElement)sender).IsMouseCaptured)
+                ViewModel.OnMove(GetMousePosition(e) - delta);
+            e.Handled = true;
         }
     }
 }
