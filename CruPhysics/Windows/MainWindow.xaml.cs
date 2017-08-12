@@ -230,14 +230,39 @@ namespace CruPhysics.Windows
             WorldCanvas.RenderTransform = Transform.Identity;
         }
 
+        private Point previousMousePosition;
+
         private void MainCanvas_OnMouseDown(object sender, MouseButtonEventArgs e)
         {
+            var canvas = (IInputElement) sender;
             ViewModel.Scene.OnMouseDown();
+            canvas.CaptureMouse();
+            previousMousePosition = e.GetPosition(canvas);
         }
 
         public UIElement GetPhysicalObjectView(PhysicalObject o)
         {
             return physicalObjectViewMap[o];
+        }
+
+        private void MainCanvas_OnMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            var canvas = (IInputElement) sender;
+            canvas.ReleaseMouseCapture();
+        }
+
+        private void MainCanvas_OnMouseMove(object sender, MouseEventArgs e)
+        {
+            var canvas = (IInputElement) sender;
+            if (canvas.IsMouseCaptured)
+            {
+                var presentPosition = e.GetPosition(canvas);
+                var vector = presentPosition - previousMousePosition;
+                var matrix = WorldCanvas.RenderTransform.Value;
+                matrix.Translate(vector.X, vector.Y);
+                WorldCanvas.RenderTransform = new MatrixTransform(matrix);
+                previousMousePosition = presentPosition;
+            }
         }
     }
 

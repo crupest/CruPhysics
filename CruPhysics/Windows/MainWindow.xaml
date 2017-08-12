@@ -117,7 +117,7 @@
             <Canvas Grid.Column="0"
                     Name="MainCanvas" ClipToBounds="True" Background="Transparent"
                     Cursor="../Resources/Cursors/HandRock.cur"
-                    MouseDown="MainCanvas_OnMouseDown">
+                    MouseDown="MainCanvas_OnMouseDown" MouseUp="MainCanvas_OnMouseUp" MouseMove="MainCanvas_OnMouseMove">
                 <Canvas.ContextMenu>
                     <ContextMenu>
                         <MenuItem Header="添加(_A)">

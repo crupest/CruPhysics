@@ -23,7 +23,6 @@ namespace CruPhysics.Shapes.SelectionBox
 
 
         private Cursor cursor;
-        private ContextMenu contextMenu;
 
         public Controller(Cursor cursor)
         {
