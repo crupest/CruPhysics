@@ -14,7 +14,7 @@
              Panel.ZIndex="{x:Static physicalObjects:PhysicalObjectUIResources.ControllerZIndex}">
     <Ellipse Width="{Binding Radius, Converter={StaticResource RadiusToDiameterConverter}}"
              Height="{Binding Radius, Converter={StaticResource RadiusToDiameterConverter}}"
-             ContextMenu="{Binding ContextMenu}" Cursor="{Binding Cursor}"
+             ContextMenu="{StaticResource PhysicalObjectContextMenu}"  Cursor="{Binding Cursor}"
              Fill="White" Stroke="Black" StrokeThickness="1"
              MouseDown="Shape_OnMouseDown" MouseUp="Shape_OnMouseUp" MouseMove="Shape_OnMouseMove"/>
 </UserControl>

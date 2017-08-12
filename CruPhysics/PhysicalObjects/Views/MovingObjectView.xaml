@@ -11,8 +11,9 @@
              controls:WorldCanvas.CenterX="{Binding Path=Position.X}"
              controls:WorldCanvas.CenterY="{Binding Path=Position.Y}"
              Panel.ZIndex="{Binding Path=ZIndex}">
-    <Ellipse Name="Shape" Width="{Binding Path=Diameter}" Height="{Binding Path=Diameter}"
+    <Ellipse Width="{Binding Path=Diameter}" Height="{Binding Path=Diameter}"
              Stroke="{Binding Path=StrokeBrush}" StrokeThickness="{Binding Path=StrokeThickness}"
+             ContextMenu="{StaticResource PhysicalObjectContextMenu}"
              MouseEnter="Shape_OnMouseEnter" MouseLeave="Shape_OnMouseLeave" MouseDown="Shape_OnMouseDown">
         <Ellipse.Fill>
             <SolidColorBrush Color="{Binding Path=Color}"/>

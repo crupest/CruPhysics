@@ -34,14 +34,12 @@ namespace CruPhysics.PhysicalObjects.Views
         private void Shape_OnMouseUp(object sender, MouseButtonEventArgs e)
         {
             ((IInputElement) sender).ReleaseMouseCapture();
-            e.Handled = true;
         }
 
         private void Shape_OnMouseMove(object sender, MouseEventArgs e)
         {
             if (((IInputElement)sender).IsMouseCaptured)
                 ViewModel.OnMove(GetMousePosition(e) - delta);
-            e.Handled = true;
         }
     }
 }

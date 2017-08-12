@@ -44,16 +44,6 @@ namespace CruPhysics.Shapes.SelectionBox
             }
         }
 
-        public ContextMenu ContextMenu
-        {
-            get => contextMenu;
-            set
-            {
-                contextMenu = value;
-                RaisePropertyChangedEvent(nameof(ContextMenu));
-            }
-        }
-
         internal void OnMove(Point newPosition)
         {
             dragged?.Invoke(this, new ControllerDraggedEventArgs(newPosition));

@@ -15,6 +15,7 @@
         <DataTemplate x:Key="FieldCruRectangleTemplate" DataType="shapes:CruRectangle">
             <Rectangle Width="{Binding Width}" Height="{Binding Height}"
                        Stroke="{Binding Tag.StrokeBrush}" StrokeThickness="{Binding Tag.StrokeThickness}"
+                       ContextMenu="{StaticResource PhysicalObjectContextMenu}"
                        MouseEnter="Shape_OnMouseEnter" MouseLeave="Shape_OnMouseLeave" MouseDown="Shape_OnMouseDown">
                 <Rectangle.Fill>
                     <SolidColorBrush Color="{Binding Tag.Color}" Opacity="0.5" />
@@ -25,7 +26,8 @@
         <DataTemplate x:Key="FieldCruCircleTemplate" DataType="shapes:CruCircle">
             <Ellipse Width="{Binding Diameter}" Height="{Binding Diameter}"
                      Stroke="{Binding Tag.StrokeBrush}" StrokeThickness="{Binding Tag.StrokeThickness}"
-                    MouseEnter="Shape_OnMouseEnter" MouseLeave="Shape_OnMouseLeave" MouseDown="Shape_OnMouseDown">
+                     ContextMenu="{StaticResource PhysicalObjectContextMenu}"
+                     MouseEnter="Shape_OnMouseEnter" MouseLeave="Shape_OnMouseLeave" MouseDown="Shape_OnMouseDown">
                 <Ellipse.Fill>
                     <SolidColorBrush Color="{Binding Tag.Color}" Opacity="0.5" />
                 </Ellipse.Fill>
