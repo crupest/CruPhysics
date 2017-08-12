@@ -63,10 +63,7 @@ namespace CruPhysics.PhysicalObjects
                 if (selectionBox == value)
                     return;
 
-                if (selectionBox != null)
-                {
-                    selectionBox.Dispose();
-                }
+                selectionBox?.Dispose();
 
                 selectionBox = value;
                 RaisePropertyChangedEvent(nameof(SelectionBox));

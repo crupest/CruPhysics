@@ -159,7 +159,7 @@ namespace CruPhysics.Shapes.SelectionBox
 
         public override IEnumerable<Controller> Controllers => controllers;
 
-        public override void Dispose()
+        protected override void DoDispose()
         {
             Shape.PropertyChanged -= ShapeOnPropertyChanged;
         }

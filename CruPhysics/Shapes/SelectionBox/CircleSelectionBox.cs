@@ -66,7 +66,7 @@ namespace CruPhysics.Shapes.SelectionBox
             }
         }
 
-        public override void Dispose()
+        protected override void DoDispose()
         {
             Shape.PropertyChanged -= ShapeOnPropertyChanged;
         }

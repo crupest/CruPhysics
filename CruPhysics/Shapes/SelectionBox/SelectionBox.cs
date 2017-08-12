@@ -6,12 +6,23 @@ namespace CruPhysics.Shapes.SelectionBox
 {
     public abstract class SelectionBox : NotifyPropertyChangedObject, IDisposable
     {
+        private bool disposed;
         private ContextMenu contextMenu;
 
         public abstract IShape SelectedShape { get; }
         public abstract IEnumerable<Controller> Controllers { get; }
         public abstract void UpdateControllerPosition();
-        public abstract void Dispose();
+        protected abstract void DoDispose();
+
+        public void Dispose()
+        {
+            if (disposed)
+                return;
+
+            DoDispose();
+            disposed = true;
+        }
+
 
         public ContextMenu ContextMenu
         {
