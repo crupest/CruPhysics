@@ -21,7 +21,11 @@ namespace CruPhysics.PhysicalObjects
             {
                 shape.Tag = null;
                 shape = value;
-                shape.Tag = this;
+                value.Tag = this;
+                if (RelatedScene != null)
+                {
+                    RelatedScene.SelectionBox = CreateSelectionBox();
+                }
                 RaisePropertyChangedEvent(nameof(Shape));
             }
         }

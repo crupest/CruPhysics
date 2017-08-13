@@ -204,7 +204,7 @@ namespace CruPhysics.Windows
 
         private void Restart_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = ViewModel.Scene.HasBegun; 
+            e.CanExecute = ViewModel.Scene.HasBegun;
         }
 
         private void ListViewItem_GotFocus(object sender, RoutedEventArgs e)
